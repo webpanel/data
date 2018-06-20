@@ -1,26 +1,12 @@
-import { DataSource } from './DataSource';
-export interface ResourceConfig {
+import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+export interface ResourceConfig extends ResourceBaseConfig {
     id?: string | number;
-    dataSource: DataSource;
-    name: string;
-    fields: string[];
-    args?: {
-        [key: string]: any;
-    };
     defaultValues?: {
         [key: string]: any;
     };
 }
-export declare class Resource {
+export declare class Resource extends ResourceBase<any | null> {
     id?: string | number;
-    name: string;
-    dataSource: DataSource;
-    fields: string[];
-    args?: {
-        [key: string]: any;
-    };
-    loading: boolean;
-    data: any | null;
     constructor(config: ResourceConfig);
     getIfHasID: () => Promise<void>;
     get: () => Promise<void>;

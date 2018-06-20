@@ -1,2 +1,3 @@
 export { DataSource } from './DataSource';
-export { Resource } from './Resource';
+export { Resource, ResourceConfig } from './Resource';
+export { ResourceCollection } from './ResourceCollection';

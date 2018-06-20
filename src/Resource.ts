@@ -1,34 +1,16 @@
-import { observable } from 'mobx';
-import { DataSource } from './DataSource';
+import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 
-export interface ResourceConfig {
+export interface ResourceConfig extends ResourceBaseConfig {
   id?: string | number;
-  dataSource: DataSource;
-  name: string;
-  fields: string[];
-  args?: { [key: string]: any };
   defaultValues?: { [key: string]: any };
 }
 
-export class Resource {
+export class Resource extends ResourceBase<any | null> {
   id?: string | number;
-  name: string;
-  dataSource: DataSource;
-  fields: string[];
-  args?: { [key: string]: any };
-
-  @observable loading: boolean = false;
-  @observable data: any | null = null;
 
   constructor(config: ResourceConfig) {
+    super(config);
     this.id = config.id;
-    this.dataSource = config.dataSource;
-    // this.dataSource = DataSourceProvider.shared().getDataSource(
-    //   config.dataSource
-    // );
-    this.name = config.name;
-    this.fields = config.fields;
-
     if (!this.id) {
       this.data = config.defaultValues;
     }
@@ -55,6 +37,7 @@ export class Resource {
     this.data = res;
     this.loading = false;
   };
+
   create = async (values: { [key: string]: any }) => {
     this.loading = true;
     let res = await this.dataSource.create(this.name, values, [
@@ -66,6 +49,7 @@ export class Resource {
     this.id = res.id;
     this.loading = false;
   };
+
   update = async (values: { [key: string]: any }) => {
     if (!this.id) {
       throw new Error('resource id is missing');
@@ -80,6 +64,7 @@ export class Resource {
     this.data = res;
     this.loading = false;
   };
+
   delete = async () => {
     if (!this.id) {
       throw new Error('resource id is missing');
