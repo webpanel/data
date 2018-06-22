@@ -1,74 +1,62 @@
-import * as inflection from 'inflection';
 import { AuthSession } from 'webpanel-auth';
 
-import { GraphQLConnector } from './utils/networking/GraphQLConnector';
 import {
-  GraphQLQuery,
-  GraphQLField,
-  GraphQLArgumentMap
-} from './utils/networking/GraphQLQuery';
-// import { AuthSession } from '../store/AuthSession';
-import { isConnectorError } from './utils/networking/Connector';
+  isConnectorError,
+  Connector,
+  IConnector,
+  DataSourceRequest
+} from './connectors/Connector';
+import { HTTPResponse } from './utils/HTTPResponse';
+import { DataSourceOperation } from './DataSourceRequest';
 
-export enum DataSourceOperation {
-  list = 'list',
-  create = 'create',
-  read = 'read',
-  update = 'update',
-  delete = 'delete'
+export type DataSourceArgumentType =
+  | DataSourceArgumentMap
+  | string
+  | number
+  | null;
+export interface DataSourceArgumentMap {
+  [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
 }
 
-const connectors = {
-  graphql: new GraphQLConnector()
-};
-
-export type GraphQLFieldSource = { [key: string]: any } | string;
-export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
-
-export type DataSourceTypes = 'graphql';
 export class DataSource {
   name: string;
-  type: DataSourceTypes;
+  connector: Connector;
   url: string;
 
-  constructor(name: string, type: DataSourceTypes, url: string) {
+  constructor(name: string, connector: IConnector, url: string) {
     this.name = name;
-    this.type = type;
+    this.connector = new connector();
     this.url = url;
-  }
-
-  getConnector() {
-    const conn = connectors[this.type];
-    if (!conn) {
-      throw new Error(`unknown data source type ${this.type}`);
-    }
-    return conn;
   }
 
   async list(
     name: string,
-    fields: string[],
-    args: { [key: string]: any }
+    fields: string[]
+    // args: { [key: string]: any }
   ): Promise<any> {
-    return this.send(DataSourceOperation.list, name, fields, args);
+    return this.send({ operation: DataSourceOperation.list, name, fields });
   }
   async create(
     name: string,
     data: { [key: string]: string },
     fields: string[]
   ): Promise<any> {
-    return this.send(DataSourceOperation.create, name, fields, { input: data });
+    return this.send({
+      operation: DataSourceOperation.create,
+      name,
+      fields,
+      data
+    });
   }
   async read(
     name: string,
     id: string | number | undefined,
-    fields: string[],
-    args?: { [key: string]: any }
+    fields: string[]
+    // args?: { [key: string]: any }
   ): Promise<any> {
-    args = args || {};
-    let _args = { ...args };
-    if (id) _args.id = id;
-    return this.send(DataSourceOperation.read, name, fields, _args);
+    // args = args || {};
+    // let _args = { ...args };
+    return this.send({ operation: DataSourceOperation.read, name, fields, id });
   }
   async update(
     name: string,
@@ -76,9 +64,12 @@ export class DataSource {
     data: { [key: string]: string },
     fields: string[]
   ): Promise<any> {
-    return this.send(DataSourceOperation.update, name, fields, {
+    return this.send({
+      operation: DataSourceOperation.update,
+      name,
+      fields,
       id,
-      input: data
+      data
     });
   }
   async delete(
@@ -86,100 +77,41 @@ export class DataSource {
     id: string | number,
     fields: string[]
   ): Promise<any> {
-    return this.send(DataSourceOperation.delete, name, fields, { id });
-  }
-
-  fillFieldsFromObject(field: GraphQLField, obj: GraphQLFieldSourceMap) {
-    if (Array.isArray(obj)) {
-      for (let f of obj) {
-        this.fillFieldsFromObject(field, f);
-      }
-    } else if (typeof obj === 'object') {
-      for (let key of Object.keys(obj)) {
-        const f = new GraphQLField(key);
-        field.field(f);
-        this.fillFieldsFromObject(f, obj[key]);
-      }
-    } else if (typeof obj === 'string') {
-      field.field(new GraphQLField(obj));
-    }
-  }
-
-  fieldForOperation(
-    operation: DataSourceOperation,
-    fetchFieldName: string,
-    fields: GraphQLFieldSourceMap,
-    args: GraphQLArgumentMap = {}
-  ): GraphQLField {
-    let field = new GraphQLField(fetchFieldName);
-
-    if (operation === 'list') {
-      const entityItemsField = new GraphQLField('items');
-      field.field(entityItemsField);
-      field.field('count');
-      if (args) {
-        field.args(args);
-      }
-      this.fillFieldsFromObject(entityItemsField, fields);
-    } else {
-      this.fillFieldsFromObject(field, fields);
-      if (args) {
-        field.args(args);
-      }
-    }
-
-    return field;
+    return this.send({
+      operation: DataSourceOperation.delete,
+      name,
+      fields,
+      id
+    });
   }
 
   async send(
-    operation: DataSourceOperation,
-    name: string,
-    fields: string[],
-    args: GraphQLArgumentMap = {}
-  ): Promise<any> {
-    let fetchFieldName = inflection.camelize(inflection.pluralize(name), true);
-
-    switch (operation) {
-      case 'read':
-        fetchFieldName = inflection.camelize(
-          inflection.singularize(name),
-          true
-        );
-        break;
-      case 'create':
-        fetchFieldName = `create${name}`;
-        break;
-      case 'update':
-        fetchFieldName = `update${name}`;
-        break;
-      case 'delete':
-        fetchFieldName = `delete${name}`;
-        break;
-      default:
+    params: {
+      operation: DataSourceOperation;
+      name: string;
+      fields: string[];
+      id?: string | number;
+      data?: any;
     }
-    // console.log('???', operation, fetchFieldName, args);
+    // args: DataSourceArgumentMap = {}
+  ): Promise<HTTPResponse | null> {
+    const dataSourceRequest = new DataSourceRequest({
+      url: this.url,
+      operation: params.operation,
+      id: params.id,
+      data: params.data
+    });
 
-    const query = new GraphQLQuery(
-      operation === 'read' || operation === 'list' ? 'query' : 'mutation',
-      'operation'
-    );
-
-    const field = this.fieldForOperation(
-      operation,
-      fetchFieldName,
-      fields,
-      args
-    );
-    query.field(field);
+    const request = this.connector.transformRequest(dataSourceRequest);
 
     try {
-      let res = await this.getConnector().send(this.url, query);
-      return res.data && res.data[fetchFieldName];
+      let res = await this.connector.send(request);
+      return res;
     } catch (err) {
       if (isConnectorError(err)) {
         if (err.authorization) {
           AuthSession.current().logout();
-          return;
+          return null;
         }
       }
 
@@ -187,33 +119,3 @@ export class DataSource {
     }
   }
 }
-
-// export class DataSourceProvider {
-//   static _shared: DataSourceProvider;
-
-//   datasources: { [key: string]: DataSource } = {};
-
-//   static shared() {
-//     if (typeof this._shared === 'undefined') {
-//       this._shared = new DataSourceProvider();
-//     }
-//     return this._shared;
-//   }
-
-//   constructor() {
-//     // const rootConfig = ConfigProvider.getConfig('root');
-//     // const dataSourcesConfig = rootConfig.datasources as { [key: string]: any };
-//     // for (let name of Object.keys(dataSourcesConfig)) {
-//     //   const conf = dataSourcesConfig[name];
-//     //   this.datasources[name] = new DataSource(name, conf.type, conf.url);
-//     // }
-//   }
-
-//   getDataSource(name: string): DataSource {
-//     const ds = this.datasources[name];
-//     if (typeof ds === 'undefined') {
-//       throw new Error(`datasource ${name} not found`);
-//     }
-//     return ds;
-//   }
-// }

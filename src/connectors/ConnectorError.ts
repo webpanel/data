@@ -1,13 +1,3 @@
-// import { Response } from 'node-fetch';
-// import { Request } from '../Request';
-
-export { Request } from '../Request';
-export { Response } from 'node-fetch';
-
-export interface Connector {
-  // send(req: Request): Promise<Response>;
-}
-
 export class ConnectorError extends Error {
   connectorError = true;
   errors: Error[];

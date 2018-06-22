@@ -1,4 +1,5 @@
-export class Response {
+export class HTTPResponse {
+  status: number;
   data: any;
 
   constructor(data: any) {

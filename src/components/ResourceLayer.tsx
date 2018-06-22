@@ -9,7 +9,7 @@ import { observer } from 'mobx-react';
 // // import { Broadcast, Subscriber } from 'react-broadcast';
 // // import { ContextObserver } from '../components/Context';
 // // import { renderTemplate, evaluateObject, evaluate } from '../utils/StringUtils';
-import { isConnectorError } from '../utils/networking/Connector';
+import { isConnectorError } from '../connectors/Connector';
 
 // // import { Spin } from 'antd';
 
