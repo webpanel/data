@@ -8,8 +8,8 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     this.loading = true;
     let res = await this.dataSource.list(
       this.name,
-      this.fields,
-      this.args || {}
+      this.fields
+      // this.args || {}
     );
     this.data = res.items || [];
     this.count = res.count;

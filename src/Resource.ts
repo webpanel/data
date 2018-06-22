@@ -28,12 +28,7 @@ export class Resource extends ResourceBase<any | null> {
       throw new Error('resource id is missing');
     }
     this.loading = true;
-    let res = await this.dataSource.read(
-      this.name,
-      this.id,
-      this.fields,
-      this.args || {}
-    );
+    let res = await this.dataSource.read(this.name, this.id, this.fields);
     this.data = res;
     this.loading = false;
   };
