@@ -9,6 +9,7 @@ export class HTTPRequest {
   constructor(variables: any = {}) {
     const cloned = cloneDeep(variables);
     this.url = cloned.url || null;
+    this.method = cloned.method;
     this.data = cloned.data || {};
     this.headers = cloned.headers || {};
   }

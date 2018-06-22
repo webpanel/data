@@ -8,7 +8,5 @@ import { DataSourceRequest } from '../DataSourceRequest';
 export interface Connector {
     send(req: HTTPRequest): Promise<HTTPResponse>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
-}
-export interface IConnector {
-    new (): Connector;
+    transformData(response: HTTPResponse, request: DataSourceRequest): any;
 }

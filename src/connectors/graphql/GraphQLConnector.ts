@@ -1,6 +1,4 @@
 import * as inflection from 'inflection';
-// import fetch from 'node-fetch';
-// import { AuthSession } from 'webpanel-auth';
 
 import {
   HTTPRequest,
@@ -10,7 +8,6 @@ import {
   DataSourceOperation
 } from '../../connectors/Connector';
 import { GraphQLQuery, GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
-// import { GraphQLResponse } from './GraphQLResponse';
 import { HTTPConnector } from '../HTTPConnector';
 
 export type GraphQLFieldSource = { [key: string]: any } | string;
@@ -39,27 +36,29 @@ export class GraphQLConnector extends HTTPConnector {
   }
 
   transformRequest(request: DataSourceRequest): HTTPRequest {
-    let fetchFieldName = inflection.camelize(inflection.pluralize(name), true);
+    let fetchFieldName = inflection.camelize(
+      inflection.pluralize(request.name),
+      true
+    );
 
     switch (request.operation) {
       case 'read':
         fetchFieldName = inflection.camelize(
-          inflection.singularize(name),
+          inflection.singularize(request.name),
           true
         );
         break;
       case 'create':
-        fetchFieldName = `create${name}`;
+        fetchFieldName = `create${request.name}`;
         break;
       case 'update':
-        fetchFieldName = `update${name}`;
+        fetchFieldName = `update${request.name}`;
         break;
       case 'delete':
-        fetchFieldName = `delete${name}`;
+        fetchFieldName = `delete${request.name}`;
         break;
       default:
     }
-    // console.log('???', operation, fetchFieldName, args);
 
     const query = new GraphQLQuery(
       request.operation === 'read' || request.operation === 'list'
@@ -71,19 +70,29 @@ export class GraphQLConnector extends HTTPConnector {
     const field = this.fieldForOperation(
       request.operation,
       fetchFieldName,
-      request.fields,
-      {
-        filter: request.filters
-      }
+      request.fields
+      // {
+      //   filter: request.filters
+      // }
     );
     query.field(field);
+
     return new HTTPRequest({
       url: request.url,
+      method: 'POST',
       data: JSON.stringify({ query: query.toString() })
     });
   }
 
-  fillFieldsFromObject(field: GraphQLField, obj: GraphQLFieldSourceMap) {
+  transformData(res: HTTPResponse, request: DataSourceRequest): any {
+    const keys = Object.keys(res.data.data);
+    return res.data.data[keys[0]];
+  }
+
+  private fillFieldsFromObject(
+    field: GraphQLField,
+    obj: GraphQLFieldSourceMap
+  ) {
     if (Array.isArray(obj)) {
       for (let f of obj) {
         this.fillFieldsFromObject(field, f);
@@ -99,12 +108,13 @@ export class GraphQLConnector extends HTTPConnector {
     }
   }
 
-  fieldForOperation(
+  private fieldForOperation(
     operation: DataSourceOperation,
     fetchFieldName: string,
     fields: GraphQLFieldSourceMap,
     args: GraphQLArgumentMap = {}
   ): GraphQLField {
+    console.log(fetchFieldName);
     let field = new GraphQLField(fetchFieldName);
 
     if (operation === 'list') {

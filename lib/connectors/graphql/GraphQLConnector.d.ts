@@ -1,5 +1,4 @@
-import { HTTPRequest, HTTPResponse, DataSourceRequest, DataSourceOperation } from '../../connectors/Connector';
-import { GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
+import { HTTPRequest, HTTPResponse, DataSourceRequest } from '../../connectors/Connector';
 import { HTTPConnector } from '../HTTPConnector';
 export declare type GraphQLFieldSource = {
     [key: string]: any;
@@ -8,6 +7,7 @@ export declare type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSou
 export declare class GraphQLConnector extends HTTPConnector {
     send(req: HTTPRequest): Promise<HTTPResponse>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
-    fillFieldsFromObject(field: GraphQLField, obj: GraphQLFieldSourceMap): void;
-    fieldForOperation(operation: DataSourceOperation, fetchFieldName: string, fields: GraphQLFieldSourceMap, args?: GraphQLArgumentMap): GraphQLField;
+    transformData(res: HTTPResponse, request: DataSourceRequest): any;
+    private fillFieldsFromObject(field, obj);
+    private fieldForOperation(operation, fetchFieldName, fields, args?);
 }

@@ -8,16 +8,17 @@
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
   "dependencies": {
+    "@types/inflection": "^1.5.28",
+    "@types/node": "^10.3.2",
+    "@types/react": "^16.3.17",
     "inflection": "^1.12.0",
     "lodash": "^4.17.10",
     "node-fetch": "^2.1.2",
     "react": "^16.4.0",
-    "@types/inflection": "^1.5.28",
-    "@types/lodash": "^4.14.109",
-    "@types/node": "^10.3.2",
-    "@types/react": "^16.3.17"
+    "url": "^0.11.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.110",
     "@types/node-fetch": "^2.1.1",
     "mobx": "^5.0.2",
     "mobx-react": "^5.2.3",

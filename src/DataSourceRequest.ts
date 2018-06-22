@@ -9,6 +9,7 @@ export enum DataSourceOperation {
 }
 
 export class DataSourceRequest {
+  name: string;
   url: string;
   operation: DataSourceOperation;
   page: number | null = 0;
@@ -23,8 +24,11 @@ export class DataSourceRequest {
 
   constructor(variables: any = {}) {
     const cloned = cloneDeep(variables);
+    this.name = cloned.name;
     this.url = cloned.url || null;
+    this.operation = cloned.operation;
     this.page = cloned.page;
+    this.fields = cloned.fields || {};
     this.filters = cloned.filters || {};
     // this.headers = cloned.headers || {};
     this.sorting = cloned.sorting || [];

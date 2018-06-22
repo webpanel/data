@@ -1,6 +1,6 @@
 import { HTTPRequest, HTTPResponse } from '../Connector';
 import { HTTPConnector } from '../HTTPConnector';
-import { DataSourceOperation } from '../../DataSourceRequest';
+import { DataSourceRequest, DataSourceOperation } from '../../DataSourceRequest';
 export declare class RestConnectorError extends Error {
     status: number;
     response: HTTPResponse;
@@ -8,5 +8,6 @@ export declare class RestConnectorError extends Error {
 }
 export declare class RestConnector extends HTTPConnector {
     send(req: HTTPRequest): Promise<HTTPResponse>;
+    transformRequest(request: DataSourceRequest): HTTPRequest;
     methodForOperation(op: DataSourceOperation): string;
 }

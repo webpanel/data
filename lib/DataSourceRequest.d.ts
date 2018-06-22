@@ -6,6 +6,7 @@ export declare enum DataSourceOperation {
     delete = "delete",
 }
 export declare class DataSourceRequest {
+    name: string;
     url: string;
     operation: DataSourceOperation;
     page: number | null;

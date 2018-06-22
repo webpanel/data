@@ -3,7 +3,6 @@ import { AuthSession } from 'webpanel-auth';
 import {
   isConnectorError,
   Connector,
-  IConnector,
   DataSourceRequest
 } from './connectors/Connector';
 import { HTTPResponse } from './utils/HTTPResponse';
@@ -23,9 +22,9 @@ export class DataSource {
   connector: Connector;
   url: string;
 
-  constructor(name: string, connector: IConnector, url: string) {
+  constructor(name: string, connector: Connector, url: string) {
     this.name = name;
-    this.connector = new connector();
+    this.connector = connector;
     this.url = url;
   }
 
@@ -96,17 +95,19 @@ export class DataSource {
     // args: DataSourceArgumentMap = {}
   ): Promise<HTTPResponse | null> {
     const dataSourceRequest = new DataSourceRequest({
+      name: params.name,
       url: this.url,
       operation: params.operation,
       id: params.id,
-      data: params.data
+      data: params.data,
+      fields: params.fields
     });
 
     const request = this.connector.transformRequest(dataSourceRequest);
 
     try {
       let res = await this.connector.send(request);
-      return res;
+      return this.connector.transformData(res, dataSourceRequest);
     } catch (err) {
       if (isConnectorError(err)) {
         if (err.authorization) {

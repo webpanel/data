@@ -1,4 +1,4 @@
-import { Connector, IConnector } from './connectors/Connector';
+import { Connector } from './connectors/Connector';
 import { HTTPResponse } from './utils/HTTPResponse';
 import { DataSourceOperation } from './DataSourceRequest';
 export declare type DataSourceArgumentType = DataSourceArgumentMap | string | number | null;
@@ -9,7 +9,7 @@ export declare class DataSource {
     name: string;
     connector: Connector;
     url: string;
-    constructor(name: string, connector: IConnector, url: string);
+    constructor(name: string, connector: Connector, url: string);
     list(name: string, fields: string[]): Promise<any>;
     create(name: string, data: {
         [key: string]: string;
