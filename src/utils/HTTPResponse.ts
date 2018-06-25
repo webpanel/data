@@ -6,8 +6,4 @@ export class HTTPResponse {
     this.data = data;
     this.status = status;
   }
-
-  // getData(): any {
-  //   return this.dataGetter ? this.dataGetter(this) : this.data;
-  // }
 }

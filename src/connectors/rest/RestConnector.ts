@@ -48,7 +48,7 @@ export class RestConnector extends HTTPConnector {
       true
     );
 
-    let fetchUrl = url.resolve(request.url, entityName);
+    let fetchUrl = url.resolve(request.url, entityName) + '/';
     if (request.id) {
       fetchUrl = url.resolve(fetchUrl, request.id.toString());
     }
@@ -60,8 +60,8 @@ export class RestConnector extends HTTPConnector {
     });
   }
 
-  methodForOperation(op: DataSourceOperation): string {
-    switch (op) {
+  methodForOperation(operation: DataSourceOperation): string {
+    switch (operation) {
       case 'list':
       case 'read':
         return 'GET';
