@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, toJS } from 'mobx';
 import { DataSource } from './DataSource';
 
 export interface ResourceBaseConfig {
@@ -21,5 +21,10 @@ export class ResourceBase<T> {
     this.dataSource = config.dataSource;
     this.name = config.name;
     this.fields = config.fields;
+  }
+
+  getRawData(): T | undefined {
+    const data = toJS(this.data);
+    return data;
   }
 }

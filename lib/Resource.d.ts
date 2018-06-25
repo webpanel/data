@@ -8,17 +8,17 @@ export interface ResourceConfig extends ResourceBaseConfig {
 export declare class Resource extends ResourceBase<any | null> {
     id?: string | number;
     constructor(config: ResourceConfig);
-    getIfHasID: () => Promise<void>;
-    get: () => Promise<void>;
+    getIfHasID: () => Promise<any>;
+    get: () => Promise<any>;
     create: (values: {
         [key: string]: any;
-    }) => Promise<void>;
+    }) => Promise<any>;
     update: (values: {
         [key: string]: any;
-    }) => Promise<void>;
-    delete: () => Promise<void>;
+    }) => Promise<any>;
+    delete: () => Promise<any>;
     isPersisted: () => boolean;
     save: (values: {
         [key: string]: any;
-    }) => Promise<void>;
+    }) => Promise<any>;
 }

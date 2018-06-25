@@ -17,7 +17,6 @@ export class Resource extends ResourceBase<any | null> {
   }
 
   getIfHasID = async () => {
-    // console.log('get???', this.id);
     if (this.id) {
       return this.get();
     }
@@ -31,6 +30,7 @@ export class Resource extends ResourceBase<any | null> {
     let res = await this.dataSource.read(this.name, this.id, this.fields);
     this.data = res;
     this.loading = false;
+    return res;
   };
 
   create = async (values: { [key: string]: any }) => {
@@ -39,10 +39,10 @@ export class Resource extends ResourceBase<any | null> {
       'id',
       ...this.fields
     ]);
-    // console.log('created???', res);
     this.data = res;
     this.id = res.id;
     this.loading = false;
+    return res;
   };
 
   update = async (values: { [key: string]: any }) => {
@@ -58,6 +58,7 @@ export class Resource extends ResourceBase<any | null> {
     );
     this.data = res;
     this.loading = false;
+    return res;
   };
 
   delete = async () => {
@@ -68,6 +69,7 @@ export class Resource extends ResourceBase<any | null> {
     let res = await this.dataSource.delete(this.name, this.id, this.fields);
     this.data = res;
     this.loading = false;
+    return res;
   };
 
   isPersisted = (): boolean => {

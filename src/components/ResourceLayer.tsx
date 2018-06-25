@@ -9,13 +9,13 @@ import { observer } from 'mobx-react';
 // // import { Broadcast, Subscriber } from 'react-broadcast';
 // // import { ContextObserver } from '../components/Context';
 // // import { renderTemplate, evaluateObject, evaluate } from '../utils/StringUtils';
-import { isConnectorError } from '../connectors/Connector';
+// import { isConnectorError } from '../connectors/Connector';
 
 // // import { Spin } from 'antd';
 
-export interface ResourceLayerConfig {
-  render: (data: Resource) => React.ReactNode;
-  config: ResourceConfig; // | ResourceCollectionConfig;
+export interface ResourceLayerConfig extends ResourceConfig {
+  render: (resource: Resource) => React.ReactNode;
+  // config: ResourceConfig; // | ResourceCollectionConfig;
   //   resources: {
   //     [key: string]: (ResourceConfig | ResourceCollectionConfig) & {
   //       collection?: boolean;
@@ -26,16 +26,14 @@ export interface ResourceLayerConfig {
   //   autoRefresh?: string;
 }
 
-export interface ResourceLayerState {
-  errors: Error[];
-  resource?: Resource;
-}
+// export interface ResourceLayerState {
+//   errors: Error[];
+//   resource?: Resource;
+// }
 
 @observer
-export class ResourceLayer extends React.Component<
-  ResourceLayerConfig,
-  ResourceLayerState
-> {
+// ResourceLayerState
+export class ResourceLayer extends React.Component<ResourceLayerConfig> {
   //   static propTypes = {
   //     config: PropTypes.shape({
   //       resources: PropTypes.object.isRequired
@@ -46,24 +44,24 @@ export class ResourceLayer extends React.Component<
   //   refreshTimer?: number = undefined;
 
   handleError = (err: Error) => {
-    // console.log('error?!', err);
-    let errors: Error[] = [];
-    if (isConnectorError(err)) {
-      errors = err.errors;
-    } else {
-      errors = [err];
-    }
-    this.setState({
-      errors: Array.prototype.concat(...this.state.errors, ...errors)
-    });
+    console.log('error?!', err);
+    // let errors: Error[] = [];
+    // if (isConnectorError(err)) {
+    //   errors = err.errors;
+    // } else {
+    //   errors = [err];
+    // }
+    // this.setState({
+    //   errors: Array.prototype.concat(...this.state.errors, ...errors)
+    // });
   };
   createResource() {
-    const { config } = this.props;
+    const { render, ...props } = this.props;
 
-    const resource = new Resource(config);
+    const resource = new Resource(props);
     resource.getIfHasID().catch(this.handleError);
 
-    this.setState({ resource });
+    // this.setState({ resource });
 
     // if (config.resources) {
     //   for (let key of Object.keys(config.resources)) {

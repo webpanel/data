@@ -1,4 +1,6 @@
 export { DataSource } from './DataSource';
+export { ResourceLayer } from './components/ResourceLayer';
+export { ResourceCollectionLayer } from './components/ResourceCollectionLayer';
 export { Resource, ResourceConfig } from './Resource';
 export { ResourceCollection } from './ResourceCollection';
 

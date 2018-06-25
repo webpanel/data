@@ -1,8 +1,18 @@
 import { observable } from 'mobx';
-import { ResourceBase } from './ResourceBase';
+import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+
+export interface ResourceCollectionConfig extends ResourceBaseConfig {
+  filter?: any;
+  sorting?: any;
+  page?: number;
+}
 
 export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable count: number | undefined = undefined;
+
+  constructor(config: ResourceCollectionConfig) {
+    super(config);
+  }
 
   get = async () => {
     this.loading = true;

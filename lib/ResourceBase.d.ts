@@ -17,4 +17,5 @@ export declare class ResourceBase<T> {
     loading: boolean;
     data: T | undefined;
     constructor(config: ResourceBaseConfig);
+    getRawData(): T | undefined;
 }
