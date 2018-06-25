@@ -38,6 +38,8 @@ export class DataSourceRequest {
     // this.headers = cloned.headers || {};
     this.sorting = cloned.sorting || [];
     // this.params = cloned.params || [];
+    this.id = variables.id;
+    this.data = variables.data;
   }
 
   getPage(pageCursor: number): DataSourceRequest {

@@ -43,7 +43,6 @@ export class RestConnector extends HTTPConnector {
   }
 
   transformRequest(request: DataSourceRequest): HTTPRequest {
-    console.log(request);
     let entityName = inflection.camelize(
       inflection.pluralize(request.name),
       true
