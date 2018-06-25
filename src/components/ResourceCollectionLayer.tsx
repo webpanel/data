@@ -10,9 +10,15 @@ export interface ResourceCollectionLayerConfig
   render: (resource: ResourceCollection) => React.ReactNode;
 }
 
+export interface ResourceCollectionLayerState {
+  errors: Error[];
+  resource?: ResourceCollection;
+}
+
 @observer
 export class ResourceCollectionLayer extends React.Component<
-  ResourceCollectionLayerConfig
+  ResourceCollectionLayerConfig,
+  ResourceCollectionLayerState
 > {
   state = { errors: [], resource: undefined };
 
@@ -25,7 +31,7 @@ export class ResourceCollectionLayer extends React.Component<
     const resource = new ResourceCollection(props);
     resource.get().catch(this.handleError);
 
-    // this.setState({ resource });
+    this.setState({ resource });
   }
 
   componentWillMount() {

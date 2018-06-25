@@ -26,14 +26,17 @@ export interface ResourceLayerConfig extends ResourceConfig {
   //   autoRefresh?: string;
 }
 
-// export interface ResourceLayerState {
-//   errors: Error[];
-//   resource?: Resource;
-// }
+export interface ResourceLayerState {
+  errors: Error[];
+  resource?: Resource;
+}
 
 @observer
 // ResourceLayerState
-export class ResourceLayer extends React.Component<ResourceLayerConfig> {
+export class ResourceLayer extends React.Component<
+  ResourceLayerConfig,
+  ResourceLayerState
+> {
   //   static propTypes = {
   //     config: PropTypes.shape({
   //       resources: PropTypes.object.isRequired
@@ -61,7 +64,7 @@ export class ResourceLayer extends React.Component<ResourceLayerConfig> {
     const resource = new Resource(props);
     resource.getIfHasID().catch(this.handleError);
 
-    // this.setState({ resource });
+    this.setState({ resource });
 
     // if (config.resources) {
     //   for (let key of Object.keys(config.resources)) {

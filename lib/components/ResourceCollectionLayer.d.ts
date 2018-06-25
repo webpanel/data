@@ -4,7 +4,11 @@ import { ResourceCollection, ResourceCollectionConfig } from '../ResourceCollect
 export interface ResourceCollectionLayerConfig extends ResourceCollectionConfig {
     render: (resource: ResourceCollection) => React.ReactNode;
 }
-export declare class ResourceCollectionLayer extends React.Component<ResourceCollectionLayerConfig> {
+export interface ResourceCollectionLayerState {
+    errors: Error[];
+    resource?: ResourceCollection;
+}
+export declare class ResourceCollectionLayer extends React.Component<ResourceCollectionLayerConfig, ResourceCollectionLayerState> {
     state: {
         errors: never[];
         resource: undefined;
