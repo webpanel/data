@@ -7,7 +7,7 @@ export declare class RestConnectorError extends Error {
     constructor(status: number, response: HTTPResponse, message?: string | undefined);
 }
 export declare class RestConnector extends HTTPConnector {
-    send(req: HTTPRequest): Promise<HTTPResponse>;
+    protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
     methodForOperation(op: DataSourceOperation): string;
 }

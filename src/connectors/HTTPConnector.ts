@@ -7,15 +7,30 @@ import {
   HTTPRequest,
   DataSourceRequest
 } from './Connector';
-import { DataSourceOperation } from '../DataSourceRequest';
+import {
+  ResponseDataTransformer,
+  ResourceResponse,
+  ResourceCollectionResponse
+} from './ResponseDataTransformer';
+
+export interface HTTPConnectorConfiguration {
+  responseDataTransformer?: ResponseDataTransformer;
+}
 
 export class HTTPConnector implements Connector {
-  async send(req: HTTPRequest): Promise<HTTPResponse> {
+  responseTransformer: ResponseDataTransformer;
+
+  constructor(config: HTTPConnectorConfiguration = {}) {
+    this.responseTransformer =
+      config.responseDataTransformer || new ResponseDataTransformer();
+  }
+
+  protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
     const accessToken = AuthSession.current().accessToken;
 
-    let res = await fetch(req.url, {
-      method: req.method,
-      body: req.data,
+    let res = await fetch(request.url, {
+      method: request.method,
+      body: request.data,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -23,17 +38,25 @@ export class HTTPConnector implements Connector {
     });
 
     let json = await res.json();
-    return new HTTPResponse(json);
+    return new HTTPResponse(json, res.status);
   }
 
-  transformRequest(request: DataSourceRequest): HTTPRequest {
+  protected transformRequest(request: DataSourceRequest): HTTPRequest {
     throw new Error('build request must be implemented');
   }
 
-  transformData(res: HTTPResponse, request: DataSourceRequest): any {
-    if (request.operation === DataSourceOperation.list) {
-      return { items: res.data };
-    }
-    return res.data;
+  protected async transformResponse(
+    response: HTTPResponse,
+    request: DataSourceRequest
+  ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
+    return this.responseTransformer.handle(request.operation, response);
+  }
+
+  async send(
+    request: DataSourceRequest
+  ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
+    const req = this.transformRequest(request);
+    const res = await this.sendHttpRequest(req);
+    return this.transformResponse(res.data, request);
   }
 }

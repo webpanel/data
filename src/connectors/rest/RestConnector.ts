@@ -1,7 +1,7 @@
 import * as inflection from 'inflection';
 import * as url from 'url';
 
-import { HTTPRequest, HTTPResponse } from '../Connector';
+import { HTTPRequest, HTTPResponse, ConnectorError } from '../Connector';
 import { HTTPConnector } from '../HTTPConnector';
 import {
   DataSourceRequest,
@@ -24,8 +24,8 @@ export class RestConnectorError extends Error {
 }
 
 export class RestConnector extends HTTPConnector {
-  async send(req: HTTPRequest): Promise<HTTPResponse> {
-    let res = await super.send(req);
+  protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
+    let res = await super.sendHttpRequest(request);
 
     if (res.status < 200 || res.status >= 300) {
       throw new RestConnectorError(
@@ -33,6 +33,10 @@ export class RestConnector extends HTTPConnector {
         res,
         res.data.error_description || res.data.error
       );
+    }
+
+    if (res.status === 401) {
+      throw new ConnectorError(true, [res.data]);
     }
 
     return res;

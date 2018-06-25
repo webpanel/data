@@ -5,6 +5,10 @@ export declare enum DataSourceOperation {
     update = "update",
     delete = "delete",
 }
+export interface SortAttribute {
+    name: string;
+    sort: 'asc' | 'desc';
+}
 export declare class DataSourceRequest {
     name: string;
     url: string;

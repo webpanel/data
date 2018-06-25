@@ -5,8 +5,12 @@ import {
   Connector,
   DataSourceRequest
 } from './connectors/Connector';
-import { HTTPResponse } from './utils/HTTPResponse';
+// import { HTTPResponse } from './utils/HTTPResponse';
 import { DataSourceOperation } from './DataSourceRequest';
+import {
+  ResourceCollectionResponse,
+  ResourceResponse
+} from './connectors/ResponseDataTransformer';
 
 export type DataSourceArgumentType =
   | DataSourceArgumentMap
@@ -93,7 +97,7 @@ export class DataSource {
       data?: any;
     }
     // args: DataSourceArgumentMap = {}
-  ): Promise<HTTPResponse | null> {
+  ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
     const dataSourceRequest = new DataSourceRequest({
       name: params.name,
       url: this.url,
@@ -103,11 +107,10 @@ export class DataSource {
       fields: params.fields
     });
 
-    const request = this.connector.transformRequest(dataSourceRequest);
+    // const request = this.connector.transformRequest(dataSourceRequest);
 
     try {
-      let res = await this.connector.send(request);
-      return this.connector.transformData(res, dataSourceRequest);
+      return this.connector.send(dataSourceRequest);
     } catch (err) {
       if (isConnectorError(err)) {
         if (err.authorization) {

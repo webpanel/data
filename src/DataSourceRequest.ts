@@ -8,6 +8,11 @@ export enum DataSourceOperation {
   delete = 'delete'
 }
 
+export interface SortAttribute {
+  name: string;
+  sort: 'asc' | 'desc';
+}
+
 export class DataSourceRequest {
   name: string;
   url: string;

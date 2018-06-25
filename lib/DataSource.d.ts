@@ -1,6 +1,6 @@
 import { Connector } from './connectors/Connector';
-import { HTTPResponse } from './utils/HTTPResponse';
 import { DataSourceOperation } from './DataSourceRequest';
+import { ResourceCollectionResponse, ResourceResponse } from './connectors/ResponseDataTransformer';
 export declare type DataSourceArgumentType = DataSourceArgumentMap | string | number | null;
 export interface DataSourceArgumentMap {
     [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
@@ -25,5 +25,5 @@ export declare class DataSource {
         fields: string[];
         id?: string | number;
         data?: any;
-    }): Promise<HTTPResponse | null>;
+    }): Promise<ResourceResponse | ResourceCollectionResponse | null>;
 }

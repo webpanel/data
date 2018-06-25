@@ -1,6 +1,13 @@
 import { Connector, HTTPResponse, HTTPRequest, DataSourceRequest } from './Connector';
+import { ResponseDataTransformer, ResourceResponse, ResourceCollectionResponse } from './ResponseDataTransformer';
+export interface HTTPConnectorConfiguration {
+    responseDataTransformer?: ResponseDataTransformer;
+}
 export declare class HTTPConnector implements Connector {
-    send(req: HTTPRequest): Promise<HTTPResponse>;
-    transformRequest(request: DataSourceRequest): HTTPRequest;
-    transformData(res: HTTPResponse, request: DataSourceRequest): any;
+    responseTransformer: ResponseDataTransformer;
+    constructor(config?: HTTPConnectorConfiguration);
+    protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;
+    protected transformRequest(request: DataSourceRequest): HTTPRequest;
+    protected transformResponse(response: HTTPResponse, request: DataSourceRequest): Promise<ResourceResponse | ResourceCollectionResponse | null>;
+    send(request: DataSourceRequest): Promise<ResourceResponse | ResourceCollectionResponse | null>;
 }

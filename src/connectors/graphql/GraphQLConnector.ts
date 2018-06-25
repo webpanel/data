@@ -5,7 +5,9 @@ import {
   HTTPResponse,
   ConnectorError,
   DataSourceRequest,
-  DataSourceOperation
+  DataSourceOperation,
+  ResourceResponse,
+  ResourceCollectionResponse
 } from '../../connectors/Connector';
 import { GraphQLQuery, GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
 import { HTTPConnector } from '../HTTPConnector';
@@ -14,12 +16,13 @@ export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
 
 export class GraphQLConnector extends HTTPConnector {
-  async send(req: HTTPRequest): Promise<HTTPResponse> {
-    let res = await super.send(req);
-
-    if (res.data.errors) {
+  async transformResponse(
+    response: HTTPResponse,
+    request: DataSourceRequest
+  ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
+    if (response.data && response.data.errors) {
       let authorization = false;
-      const errors = res.data.errors.map((e: Error) => {
+      const errors = response.data.errors.map((e: Error) => {
         if (
           e.message === 'jwt must be provided' ||
           e.message === 'jwt malformed'
@@ -31,8 +34,17 @@ export class GraphQLConnector extends HTTPConnector {
       throw new ConnectorError(authorization, errors);
     }
 
-    // return res.data && res.data[fetchFieldName];
-    return new HTTPResponse(res.data);
+    let fetchFieldName = inflection.camelize(
+      inflection.pluralize(request.name),
+      true
+    );
+
+    const data = response.data || response.data.data[fetchFieldName] || null;
+    if (data === null) {
+      return data;
+    }
+
+    return this.responseTransformer.handle(request.operation, data);
   }
 
   transformRequest(request: DataSourceRequest): HTTPRequest {
