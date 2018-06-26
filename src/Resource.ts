@@ -16,6 +16,17 @@ export class Resource extends ResourceBase<any | null> {
     }
   }
 
+  async tryWithLoading(p: Promise<any>): Promise<any> {
+    this.loading = true;
+    try {
+      return await p;
+    } catch (err) {
+      throw err;
+    } finally {
+      this.loading = false;
+    }
+  }
+
   getIfHasID = async () => {
     if (this.id) {
       return this.get();
@@ -26,22 +37,19 @@ export class Resource extends ResourceBase<any | null> {
     if (!this.id) {
       throw new Error('resource id is missing');
     }
-    this.loading = true;
-    let res = await this.dataSource.read(this.name, this.id, this.fields);
+    let res = await this.tryWithLoading(
+      this.dataSource.read(this.name, this.id, this.fields)
+    );
     this.data = res;
-    this.loading = false;
     return res;
   };
 
   create = async (values: { [key: string]: any }) => {
-    this.loading = true;
-    let res = await this.dataSource.create(this.name, values, [
-      'id',
-      ...this.fields
-    ]);
+    let res = await this.tryWithLoading(
+      this.dataSource.create(this.name, values, ['id', ...this.fields])
+    );
     this.data = res;
     this.id = res.id;
-    this.loading = false;
     return res;
   };
 
@@ -49,15 +57,10 @@ export class Resource extends ResourceBase<any | null> {
     if (!this.id) {
       throw new Error('resource id is missing');
     }
-    this.loading = true;
-    let res = await this.dataSource.update(
-      this.name,
-      this.id,
-      values,
-      this.fields
+    let res = await this.tryWithLoading(
+      this.dataSource.update(this.name, this.id, values, this.fields)
     );
     this.data = res;
-    this.loading = false;
     return res;
   };
 
@@ -65,10 +68,10 @@ export class Resource extends ResourceBase<any | null> {
     if (!this.id) {
       throw new Error('resource id is missing');
     }
-    this.loading = true;
-    let res = await this.dataSource.delete(this.name, this.id, this.fields);
+    let res = await this.tryWithLoading(
+      this.dataSource.delete(this.name, this.id, this.fields)
+    );
     this.data = res;
-    this.loading = false;
     return res;
   };
 

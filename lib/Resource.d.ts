@@ -8,6 +8,7 @@ export interface ResourceConfig extends ResourceBaseConfig {
 export declare class Resource extends ResourceBase<any | null> {
     id?: string | number;
     constructor(config: ResourceConfig);
+    tryWithLoading(p: Promise<any>): Promise<any>;
     getIfHasID: () => Promise<any>;
     get: () => Promise<any>;
     create: (values: {
