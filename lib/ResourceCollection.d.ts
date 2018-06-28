@@ -8,4 +8,5 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     count: number | undefined;
     constructor(config: ResourceCollectionConfig);
     get: () => Promise<void>;
+    delete: (id: string | number) => Promise<any>;
 }

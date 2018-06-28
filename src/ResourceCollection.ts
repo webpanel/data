@@ -25,4 +25,9 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     this.count = res.count;
     this.loading = false;
   };
+
+  delete = async (id: string | number) => {
+    let res = await this.dataSource.delete(this.name, id, []);
+    return res;
+  };
 }
