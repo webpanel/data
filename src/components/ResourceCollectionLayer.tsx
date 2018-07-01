@@ -5,8 +5,8 @@ import {
 } from '../ResourceCollection';
 import { observer } from 'mobx-react';
 
-export interface ResourceCollectionLayerConfig
-  extends ResourceCollectionConfig {
+export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
+  autoload?: boolean;
   render: (resource: ResourceCollection) => React.ReactNode;
 }
 
@@ -17,7 +17,7 @@ export interface ResourceCollectionLayerState {
 
 @observer
 export class ResourceCollectionLayer extends React.Component<
-  ResourceCollectionLayerConfig,
+  ResourceCollectionLayerProps,
   ResourceCollectionLayerState
 > {
   state = { errors: [], resource: undefined };
@@ -29,8 +29,9 @@ export class ResourceCollectionLayer extends React.Component<
     const { render, ...props } = this.props;
 
     const resource = new ResourceCollection(props);
-    resource.get().catch(this.handleError);
-
+    if (this.props.autoload || typeof this.props.autoload === 'undefined') {
+      resource.get().catch(this.handleError);
+    }
     this.setState({ resource });
   }
 
