@@ -21,8 +21,10 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
       this.fields
       // this.args || {}
     );
-    this.data = res.items || [];
-    this.count = res.count;
+    if (res) {
+      this.data = res.items || [];
+      this.count = res.count;
+    }
     this.loading = false;
   };
 

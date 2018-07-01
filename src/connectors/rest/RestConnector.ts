@@ -8,17 +8,12 @@ import {
   DataSourceOperation
 } from '../../DataSourceRequest';
 
-export class RestConnectorError extends Error {
+export class RestConnectorError extends ConnectorError {
   status: number;
   response: HTTPResponse;
 
-  constructor(
-    status: number,
-    response: HTTPResponse,
-    message?: string | undefined
-  ) {
-    super(message);
-    this.status = status;
+  constructor(response: HTTPResponse, message?: string | undefined) {
+    super(response.status === 401, [new Error(message)]);
     this.response = response;
   }
 }
@@ -28,15 +23,7 @@ export class RestConnector extends HTTPConnector {
     let res = await super.sendHttpRequest(request);
 
     if (res.status < 200 || res.status >= 300) {
-      throw new RestConnectorError(
-        res.status,
-        res,
-        res.data.error_description || res.data.error
-      );
-    }
-
-    if (res.status === 401) {
-      throw new ConnectorError(true, [res.data]);
+      throw new RestConnectorError(res, this.getErrorMessageFromResponse(res));
     }
 
     return res;
@@ -58,6 +45,10 @@ export class RestConnector extends HTTPConnector {
       method: this.methodForOperation(request.operation),
       data: JSON.stringify(request.data)
     });
+  }
+
+  getErrorMessageFromResponse(res: HTTPResponse): string {
+    return res.data.error_description || res.data.error || res.data.message;
   }
 
   methodForOperation(operation: DataSourceOperation): string {

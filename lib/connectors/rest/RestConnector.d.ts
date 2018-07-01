@@ -1,13 +1,14 @@
-import { HTTPRequest, HTTPResponse } from '../Connector';
+import { HTTPRequest, HTTPResponse, ConnectorError } from '../Connector';
 import { HTTPConnector } from '../HTTPConnector';
 import { DataSourceRequest, DataSourceOperation } from '../../DataSourceRequest';
-export declare class RestConnectorError extends Error {
+export declare class RestConnectorError extends ConnectorError {
     status: number;
     response: HTTPResponse;
-    constructor(status: number, response: HTTPResponse, message?: string | undefined);
+    constructor(response: HTTPResponse, message?: string | undefined);
 }
 export declare class RestConnector extends HTTPConnector {
     protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
+    getErrorMessageFromResponse(res: HTTPResponse): string;
     methodForOperation(operation: DataSourceOperation): string;
 }

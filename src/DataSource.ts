@@ -110,7 +110,7 @@ export class DataSource {
     // const request = this.connector.transformRequest(dataSourceRequest);
 
     try {
-      return this.connector.send(dataSourceRequest);
+      return await this.connector.send(dataSourceRequest);
     } catch (err) {
       if (isConnectorError(err)) {
         if (err.authorization) {
