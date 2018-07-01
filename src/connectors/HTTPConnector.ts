@@ -37,7 +37,7 @@ export class HTTPConnector implements Connector {
       }
     });
 
-    let json = await res.json();
+    let json = res.status !== 204 ? await res.json() : null;
     return new HTTPResponse(json, res.status);
   }
 
