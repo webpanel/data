@@ -38,7 +38,7 @@ export class Resource extends ResourceBase<any | null> {
       throw new Error('resource id is missing');
     }
     let res = await this.tryWithLoading(
-      this.dataSource.read(this.name, this.id, this.fields)
+      this.dataSource.read(this.name, this.id, this.fields, this.arguments)
     );
     this.data = res;
     return res;
@@ -46,7 +46,12 @@ export class Resource extends ResourceBase<any | null> {
 
   create = async (values: { [key: string]: any }) => {
     let res = await this.tryWithLoading(
-      this.dataSource.create(this.name, values, ['id', ...this.fields])
+      this.dataSource.create(
+        this.name,
+        values,
+        ['id', ...this.fields],
+        this.arguments
+      )
     );
     this.data = res;
     this.id = res.id;
@@ -58,7 +63,13 @@ export class Resource extends ResourceBase<any | null> {
       throw new Error('resource id is missing');
     }
     let res = await this.tryWithLoading(
-      this.dataSource.update(this.name, this.id, values, this.fields)
+      this.dataSource.update(
+        this.name,
+        this.id,
+        values,
+        this.fields,
+        this.arguments
+      )
     );
     this.data = res;
     return res;
@@ -69,7 +80,7 @@ export class Resource extends ResourceBase<any | null> {
       throw new Error('resource id is missing');
     }
     let res = await this.tryWithLoading(
-      this.dataSource.delete(this.name, this.id, this.fields)
+      this.dataSource.delete(this.name, this.id, this.fields, this.arguments)
     );
     this.data = res;
     return res;

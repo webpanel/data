@@ -46,7 +46,6 @@ export class RestConnector extends HTTPConnector {
       for (let key in request.arguments) {
         querystring[key] = request.arguments;
       }
-      // fetchUrl += '?' + stringify(request.arguments);
     }
 
     if (request.limit) {

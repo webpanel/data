@@ -32,7 +32,8 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
       this.filters,
       this.sorting,
       this.offset,
-      this.limit
+      this.limit,
+      this.arguments
     );
     if (res) {
       this.data = res.items || [];
