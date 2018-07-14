@@ -12,7 +12,7 @@ export class ResourceBase<T> {
   name: string;
   dataSource: DataSource;
   fields: string[];
-  args?: { [key: string]: any };
+  arguments?: { [key: string]: any };
 
   @observable loading: boolean = false;
   @observable data: T | undefined = undefined;

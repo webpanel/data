@@ -20,6 +20,12 @@ export class GraphQLConnector extends HTTPConnector {
     response: HTTPResponse,
     request: DataSourceRequest
   ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
+    if (response.status === 401) {
+      throw new ConnectorError(true, [
+        new Error(this.getErrorMessageFromResponse(response))
+      ]);
+    }
+
     if (response.data && response.data.errors) {
       let authorization = false;
       const errors = response.data.errors.map((e: Error) => {

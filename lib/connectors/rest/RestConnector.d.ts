@@ -9,6 +9,5 @@ export declare class RestConnectorError extends ConnectorError {
 export declare class RestConnector extends HTTPConnector {
     protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
-    getErrorMessageFromResponse(res: HTTPResponse): string;
     methodForOperation(operation: DataSourceOperation): string;
 }

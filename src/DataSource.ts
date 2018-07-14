@@ -34,80 +34,108 @@ export class DataSource {
 
   async list(
     name: string,
-    fields: string[]
-    // args: { [key: string]: any }
+    fields: string[],
+    filters?: DataSourceArgumentMap,
+    sorting?: string[],
+    offset?: number,
+    limit?: number,
+    args?: DataSourceArgumentMap
   ): Promise<any> {
-    return this.send({ operation: DataSourceOperation.list, name, fields });
+    return this.send({
+      operation: DataSourceOperation.list,
+      name,
+      fields,
+      filters,
+      sorting,
+      offset,
+      limit,
+      args
+    });
   }
   async create(
     name: string,
     data: { [key: string]: string },
-    fields: string[]
+    fields: string[],
+    args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
       operation: DataSourceOperation.create,
       name,
       fields,
-      data
+      data,
+      args
     });
   }
   async read(
     name: string,
     id: string | number | undefined,
-    fields: string[]
-    // args?: { [key: string]: any }
+    fields: string[],
+    args?: DataSourceArgumentMap
   ): Promise<any> {
-    // args = args || {};
-    // let _args = { ...args };
-    return this.send({ operation: DataSourceOperation.read, name, fields, id });
+    return this.send({
+      operation: DataSourceOperation.read,
+      name,
+      fields,
+      id,
+      args
+    });
   }
   async update(
     name: string,
     id: string | number,
     data: { [key: string]: string },
-    fields: string[]
+    fields: string[],
+    args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
       operation: DataSourceOperation.update,
       name,
       fields,
       id,
-      data
+      data,
+      args
     });
   }
   async delete(
     name: string,
     id: string | number,
-    fields: string[]
+    fields: string[],
+    args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
       operation: DataSourceOperation.delete,
       name,
       fields,
-      id
+      id,
+      args
     });
   }
 
-  async send(
-    params: {
-      operation: DataSourceOperation;
-      name: string;
-      fields: string[];
-      id?: string | number;
-      data?: any;
-    }
-    // args: DataSourceArgumentMap = {}
-  ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
+  async send(params: {
+    operation: DataSourceOperation;
+    name: string;
+    fields: string[];
+    id?: string | number;
+    data?: any;
+    filters?: DataSourceArgumentMap;
+    sorting?: string[];
+    offset?: number;
+    limit?: number;
+    args?: DataSourceArgumentMap;
+  }): Promise<ResourceResponse | ResourceCollectionResponse | null> {
     const dataSourceRequest = new DataSourceRequest({
       name: params.name,
       url: this.url,
       operation: params.operation,
       id: params.id,
       data: params.data,
-      fields: params.fields
+      fields: params.fields,
+      filters: params.filters,
+      sorting: params.sorting,
+      offset: params.offset,
+      limit: params.limit,
+      arguments: params.args
     });
-
-    // const request = this.connector.transformRequest(dataSourceRequest);
 
     try {
       return await this.connector.send(dataSourceRequest);

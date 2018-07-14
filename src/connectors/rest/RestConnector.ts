@@ -1,5 +1,6 @@
 import * as inflection from 'inflection';
 import * as url from 'url';
+import { stringify } from 'querystring';
 
 import { HTTPRequest, HTTPResponse, ConnectorError } from '../Connector';
 import { HTTPConnector } from '../HTTPConnector';
@@ -40,15 +41,27 @@ export class RestConnector extends HTTPConnector {
       fetchUrl = url.resolve(fetchUrl, request.id.toString());
     }
 
+    let querystring = {};
+    if (request.arguments) {
+      for (let key in request.arguments) {
+        querystring[key] = request.arguments;
+      }
+      // fetchUrl += '?' + stringify(request.arguments);
+    }
+
+    if (request.limit) {
+      querystring['limit'] = request.limit;
+    }
+    if (request.offset) {
+      querystring['offset'] = request.offset;
+    }
+
     return new HTTPRequest({
       url: fetchUrl,
+      querystring,
       method: this.methodForOperation(request.operation),
       data: JSON.stringify(request.data)
     });
-  }
-
-  getErrorMessageFromResponse(res: HTTPResponse): string {
-    return res.data.error_description || res.data.error || res.data.message;
   }
 
   methodForOperation(operation: DataSourceOperation): string {

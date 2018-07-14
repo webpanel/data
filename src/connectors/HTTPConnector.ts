@@ -28,7 +28,7 @@ export class HTTPConnector implements Connector {
   protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
     const accessToken = AuthSession.current().accessToken;
 
-    let res = await fetch(request.url, {
+    let res = await fetch(request.getUrl(), {
       method: request.method,
       body: request.data,
       headers: {
@@ -39,6 +39,10 @@ export class HTTPConnector implements Connector {
 
     let json = res.status !== 204 ? await res.json() : null;
     return new HTTPResponse(json, res.status);
+  }
+
+  getErrorMessageFromResponse(res: HTTPResponse): string {
+    return res.data.error_description || res.data.error || res.data.message;
   }
 
   protected transformRequest(request: DataSourceRequest): HTTPRequest {

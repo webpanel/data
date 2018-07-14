@@ -13,8 +13,8 @@ export declare class DataSourceRequest {
     name: string;
     url: string;
     operation: DataSourceOperation;
-    page: number | null;
-    limit: number | null;
+    offset: number;
+    limit?: number;
     fields: {
         [key: string]: string;
     };
@@ -24,16 +24,8 @@ export declare class DataSourceRequest {
     sorting: string[];
     id?: string | number;
     data?: any;
+    arguments?: {
+        [key: string]: string;
+    };
     constructor(variables?: any);
-    getPage(pageCursor: number): DataSourceRequest;
-    field(variable: string, value: string): DataSourceRequest;
-    withFields(fields: {
-        [key: string]: string;
-    }): DataSourceRequest;
-    filter(variable: string, value: string): DataSourceRequest;
-    withFilters(filters: {
-        [key: string]: string;
-    }): DataSourceRequest;
-    paginate(limit: number | null): DataSourceRequest;
-    sort(array: string[]): DataSourceRequest;
 }

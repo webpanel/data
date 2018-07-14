@@ -11,7 +11,7 @@ export declare class ResourceBase<T> {
     name: string;
     dataSource: DataSource;
     fields: string[];
-    args?: {
+    arguments?: {
         [key: string]: any;
     };
     loading: boolean;
