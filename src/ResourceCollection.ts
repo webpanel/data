@@ -2,9 +2,14 @@ import { observable } from 'mobx';
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 
+export interface SortInfo {
+  columnKey: string;
+  order: 'ascend' | 'descend';
+}
+
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
   filters?: DataSourceArgumentMap;
-  sorting?: string[];
+  sorting?: SortInfo[];
   offset?: number;
   limit?: number;
 }
@@ -46,4 +51,24 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     let res = await this.dataSource.delete(this.name, id, []);
     return res;
   };
+
+  updateFilters(filters: DataSourceArgumentMap): Promise<void> {
+    this.filters = filters;
+    return this.get();
+  }
+
+  updateSorting(sorting: SortInfo[]): Promise<void> {
+    this.sorting = sorting;
+    return this.get();
+  }
+
+  updateOffset(offset: number): Promise<void> {
+    this.offset = offset;
+    return this.get();
+  }
+
+  updateLimit(limit: number): Promise<void> {
+    this.limit = limit;
+    return this.get();
+  }
 }
