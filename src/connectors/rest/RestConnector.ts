@@ -44,7 +44,7 @@ export class RestConnector extends HTTPConnector {
     let querystring = {};
     if (request.arguments) {
       for (let key in request.arguments) {
-        querystring[key] = request.arguments;
+        querystring[key] = request.arguments[key];
       }
     }
 
