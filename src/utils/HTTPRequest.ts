@@ -15,7 +15,7 @@ export class HTTPRequest {
     }
     const [url, qs] = cloned.url.split('?');
     this.url = url;
-    this.querystring = Object.assign({}, parse(qs), variables.variables || {});
+    this.querystring = Object.assign({}, parse(qs), variables.querystring);
     this.method = cloned.method;
     this.data = cloned.data || {};
     this.headers = cloned.headers || {};
