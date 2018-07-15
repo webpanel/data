@@ -1,11 +1,7 @@
 import { observable } from 'mobx';
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
-
-export interface SortInfo {
-  columnKey: string;
-  order: 'ascend' | 'descend';
-}
+import { SortInfo } from './DataSourceRequest';
 
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
   filters?: DataSourceArgumentMap;

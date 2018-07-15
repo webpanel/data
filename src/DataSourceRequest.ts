@@ -8,9 +8,9 @@ export enum DataSourceOperation {
   delete = 'delete'
 }
 
-export interface SortAttribute {
-  name: string;
-  sort: 'asc' | 'desc';
+export interface SortInfo {
+  columnKey: string;
+  order: 'ascend' | 'descend';
 }
 
 export class DataSourceRequest {
@@ -21,7 +21,7 @@ export class DataSourceRequest {
   limit?: number;
   fields: { [key: string]: string } = {};
   filters: { [key: string]: string } = {};
-  sorting: string[] = [];
+  sorting: SortInfo[] = [];
   id?: string | number = undefined;
   data?: any = undefined;
   arguments?: { [key: string]: string } = {};
