@@ -45,8 +45,8 @@ export class GraphQLConnector extends HTTPConnector {
       true
     );
 
-    const data = response.data || response.data.data[fetchFieldName] || null;
-    if (data === null) {
+    const data = response.data && response.data[fetchFieldName].items;
+    if (false === data) {
       return data;
     }
 
@@ -78,28 +78,62 @@ export class GraphQLConnector extends HTTPConnector {
       default:
     }
 
+    const args = {
+      filter: request.filters,
+      offset: request.offset,
+      limit: request.limit,
+      sort: request.sorting
+    };
+
     const query = new GraphQLQuery(
       request.operation === 'read' || request.operation === 'list'
         ? 'query'
         : 'mutation',
-      'operation'
+      this.generateQueryParams(fetchFieldName, args)
     );
 
     const field = this.fieldForOperation(
       request.operation,
       fetchFieldName,
-      request.fields
-      // {
-      //   filter: request.filters
-      // }
+      request.fields,
+      args
     );
+
     query.field(field);
 
     return new HTTPRequest({
       url: request.url,
       method: 'POST',
-      data: JSON.stringify({ query: query.toString() })
+      data: query.toString()
     });
+  }
+
+  generateQueryParams(name: string, args: object) {
+    let str = 'operation';
+    let header = (<any>Object)
+      .keys(args)
+      .map((key: string) => {
+        switch (key) {
+          case 'filter':
+            return `$${key}: ${inflection.singularize(
+              inflection.camelize(name, false)
+            )}FilterType`;
+
+          case 'sort':
+            return `$${key}: [${inflection.singularize(
+              inflection.camelize(name, false)
+            )}SortType!]`;
+
+          default:
+            return '';
+        }
+      })
+      .filter((x: string) => !!x)
+      .join(',');
+    if (header) {
+      header = `(${header})`;
+    }
+    return str + header;
   }
 
   transformData(res: HTTPResponse, request: DataSourceRequest): any {
@@ -132,7 +166,6 @@ export class GraphQLConnector extends HTTPConnector {
     fields: GraphQLFieldSourceMap,
     args: GraphQLArgumentMap = {}
   ): GraphQLField {
-    console.log(fetchFieldName);
     let field = new GraphQLField(fetchFieldName);
 
     if (operation === 'list') {

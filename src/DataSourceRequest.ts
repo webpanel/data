@@ -8,9 +8,14 @@ export enum DataSourceOperation {
   delete = 'delete'
 }
 
+export enum SortInfoOrder {
+  ascend = 'ascend',
+  descend = 'descend'
+}
+
 export interface SortInfo {
   columnKey: string;
-  order: 'ascend' | 'descend';
+  order: SortInfoOrder;
 }
 
 export class DataSourceRequest {
