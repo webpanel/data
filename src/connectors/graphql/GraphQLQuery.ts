@@ -1,10 +1,19 @@
 // use local version until: https://github.com/codemeasandwich/graphql-query-builder/pull/9
 // import Query from './graphql-query';
 
-export type GraphQLArgumentType = GraphQLArgumentMap | string | number | null;
+import { SortInfo, SortInfoOrder } from '../../DataSourceRequest';
+
+export type GraphQLArgumentType =
+  | GraphQLArgumentMap
+  | SortInfo
+  | string
+  | number
+  | null
+  | undefined;
 export interface GraphQLArgumentMap {
   [key: string]: GraphQLArgumentType | GraphQLArgumentType[];
 }
+
 function isGraphQLArgumentMap(arg: any): arg is GraphQLArgumentMap {
   return arg !== null && typeof arg === 'object';
 }
@@ -56,13 +65,28 @@ export class GraphQLField {
     return str + ' ';
   }
 
+  formatSortInfo(sorting: object) {
+    return (
+      sorting &&
+      (<any>sorting).map(
+        (sort: any) =>
+          sort.columnKey.toUpperCase() +
+          (sort.order === SortInfoOrder.descend ? '_DESC' : '')
+      )
+    );
+  }
+
   private serializeArgs(args: GraphQLArgumentMap): string | null {
     let res: string[] = [];
     for (let key of Object.keys(args)) {
       let value = args[key];
       let serialized = this.serializeArg(value);
       if (typeof serialized !== 'undefined') {
-        res.push(`${key}:${serialized}`);
+        if (key === 'filter' || key === 'sort') {
+          res.push(`${key}:$${key}`);
+        } else {
+          res.push(`${key}:${serialized}`);
+        }
       }
     }
     if (res.length === 0) {
@@ -72,7 +96,7 @@ export class GraphQLField {
   }
   private serializeArg(
     value: GraphQLArgumentType | GraphQLArgumentType[]
-  ): string | number | null | undefined {
+  ): SortInfo | string | number | null | undefined {
     let res = undefined;
     if (Array.isArray(value)) {
       res = '[' + value.map((x: any) => this.serializeArg(x)).join(',') + ']';
@@ -84,6 +108,14 @@ export class GraphQLField {
       res = value;
     }
     return res;
+  }
+
+  get arguments(): object {
+    return Object.assign(
+      {},
+      this._args,
+      ...this._fields.map(field => field.arguments)
+    );
   }
 }
 
@@ -98,6 +130,21 @@ export class GraphQLQuery extends GraphQLField {
   }
 
   toString(): string {
-    return this.type + ' ' + super.toString();
+    return JSON.stringify({
+      query: this.type + ' ' + super.toString(),
+      variables: this.variables
+    });
+  }
+
+  get variables() {
+    const args = this.arguments;
+    const processedArgs = {};
+    for (const key in args) {
+      if (key === 'sort' || key === 'filter') {
+        processedArgs[`${key}`] =
+          key === 'sort' ? this.formatSortInfo(<Object>args[key]) : args[key];
+      }
+    }
+    return processedArgs;
   }
 }

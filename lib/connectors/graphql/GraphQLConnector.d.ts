@@ -7,6 +7,7 @@ export declare type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSou
 export declare class GraphQLConnector extends HTTPConnector {
     transformResponse(response: HTTPResponse, request: DataSourceRequest): Promise<ResourceResponse | ResourceCollectionResponse | null>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
+    generateQueryParams(name: string, args: object): string;
     transformData(res: HTTPResponse, request: DataSourceRequest): any;
     private fillFieldsFromObject;
     private fieldForOperation;

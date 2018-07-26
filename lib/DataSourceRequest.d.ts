@@ -5,9 +5,13 @@ export declare enum DataSourceOperation {
     update = "update",
     delete = "delete"
 }
+export declare enum SortInfoOrder {
+    ascend = "ascend",
+    descend = "descend"
+}
 export interface SortInfo {
     columnKey: string;
-    order: 'ascend' | 'descend';
+    order: SortInfoOrder;
 }
 export declare class DataSourceRequest {
     name: string;
