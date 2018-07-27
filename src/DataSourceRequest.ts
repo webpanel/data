@@ -21,6 +21,7 @@ export class DataSourceRequest {
   limit?: number;
   fields: { [key: string]: string } = {};
   filters: { [key: string]: string } = {};
+  search?: string;
   sorting: SortInfo[] = [];
   id?: string | number = undefined;
   data?: any = undefined;
@@ -35,6 +36,7 @@ export class DataSourceRequest {
     this.limit = cloned.limit;
     this.fields = cloned.fields || {};
     this.filters = cloned.filters || {};
+    this.search = cloned.search;
     this.sorting = cloned.sorting || [];
     this.id = variables.id;
     this.data = variables.data;

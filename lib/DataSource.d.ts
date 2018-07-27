@@ -10,22 +10,23 @@ export declare class DataSource {
     connector: Connector;
     url: string;
     constructor(name: string, connector: Connector, url: string);
-    list(name: string, fields: string[], filters?: DataSourceArgumentMap, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;
+    list(name: string, fields?: string[], filters?: DataSourceArgumentMap, search?: string, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;
     create(name: string, data: {
         [key: string]: string;
-    }, fields: string[], args?: DataSourceArgumentMap): Promise<any>;
-    read(name: string, id: string | number | undefined, fields: string[], args?: DataSourceArgumentMap): Promise<any>;
+    }, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
+    read(name: string, id: string | number | undefined, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
     update(name: string, id: string | number, data: {
         [key: string]: string;
-    }, fields: string[], args?: DataSourceArgumentMap): Promise<any>;
-    delete(name: string, id: string | number, fields: string[], args?: DataSourceArgumentMap): Promise<any>;
+    }, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
+    delete(name: string, id: string | number, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
     send(params: {
         operation: DataSourceOperation;
         name: string;
-        fields: string[];
+        fields?: string[];
         id?: string | number;
         data?: any;
         filters?: DataSourceArgumentMap;
+        search?: string;
         sorting?: string[];
         offset?: number;
         limit?: number;
