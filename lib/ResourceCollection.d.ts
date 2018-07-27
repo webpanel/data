@@ -18,9 +18,9 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     constructor(config: ResourceCollectionConfig);
     get: () => Promise<void>;
     delete: (id: string | number) => Promise<any>;
-    updateFilters(filters: DataSourceArgumentMap): Promise<void>;
-    updateSearch(search?: string): Promise<void>;
-    updateSorting(sorting: SortInfo[]): Promise<void>;
-    updateOffset(offset: number): Promise<void>;
-    updateLimit(limit: number): Promise<void>;
+    updateFilters(filters: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
+    updateSearch(search?: string, autoreload?: boolean): Promise<void>;
+    updateSorting(sorting: SortInfo[], autoreload?: boolean): Promise<void>;
+    updateOffset(offset: number, autoreload?: boolean): Promise<void>;
+    updateLimit(limit: number, autoreload?: boolean): Promise<void>;
 }
