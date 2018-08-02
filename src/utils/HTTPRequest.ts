@@ -17,7 +17,7 @@ export class HTTPRequest {
     this.url = url;
     this.querystring = Object.assign({}, parse(qs), variables.querystring);
     this.method = cloned.method;
-    this.data = cloned.data || {};
+    this.data = cloned.data;
     this.headers = cloned.headers || {};
   }
 
