@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 import { SortInfo } from './DataSourceRequest';
+import { Resource } from './Resource';
 
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
   filters?: DataSourceArgumentMap;
@@ -50,6 +51,22 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   delete = async (id: string | number) => {
     let res = await this.dataSource.delete(this.name, id, []);
     return res;
+  };
+
+  getItem = (props: {
+    id: string | number;
+    args?: { [key: string]: any };
+    autoload?: boolean;
+  }): Resource => {
+    let item = new Resource({
+      name: this.name,
+      id: props.id,
+      args: props.args,
+      dataSource: this.dataSource,
+      fields: this.fields
+    });
+
+    return item;
   };
 
   async updateFilters(

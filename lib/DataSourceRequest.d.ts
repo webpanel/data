@@ -3,7 +3,7 @@ export declare enum DataSourceOperation {
     create = "create",
     read = "read",
     update = "update",
-    delete = "delete",
+    delete = "delete"
 }
 export interface SortInfo {
     columnKey: string;

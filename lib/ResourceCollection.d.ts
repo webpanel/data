@@ -1,6 +1,7 @@
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 import { SortInfo } from './DataSourceRequest';
+import { Resource } from './Resource';
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
     filters?: DataSourceArgumentMap;
     search?: string;
@@ -18,6 +19,13 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     constructor(config: ResourceCollectionConfig);
     get: () => Promise<void>;
     delete: (id: string | number) => Promise<any>;
+    getItem: (props: {
+        id: string | number;
+        args?: {
+            [key: string]: any;
+        } | undefined;
+        autoload?: boolean | undefined;
+    }) => Resource;
     updateFilters(filters: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
     updateSearch(search?: string, autoreload?: boolean): Promise<void>;
     updateSorting(sorting: SortInfo[], autoreload?: boolean): Promise<void>;
