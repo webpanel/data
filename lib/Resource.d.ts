@@ -1,12 +1,25 @@
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+declare type ResourceID = string | number;
 export interface ResourceConfig extends ResourceBaseConfig {
-    id?: string | number;
+    id?: ResourceID;
     defaultValues?: {
         [key: string]: any;
     };
+    onCreate?: ((id: ResourceID, values: {
+        [key: string]: any;
+    }) => void);
+    onUpdate?: ((values: {
+        [key: string]: any;
+    }) => void);
 }
 export declare class Resource extends ResourceBase<any | null> {
-    id?: string | number;
+    id?: ResourceID;
+    onCreate?: ((id: ResourceID, values: {
+        [key: string]: any;
+    }) => void);
+    onUpdate?: ((values: {
+        [key: string]: any;
+    }) => void);
     constructor(config: ResourceConfig);
     tryWithLoading(p: Promise<any>): Promise<any>;
     getIfHasID: () => Promise<any>;
@@ -23,3 +36,4 @@ export declare class Resource extends ResourceBase<any | null> {
         [key: string]: any;
     }) => Promise<any>;
 }
+export {};
