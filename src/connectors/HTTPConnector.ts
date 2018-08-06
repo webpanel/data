@@ -28,13 +28,17 @@ export class HTTPConnector implements Connector {
   protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
     const accessToken = AuthSession.current().accessToken;
 
+    let headers: { [index: string]: string } = {
+      'content-type': 'application/json'
+    };
+    if (accessToken) {
+      headers.authorization = `Bearer ${accessToken}`;
+    }
+
     let res = await fetch(request.getUrl(), {
       method: request.method,
       body: request.data,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
-      }
+      headers
     });
 
     let json = res.status !== 204 ? await res.json() : null;
