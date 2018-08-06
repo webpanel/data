@@ -55,7 +55,10 @@ export class GraphQLConnector extends HTTPConnector {
       inflection.pluralize(request.name),
       true
     );
-    const entityName = inflection.camelize(request.name, false);
+    const entityName = inflection.camelize(
+      inflection.singularize(request.name),
+      false
+    );
 
     switch (request.operation) {
       case DataSourceOperation.read:
