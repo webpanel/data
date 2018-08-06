@@ -13,7 +13,7 @@ export declare class ResourceLayer extends React.Component<ResourceLayerProps, R
         errors: never[];
         resource: undefined;
     };
-    handleError: (err: Error) => void;
+    handleError: (err: Error) => never;
     createResource(): void;
     componentWillMount(): void;
     render(): {} | null | undefined;
