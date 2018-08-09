@@ -13,7 +13,7 @@ export declare class ResourceCollectionLayer extends React.Component<ResourceCol
         errors: never[];
         resource: undefined;
     };
-    handleError: (err: Error) => never;
+    handleError: (err: Error) => void;
     createResource(): void;
     componentWillMount(): void;
     render(): {} | null | undefined;

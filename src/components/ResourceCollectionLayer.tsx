@@ -23,7 +23,7 @@ export class ResourceCollectionLayer extends React.Component<
   state = { errors: [], resource: undefined };
 
   handleError = (err: Error) => {
-    throw err;
+    // console.log('error?!', err);
   };
 
   createResource() {

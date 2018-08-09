@@ -20,9 +20,17 @@ export class ResourceLayer extends React.Component<
   state = { errors: [], resource: undefined };
 
   handleError = (err: Error) => {
-    throw err;
+    // console.log('error?!', err);
+    // let errors: Error[] = [];
+    // if (isConnectorError(err)) {
+    //   errors = err.errors;
+    // } else {
+    //   errors = [err];
+    // }
+    // this.setState({
+    //   errors: Array.prototype.concat(...this.state.errors, ...errors)
+    // });
   };
-
   createResource() {
     const { render, ...props } = this.props;
 
