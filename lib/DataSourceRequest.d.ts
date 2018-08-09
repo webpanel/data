@@ -21,7 +21,6 @@ export declare class DataSourceRequest {
     filters: {
         [key: string]: string;
     };
-    search?: string;
     sorting: SortInfo[];
     id?: string | number;
     data?: any;

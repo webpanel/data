@@ -1,6 +1,6 @@
 import * as inflection from 'inflection';
 import * as url from 'url';
-// import { stringify } from 'querystring';
+import { stringify } from 'querystring';
 
 import { HTTPRequest, HTTPResponse, ConnectorError } from '../Connector';
 import { HTTPConnector } from '../HTTPConnector';

@@ -10,7 +10,7 @@ export interface ResourceBaseConfig {
 export declare class ResourceBase<T> {
     name: string;
     dataSource: DataSource;
-    fields?: string[];
+    fields: string[];
     arguments?: {
         [key: string]: any;
     };

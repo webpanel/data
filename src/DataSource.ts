@@ -34,9 +34,8 @@ export class DataSource {
 
   async list(
     name: string,
-    fields?: string[],
+    fields: string[],
     filters?: DataSourceArgumentMap,
-    search?: string,
     sorting?: string[],
     offset?: number,
     limit?: number,
@@ -47,7 +46,6 @@ export class DataSource {
       name,
       fields,
       filters,
-      search,
       sorting,
       offset,
       limit,
@@ -57,7 +55,7 @@ export class DataSource {
   async create(
     name: string,
     data: { [key: string]: string },
-    fields?: string[],
+    fields: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
@@ -71,7 +69,7 @@ export class DataSource {
   async read(
     name: string,
     id: string | number | undefined,
-    fields?: string[],
+    fields: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
@@ -86,7 +84,7 @@ export class DataSource {
     name: string,
     id: string | number,
     data: { [key: string]: string },
-    fields?: string[],
+    fields: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
@@ -101,7 +99,7 @@ export class DataSource {
   async delete(
     name: string,
     id: string | number,
-    fields?: string[],
+    fields: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {
     return this.send({
@@ -116,11 +114,10 @@ export class DataSource {
   async send(params: {
     operation: DataSourceOperation;
     name: string;
-    fields?: string[];
+    fields: string[];
     id?: string | number;
     data?: any;
     filters?: DataSourceArgumentMap;
-    search?: string;
     sorting?: string[];
     offset?: number;
     limit?: number;
@@ -134,7 +131,6 @@ export class DataSource {
       data: params.data,
       fields: params.fields,
       filters: params.filters,
-      search: params.search,
       sorting: params.sorting,
       offset: params.offset,
       limit: params.limit,

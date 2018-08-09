@@ -49,7 +49,7 @@ export class Resource extends ResourceBase<any | null> {
       this.dataSource.create(
         this.name,
         values,
-        ['id', ...(this.fields || [])],
+        ['id', ...this.fields],
         this.arguments
       )
     );

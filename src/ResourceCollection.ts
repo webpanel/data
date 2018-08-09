@@ -5,7 +5,6 @@ import { SortInfo } from './DataSourceRequest';
 
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
   filters?: DataSourceArgumentMap;
-  search?: string;
   sorting?: SortInfo[];
   offset?: number;
   limit?: number;
@@ -13,8 +12,7 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
 
 export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable count: number | undefined = undefined;
-  @observable filters?: DataSourceArgumentMap;
-  @observable search?: string;
+  @observable filters?: any;
   @observable sorting?: any;
   @observable offset?: number;
   @observable limit?: number;
@@ -22,7 +20,6 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   constructor(config: ResourceCollectionConfig) {
     super(config);
     this.filters = config.filters;
-    this.search = config.search;
     this.sorting = config.sorting;
     this.offset = config.offset;
     this.limit = config.limit;
@@ -34,7 +31,6 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
       this.name,
       this.fields,
       this.filters,
-      this.search,
       this.sorting,
       this.offset,
       this.limit,
@@ -54,11 +50,6 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
 
   updateFilters(filters: DataSourceArgumentMap): Promise<void> {
     this.filters = filters;
-    return this.get();
-  }
-
-  updateSearch(search?: string): Promise<void> {
-    this.search = search;
     return this.get();
   }
 
