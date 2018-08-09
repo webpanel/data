@@ -4,10 +4,19 @@ import {
   ResourceCollectionConfig
 } from '../ResourceCollection';
 import { observer } from 'mobx-react';
+import { DataSourceArgumentMap } from '../DataSource';
+import { SortInfo } from '../DataSourceRequest';
 
 export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
   autoload?: boolean;
   render: (resource: ResourceCollection) => React.ReactNode;
+
+  // observed properties
+  filters?: DataSourceArgumentMap;
+  search?: string;
+  sorting?: SortInfo[];
+  offset?: number;
+  limit?: number;
 }
 
 export interface ResourceCollectionLayerState {
@@ -20,7 +29,10 @@ export class ResourceCollectionLayer extends React.Component<
   ResourceCollectionLayerProps,
   ResourceCollectionLayerState
 > {
-  state = { errors: [], resource: undefined };
+  state = {
+    errors: [],
+    resource: undefined
+  };
 
   handleError = (err: Error) => {
     throw err;
@@ -36,14 +48,43 @@ export class ResourceCollectionLayer extends React.Component<
     this.setState({ resource });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.createResource();
+  }
+
+  componentDidUpdate(prevProps: Readonly<ResourceCollectionLayerProps>) {
+    super.componentDidUpdate;
+    const { filters, search, sorting, offset, limit } = this.props;
+
+    const resource = this.state.resource;
+    if (!resource) {
+      return;
+    }
+    const _resource = resource as ResourceCollection;
+
+    if (_resource.filters !== filters) {
+      _resource.updateFilters(filters, false);
+    }
+    if (_resource.search !== search) {
+      _resource.updateSearch(search, false);
+    }
+    if (_resource.sorting !== sorting) {
+      _resource.updateSorting(sorting, false);
+    }
+    if (_resource.offset !== offset) {
+      _resource.updateOffset(offset, false);
+    }
+    if (_resource.limit !== limit) {
+      _resource.updateLimit(limit, false);
+    }
+
+    _resource.get();
   }
 
   render() {
     const resource = this.state.resource;
     if (!resource) {
-      return 'not initialized';
+      return 'Resource not initialized';
     }
     return this.props.render(resource);
   }

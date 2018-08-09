@@ -4,7 +4,7 @@ type ResourceID = string | number;
 
 export interface ResourceConfig extends ResourceBaseConfig {
   id?: ResourceID;
-  defaultValues?: { [key: string]: any };
+  initialValues?: { [key: string]: any };
   onCreate?: ((id: ResourceID, values: { [key: string]: any }) => void);
   onUpdate?: ((values: { [key: string]: any }) => void);
 }
@@ -20,7 +20,7 @@ export class Resource extends ResourceBase<any | null> {
     this.onCreate = config.onCreate;
     this.onUpdate = config.onUpdate;
     if (!this.id) {
-      this.data = config.defaultValues;
+      this.data = config.initialValues;
     }
   }
 
