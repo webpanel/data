@@ -3,11 +3,11 @@ import { DataSourceArgumentMap } from './DataSource';
 import { SortInfo } from './DataSourceRequest';
 import { Resource } from './Resource';
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
-    filters?: DataSourceArgumentMap;
-    search?: string;
-    sorting?: SortInfo[];
-    offset?: number;
-    limit?: number;
+    initialFilters?: DataSourceArgumentMap;
+    initialSearch?: string;
+    initialSorting?: SortInfo[];
+    initialOffset?: number;
+    initialLimit?: number;
 }
 export declare class ResourceCollection extends ResourceBase<any[] | null> {
     count: number | undefined;
@@ -26,9 +26,9 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
         } | undefined;
         autoload?: boolean | undefined;
     }) => Resource;
-    updateFilters(filters: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
+    updateFilters(filters?: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
     updateSearch(search?: string, autoreload?: boolean): Promise<void>;
-    updateSorting(sorting: SortInfo[], autoreload?: boolean): Promise<void>;
-    updateOffset(offset: number, autoreload?: boolean): Promise<void>;
-    updateLimit(limit: number, autoreload?: boolean): Promise<void>;
+    updateSorting(sorting?: SortInfo[], autoreload?: boolean): Promise<void>;
+    updateOffset(offset?: number, autoreload?: boolean): Promise<void>;
+    updateLimit(limit?: number, autoreload?: boolean): Promise<void>;
 }
