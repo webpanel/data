@@ -8,6 +8,6 @@ export declare class GraphQLConnector extends HTTPConnector {
     transformResponse(response: HTTPResponse, request: DataSourceRequest): Promise<ResourceResponse | ResourceCollectionResponse | null>;
     transformRequest(request: DataSourceRequest): HTTPRequest;
     transformData(res: HTTPResponse, request: DataSourceRequest): any;
-    private fillFieldsFromObject;
-    private fieldForOperation;
+    private fillFieldsFromObject(field, obj);
+    private fieldForOperation(operation, fetchFieldName, fields, args?);
 }

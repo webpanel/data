@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import * as React from 'react';
 import { ResourceCollection, ResourceCollectionConfig } from '../ResourceCollection';
 export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {

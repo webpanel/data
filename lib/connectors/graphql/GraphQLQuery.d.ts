@@ -12,8 +12,8 @@ export declare class GraphQLField {
     arg(key: string, value: GraphQLArgumentType): GraphQLField;
     args(value: GraphQLArgumentMap): GraphQLField;
     toString(): string;
-    private serializeArgs;
-    private serializeArg;
+    private serializeArgs(args);
+    private serializeArg(value);
 }
 export declare type GraphQLQueryType = 'query' | 'mutation';
 export declare class GraphQLQuery extends GraphQLField {
