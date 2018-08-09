@@ -52,40 +52,28 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     return res;
   };
 
-  async updateFilters(
-    filters: DataSourceArgumentMap,
-    autoreload: boolean = true
-  ): Promise<void> {
+  updateFilters(filters: DataSourceArgumentMap): Promise<void> {
     this.filters = filters;
-    if (autoreload) return this.get();
+    return this.get();
   }
 
-  async updateSearch(
-    search?: string,
-    autoreload: boolean = true
-  ): Promise<void> {
+  updateSearch(search?: string): Promise<void> {
     this.search = search;
-    if (autoreload) return this.get();
+    return this.get();
   }
 
-  async updateSorting(
-    sorting: SortInfo[],
-    autoreload: boolean = true
-  ): Promise<void> {
+  updateSorting(sorting: SortInfo[]): Promise<void> {
     this.sorting = sorting;
-    if (autoreload) return this.get();
+    return this.get();
   }
 
-  async updateOffset(
-    offset: number,
-    autoreload: boolean = true
-  ): Promise<void> {
+  updateOffset(offset: number): Promise<void> {
     this.offset = offset;
-    if (autoreload) return this.get();
+    return this.get();
   }
 
-  async updateLimit(limit: number, autoreload: boolean = true): Promise<void> {
+  updateLimit(limit: number): Promise<void> {
     this.limit = limit;
-    if (autoreload) return this.get();
+    return this.get();
   }
 }
