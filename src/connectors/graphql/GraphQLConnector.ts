@@ -41,14 +41,12 @@ export class GraphQLConnector extends HTTPConnector {
     }
 
     let fetchFieldName = inflection.camelize(
-      request.operation === DataSourceOperation.list
-        ? inflection.pluralize(request.name)
-        : request.name,
+      inflection.pluralize(request.name),
       true
     );
 
-    const data = response.data && response.data[fetchFieldName];
-    if (null === data) {
+    const data = response.data || response.data.data[fetchFieldName] || null;
+    if (data === null) {
       return data;
     }
 
@@ -61,88 +59,47 @@ export class GraphQLConnector extends HTTPConnector {
       true
     );
 
-    const entityName = inflection.camelize(request.name, false);
-
     switch (request.operation) {
-      case DataSourceOperation.read:
+      case 'read':
         fetchFieldName = inflection.camelize(
           inflection.singularize(request.name),
           true
         );
         break;
-      case DataSourceOperation.create:
-        fetchFieldName = `create${entityName}`;
+      case 'create':
+        fetchFieldName = `create${request.name}`;
         break;
-      case DataSourceOperation.update:
-        fetchFieldName = `update${entityName}`;
+      case 'update':
+        fetchFieldName = `update${request.name}`;
         break;
-      case DataSourceOperation.delete:
-        fetchFieldName = `delete${entityName}`;
+      case 'delete':
+        fetchFieldName = `delete${request.name}`;
         break;
       default:
     }
-
-    const args =
-      request.operation === DataSourceOperation.list
-        ? {
-            filter: request.filters,
-            offset: request.offset,
-            limit: request.limit,
-            sort: request.sorting
-          }
-        : { id: request.id, input: request.data };
 
     const query = new GraphQLQuery(
       request.operation === 'read' || request.operation === 'list'
         ? 'query'
         : 'mutation',
-      this.generateQueryParams(fetchFieldName, args)
+      'operation'
     );
 
     const field = this.fieldForOperation(
       request.operation,
       fetchFieldName,
-      request.fields,
-      args
+      request.fields
+      // {
+      //   filter: request.filters
+      // }
     );
-
     query.field(field);
 
     return new HTTPRequest({
       url: request.url,
       method: 'POST',
-      data: query.toString()
+      data: JSON.stringify({ query: query.toString() })
     });
-  }
-
-  generateQueryParams(name: string, args: object) {
-    let str = 'operation';
-    let header = (<any>Object)
-      .keys(args)
-      .map((key: string) => {
-        switch (key) {
-          case 'filter':
-            if (!args[key]) return '';
-            return `$${key}: ${inflection.singularize(
-              inflection.camelize(name, false)
-            )}FilterType`;
-
-          case 'sort':
-            if (!args[key]) return '';
-            return `$${key}: [${inflection.singularize(
-              inflection.camelize(name, false)
-            )}SortType!]`;
-
-          default:
-            return '';
-        }
-      })
-      .filter((x: string) => !!x)
-      .join(',');
-    if (header) {
-      header = `(${header})`;
-    }
-    return str + header;
   }
 
   transformData(res: HTTPResponse, request: DataSourceRequest): any {
@@ -175,6 +132,7 @@ export class GraphQLConnector extends HTTPConnector {
     fields: GraphQLFieldSourceMap,
     args: GraphQLArgumentMap = {}
   ): GraphQLField {
+    console.log(fetchFieldName);
     let field = new GraphQLField(fetchFieldName);
 
     if (operation === 'list') {

@@ -20,7 +20,7 @@ export class ResourceBase<T> {
   constructor(config: ResourceBaseConfig) {
     this.dataSource = config.dataSource;
     this.name = config.name;
-    this.fields = config.fields || ['id'];
+    this.fields = config.fields;
     this.arguments = config.args;
   }
 
