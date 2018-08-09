@@ -1,24 +1,16 @@
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 
-type ResourceID = string | number;
-
 export interface ResourceConfig extends ResourceBaseConfig {
-  id?: ResourceID;
+  id?: string | number;
   defaultValues?: { [key: string]: any };
-  onCreate?: ((id: ResourceID, values: { [key: string]: any }) => void);
-  onUpdate?: ((values: { [key: string]: any }) => void);
 }
 
 export class Resource extends ResourceBase<any | null> {
-  id?: ResourceID;
-  onCreate?: ((id: ResourceID, values: { [key: string]: any }) => void);
-  onUpdate?: ((values: { [key: string]: any }) => void);
+  id?: string | number;
 
   constructor(config: ResourceConfig) {
     super(config);
     this.id = config.id;
-    this.onCreate = config.onCreate;
-    this.onUpdate = config.onUpdate;
     if (!this.id) {
       this.data = config.defaultValues;
     }
@@ -63,11 +55,6 @@ export class Resource extends ResourceBase<any | null> {
     );
     this.data = res;
     this.id = res.id;
-
-    if (this.onCreate) {
-      this.onCreate(res.id, res);
-    }
-
     return res;
   };
 
@@ -85,9 +72,6 @@ export class Resource extends ResourceBase<any | null> {
       )
     );
     this.data = res;
-    if (this.onUpdate) {
-      this.onUpdate(res);
-    }
     return res;
   };
 
