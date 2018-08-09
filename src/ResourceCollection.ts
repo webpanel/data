@@ -49,7 +49,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   };
 
   delete = async (id: string | number) => {
-    let res = await this.dataSource.delete(this.name, id, this.fields);
+    let res = await this.dataSource.delete(this.name, id, []);
     return res;
   };
 
