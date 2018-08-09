@@ -5,34 +5,28 @@ import { SortInfo } from './DataSourceRequest';
 import { Resource } from './Resource';
 
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
-  initialFilters?: DataSourceArgumentMap;
-  initialSearch?: string;
-  initialSorting?: SortInfo[];
-  initialOffset?: number;
-  initialLimit?: number;
+  filters?: DataSourceArgumentMap;
+  search?: string;
+  sorting?: SortInfo[];
+  offset?: number;
+  limit?: number;
 }
 
 export class ResourceCollection extends ResourceBase<any[] | null> {
-  @observable
-  count: number | undefined = undefined;
-  @observable
-  filters?: DataSourceArgumentMap;
-  @observable
-  search?: string;
-  @observable
-  sorting?: any;
-  @observable
-  offset?: number;
-  @observable
-  limit?: number;
+  @observable count: number | undefined = undefined;
+  @observable filters?: DataSourceArgumentMap;
+  @observable search?: string;
+  @observable sorting?: any;
+  @observable offset?: number;
+  @observable limit?: number;
 
   constructor(config: ResourceCollectionConfig) {
     super(config);
-    this.filters = config.initialFilters;
-    this.search = config.initialSearch;
-    this.sorting = config.initialSorting;
-    this.offset = config.initialOffset;
-    this.limit = config.initialLimit;
+    this.filters = config.filters;
+    this.search = config.search;
+    this.sorting = config.sorting;
+    this.offset = config.offset;
+    this.limit = config.limit;
   }
 
   get = async () => {
@@ -67,16 +61,16 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     let item = new Resource({
       name: this.name,
       id: props.id,
-      initialArgs: props.args,
+      args: props.args,
       dataSource: this.dataSource,
-      initialFields: this.fields
+      fields: this.fields
     });
 
     return item;
   };
 
   async updateFilters(
-    filters?: DataSourceArgumentMap,
+    filters: DataSourceArgumentMap,
     autoreload: boolean = true
   ): Promise<void> {
     this.filters = filters;
@@ -92,7 +86,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   }
 
   async updateSorting(
-    sorting?: SortInfo[],
+    sorting: SortInfo[],
     autoreload: boolean = true
   ): Promise<void> {
     this.sorting = sorting;
@@ -100,14 +94,14 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   }
 
   async updateOffset(
-    offset?: number,
+    offset: number,
     autoreload: boolean = true
   ): Promise<void> {
     this.offset = offset;
     if (autoreload) return this.get();
   }
 
-  async updateLimit(limit?: number, autoreload: boolean = true): Promise<void> {
+  async updateLimit(limit: number, autoreload: boolean = true): Promise<void> {
     this.limit = limit;
     if (autoreload) return this.get();
   }

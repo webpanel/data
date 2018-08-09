@@ -2,7 +2,7 @@ import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 declare type ResourceID = string | number;
 export interface ResourceConfig extends ResourceBaseConfig {
     id?: ResourceID;
-    initialValues?: {
+    defaultValues?: {
         [key: string]: any;
     };
     onCreate?: ((id: ResourceID, values: {
