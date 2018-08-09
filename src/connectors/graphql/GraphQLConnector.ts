@@ -40,7 +40,12 @@ export class GraphQLConnector extends HTTPConnector {
       throw new ConnectorError(authorization, errors);
     }
 
-    let fetchFieldName = this.fetchFieldNameForRequest(request);
+    let fetchFieldName = inflection.camelize(
+      request.operation === DataSourceOperation.list
+        ? inflection.pluralize(request.name)
+        : request.name,
+      true
+    );
 
     const data = response.data && response.data[fetchFieldName];
     if (null === data) {
@@ -50,11 +55,12 @@ export class GraphQLConnector extends HTTPConnector {
     return this.responseTransformer.handle(request.operation, data);
   }
 
-  fetchFieldNameForRequest(request: DataSourceRequest): string {
+  transformRequest(request: DataSourceRequest): HTTPRequest {
     let fetchFieldName = inflection.camelize(
       inflection.pluralize(request.name),
       true
     );
+
     const entityName = inflection.camelize(request.name, false);
 
     switch (request.operation) {
@@ -75,11 +81,6 @@ export class GraphQLConnector extends HTTPConnector {
         break;
       default:
     }
-    return fetchFieldName;
-  }
-
-  transformRequest(request: DataSourceRequest): HTTPRequest {
-    let fetchFieldName = this.fetchFieldNameForRequest(request);
 
     const args =
       request.operation === DataSourceOperation.list
