@@ -16,7 +16,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable
   count: number | undefined = undefined;
   @observable
-  filters?: DataSourceArgumentMap;
+  filters?: { [key: string]: DataSourceArgumentMap };
   @observable
   search?: string;
   @observable
@@ -28,11 +28,12 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
 
   constructor(config: ResourceCollectionConfig) {
     super(config);
-    this.filters = config.initialFilters;
     this.search = config.initialSearch;
     this.sorting = config.initialSorting;
     this.offset = config.initialOffset;
     this.limit = config.initialLimit;
+
+    this.updateFilters(config.initialFilters, false);
   }
 
   get = async () => {
@@ -79,8 +80,25 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     filters?: DataSourceArgumentMap,
     autoreload: boolean = true
   ): Promise<void> {
-    this.filters = filters;
+    return this.updateNamedFilters('_default', filters, autoreload);
+  }
+
+  async updateNamedFilters(
+    key: string,
+    filters?: DataSourceArgumentMap,
+    autoreload: boolean = true
+  ) {
+    this.filters = this.filters || {};
+    if (filters) {
+      this.filters[key] = filters;
+    } else {
+      delete this.filters[key];
+    }
     if (autoreload) return this.get();
+  }
+
+  namedFilter(key: string): DataSourceArgumentMap | undefined {
+    return this.filters && this.filters[key];
   }
 
   async updateSearch(

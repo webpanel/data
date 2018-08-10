@@ -1,3 +1,4 @@
+import { DataSourceArgumentMap } from './DataSource';
 export declare enum DataSourceOperation {
     list = "list",
     create = "create",
@@ -23,7 +24,7 @@ export declare class DataSourceRequest {
         [key: string]: string;
     };
     filters: {
-        [key: string]: string;
+        [key: string]: DataSourceArgumentMap;
     };
     search?: string;
     sorting: SortInfo[];

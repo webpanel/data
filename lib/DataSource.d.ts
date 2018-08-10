@@ -10,7 +10,9 @@ export declare class DataSource {
     connector: Connector;
     url: string;
     constructor(name: string, connector: Connector, url: string);
-    list(name: string, fields?: string[], filters?: DataSourceArgumentMap, search?: string, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;
+    list(name: string, fields?: string[], filters?: {
+        [key: string]: DataSourceArgumentMap;
+    }, search?: string, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;
     create(name: string, data: {
         [key: string]: string;
     }, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
@@ -25,7 +27,9 @@ export declare class DataSource {
         fields?: string[];
         id?: string | number;
         data?: any;
-        filters?: DataSourceArgumentMap;
+        filters?: {
+            [key: string]: DataSourceArgumentMap;
+        };
         search?: string;
         sorting?: string[];
         offset?: number;

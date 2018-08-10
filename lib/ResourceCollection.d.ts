@@ -11,7 +11,9 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
 }
 export declare class ResourceCollection extends ResourceBase<any[] | null> {
     count: number | undefined;
-    filters?: DataSourceArgumentMap;
+    filters?: {
+        [key: string]: DataSourceArgumentMap;
+    };
     search?: string;
     sorting?: any;
     offset?: number;
@@ -27,6 +29,8 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
         autoload?: boolean | undefined;
     }) => Resource;
     updateFilters(filters?: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
+    updateNamedFilters(key: string, filters?: DataSourceArgumentMap, autoreload?: boolean): Promise<void>;
+    namedFilter(key: string): DataSourceArgumentMap | undefined;
     updateSearch(search?: string, autoreload?: boolean): Promise<void>;
     updateSorting(sorting?: SortInfo[], autoreload?: boolean): Promise<void>;
     updateOffset(offset?: number, autoreload?: boolean): Promise<void>;
