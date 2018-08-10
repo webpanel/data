@@ -12,11 +12,13 @@ export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
   render: (resource: ResourceCollection) => React.ReactNode;
 
   // observed properties
-  filters?: DataSourceArgumentMap;
-  search?: string;
-  sorting?: SortInfo[];
-  offset?: number;
-  limit?: number;
+  values?: {
+    filters?: DataSourceArgumentMap;
+    search?: string;
+    sorting?: SortInfo[];
+    offset?: number;
+    limit?: number;
+  };
 }
 
 export interface ResourceCollectionLayerState {
@@ -53,8 +55,10 @@ export class ResourceCollectionLayer extends React.Component<
   }
 
   componentDidUpdate(prevProps: Readonly<ResourceCollectionLayerProps>) {
-    super.componentDidUpdate;
-    const { filters, search, sorting, offset, limit } = this.props;
+    if (!this.props.values) {
+      return;
+    }
+    const { filters, search, sorting, offset, limit } = this.props.values;
 
     const resource = this.state.resource;
     if (!resource) {
@@ -62,23 +66,30 @@ export class ResourceCollectionLayer extends React.Component<
     }
     const _resource = resource as ResourceCollection;
 
-    if (_resource.filters !== filters) {
-      _resource.updateFilters(filters, false);
+    let hasChange = false;
+
+    if (_resource.namedFilter('$_layer') !== filters) {
+      _resource.updateNamedFilters('$_layer', filters, false);
+      hasChange = true;
     }
     if (_resource.search !== search) {
       _resource.updateSearch(search, false);
+      hasChange = true;
     }
     if (_resource.sorting !== sorting) {
       _resource.updateSorting(sorting, false);
+      hasChange = true;
     }
     if (_resource.offset !== offset) {
       _resource.updateOffset(offset, false);
+      hasChange = true;
     }
     if (_resource.limit !== limit) {
       _resource.updateLimit(limit, false);
+      hasChange = true;
     }
 
-    _resource.get();
+    if (hasChange) _resource.get();
   }
 
   render() {

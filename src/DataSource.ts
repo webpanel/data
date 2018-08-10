@@ -35,7 +35,7 @@ export class DataSource {
   async list(
     name: string,
     fields?: string[],
-    filters?: DataSourceArgumentMap,
+    filters?: { [key: string]: DataSourceArgumentMap },
     search?: string,
     sorting?: string[],
     offset?: number,
@@ -119,7 +119,7 @@ export class DataSource {
     fields?: string[];
     id?: string | number;
     data?: any;
-    filters?: DataSourceArgumentMap;
+    filters?: { [key: string]: DataSourceArgumentMap };
     search?: string;
     sorting?: string[];
     offset?: number;

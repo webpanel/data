@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import { DataSourceArgumentMap } from './DataSource';
 
 export enum DataSourceOperation {
   list = 'list',
@@ -25,7 +26,7 @@ export class DataSourceRequest {
   offset: number = 0;
   limit?: number;
   fields: { [key: string]: string } = {};
-  filters: { [key: string]: string } = {};
+  filters: { [key: string]: DataSourceArgumentMap } = {};
   search?: string;
   sorting: SortInfo[] = [];
   id?: string | number = undefined;
