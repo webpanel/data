@@ -2,7 +2,7 @@ import { DataSource } from './DataSource';
 export interface ResourceBaseConfig {
     dataSource: DataSource;
     name: string;
-    initialFields?: string[];
+    fields?: string[];
     initialArgs?: {
         [key: string]: any;
     };

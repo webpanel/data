@@ -4,7 +4,7 @@ import { DataSource } from './DataSource';
 export interface ResourceBaseConfig {
   dataSource: DataSource;
   name: string;
-  initialFields?: string[];
+  fields?: string[];
   initialArgs?: { [key: string]: any };
 }
 
@@ -22,7 +22,7 @@ export class ResourceBase<T> {
   constructor(config: ResourceBaseConfig) {
     this.dataSource = config.dataSource;
     this.name = config.name;
-    this.fields = config.initialFields || ['id'];
+    this.fields = config.fields || ['id'];
     this.arguments = config.initialArgs;
   }
 

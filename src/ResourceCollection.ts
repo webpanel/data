@@ -70,7 +70,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
       id: props.id,
       initialArgs: props.args,
       dataSource: this.dataSource,
-      initialFields: this.fields
+      fields: this.fields
     });
 
     return item;
