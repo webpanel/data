@@ -11,6 +11,7 @@ import {
 } from '../../connectors/Connector';
 import { GraphQLQuery, GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
 import { HTTPConnector } from '../HTTPConnector';
+import { DataSourceArgumentMap } from '../../DataSource';
 
 export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
@@ -84,10 +85,17 @@ export class GraphQLConnector extends HTTPConnector {
   transformRequest(request: DataSourceRequest): HTTPRequest {
     let fetchFieldName = this.fetchFieldNameForRequest(request);
 
+    let filter: { [key: string]: any } = {};
+    for (const filterName of Object.keys(request.filters)) {
+      for (const key of Object.keys(request.filters[filterName])) {
+        filter[key] = request.filters[filterName][key];
+      }
+    }
+
     const args =
       request.operation === DataSourceOperation.list
         ? {
-            filter: request.filters,
+            filter,
             offset: request.offset,
             limit: request.limit,
             sort: request.sorting
