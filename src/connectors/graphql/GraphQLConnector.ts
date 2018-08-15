@@ -11,7 +11,6 @@ import {
 } from '../../connectors/Connector';
 import { GraphQLQuery, GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
 import { HTTPConnector } from '../HTTPConnector';
-import { DataSourceArgumentMap } from '../../DataSource';
 
 export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
@@ -126,7 +125,7 @@ export class GraphQLConnector extends HTTPConnector {
   }
 
   generateQueryParams(name: string, args: object) {
-    let str = 'operation';
+    let str = name;
     let header = (<any>Object)
       .keys(args)
       .map((key: string) => {
