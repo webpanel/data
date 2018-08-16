@@ -91,6 +91,10 @@ export class GraphQLConnector extends HTTPConnector {
       }
     }
 
+    if(request.search) {
+      filter.q = request.search
+    }
+
     const args =
       request.operation === DataSourceOperation.list
         ? {
