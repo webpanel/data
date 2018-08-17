@@ -53,6 +53,7 @@ export class Resource extends ResourceBase<any | null> {
   };
 
   create = async (values: { [key: string]: any }) => {
+    values = Object.assign({}, this.data, values);
     let res = await this.tryWithLoading(
       this.dataSource.create(
         this.name,
@@ -72,6 +73,7 @@ export class Resource extends ResourceBase<any | null> {
   };
 
   update = async (values: { [key: string]: any }) => {
+    values = Object.assign({}, this.data, values);
     if (!this.id) {
       throw new Error('resource id is missing');
     }
@@ -107,6 +109,7 @@ export class Resource extends ResourceBase<any | null> {
   };
 
   save = async (values: { [key: string]: any }) => {
+    values = Object.assign({}, this.data, values);
     if (!this.id) {
       return this.create(values);
     }
