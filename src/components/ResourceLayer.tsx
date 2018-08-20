@@ -39,6 +39,29 @@ export class ResourceLayer extends React.Component<
     this.createResource();
   }
 
+  componentDidUpdate() {
+    const { id, fields } = this.props;
+
+    const resource = this.state.resource;
+    if (!resource) {
+      return;
+    }
+    const _resource = resource as Resource;
+
+    let hasChange = false;
+
+    if (_resource.id !== id) {
+      hasChange = true;
+    }
+    if (_resource.fields !== fields) {
+      hasChange = true;
+    }
+
+    if (hasChange) {
+      this.createResource();
+    }
+  }
+
   render() {
     const resource = this.state.resource;
     if (!resource) {

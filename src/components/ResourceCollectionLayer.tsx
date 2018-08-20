@@ -54,7 +54,7 @@ export class ResourceCollectionLayer extends React.Component<
     this.createResource();
   }
 
-  componentDidUpdate(prevProps: Readonly<ResourceCollectionLayerProps>) {
+  componentDidUpdate() {
     if (!this.props.values) {
       return;
     }

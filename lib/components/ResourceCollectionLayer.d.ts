@@ -25,6 +25,6 @@ export declare class ResourceCollectionLayer extends React.Component<ResourceCol
     handleError: (err: Error) => never;
     createResource(): void;
     componentDidMount(): void;
-    componentDidUpdate(prevProps: Readonly<ResourceCollectionLayerProps>): void;
+    componentDidUpdate(): void;
     render(): {} | null | undefined;
 }
