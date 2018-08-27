@@ -16,7 +16,7 @@ export class Resource extends ResourceBase<any | null> {
 
   constructor(config: ResourceConfig) {
     super(config);
-    this.id = config.id;
+    this.id = config.id || undefined;
     this.onCreate = config.onCreate;
     this.onUpdate = config.onUpdate;
     if (!this.id) {
