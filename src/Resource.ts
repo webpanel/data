@@ -54,11 +54,17 @@ export class Resource extends ResourceBase<any | null> {
 
   create = async (values: { [key: string]: any }) => {
     values = Object.assign({}, this.data, values);
-    let res = await this.tryWithLoading(
+
+    const fields = [...(this.fields || [])];
+    if (fields.indexOf('id') === -1) {
+      fields.push('id');
+    }
+
+    const res = await this.tryWithLoading(
       this.dataSource.create(
         this.name,
         values,
-        ['id', ...(this.fields || [])],
+        fields,
         this.arguments
       )
     );
