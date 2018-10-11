@@ -91,8 +91,8 @@ export class GraphQLConnector extends HTTPConnector {
       }
     }
 
-    if(request.search) {
-      filter.q = request.search
+    if (request.search) {
+      filter.q = request.search;
     }
 
     const args =
@@ -109,7 +109,7 @@ export class GraphQLConnector extends HTTPConnector {
       request.operation === 'read' || request.operation === 'list'
         ? 'query'
         : 'mutation',
-      this.generateQueryParams(fetchFieldName, args)
+      this.generateQueryParams(request, args)
     );
 
     const field = this.fieldForOperation(
@@ -128,8 +128,9 @@ export class GraphQLConnector extends HTTPConnector {
     });
   }
 
-  generateQueryParams(name: string, args: object) {
-    let str = name;
+  generateQueryParams(request: DataSourceRequest, args: object) {
+    let fieldName = this.fetchFieldNameForRequest(request);
+    let str = fieldName;
     let header = (<any>Object)
       .keys(args)
       .map((key: string) => {
@@ -137,14 +138,20 @@ export class GraphQLConnector extends HTTPConnector {
           case 'filter':
             if (!args[key]) return '';
             return `$${key}: ${inflection.singularize(
-              inflection.camelize(name, false)
+              inflection.camelize(fieldName, false)
             )}FilterType`;
 
           case 'sort':
             if (!args[key]) return '';
             return `$${key}: [${inflection.singularize(
-              inflection.camelize(name, false)
+              inflection.camelize(fieldName, false)
             )}SortType!]`;
+
+          case 'input':
+            if (!args[key]) return '';
+            return `$${key}: ${inflection.singularize(
+              inflection.camelize(request.name, false)
+            )}Raw${inflection.camelize(request.operation)}Input!`;
 
           default:
             return '';

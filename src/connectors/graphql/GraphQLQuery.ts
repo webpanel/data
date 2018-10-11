@@ -81,8 +81,11 @@ export class GraphQLField {
     for (let key of Object.keys(args)) {
       let value = args[key];
       let serialized = this.serializeArg(value);
+      if (value !== null && !value) {
+        continue;
+      }
       if (typeof serialized !== 'undefined') {
-        if (key === 'filter' || key === 'sort') {
+        if (key === 'filter' || key === 'sort' || key === 'input') {
           res.push(`${key}:$${key}`);
         } else {
           res.push(`${key}:${serialized}`);
@@ -140,7 +143,7 @@ export class GraphQLQuery extends GraphQLField {
     const args = this.arguments;
     const processedArgs = {};
     for (const key in args) {
-      if (key === 'sort' || key === 'filter') {
+      if (key === 'sort' || key === 'filter' || key === 'input') {
         processedArgs[`${key}`] =
           key === 'sort' ? this.formatSortInfo(<Object>args[key]) : args[key];
       }
