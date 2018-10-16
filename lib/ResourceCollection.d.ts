@@ -20,9 +20,9 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     limit?: number;
     constructor(config: ResourceCollectionConfig);
     get: () => Promise<void>;
-    delete: (id: import("csstype").AnimationIterationCountProperty) => Promise<any>;
+    delete: (id: string | number) => Promise<any>;
     getItem: (props: {
-        id: import("csstype").AnimationIterationCountProperty;
+        id: string | number;
         args?: {
             [key: string]: any;
         } | undefined;

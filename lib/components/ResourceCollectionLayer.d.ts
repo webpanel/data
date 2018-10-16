@@ -14,17 +14,14 @@ export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
     };
 }
 export interface ResourceCollectionLayerState {
-    errors: Error[];
     resource?: ResourceCollection;
 }
 export declare class ResourceCollectionLayer extends React.Component<ResourceCollectionLayerProps, ResourceCollectionLayerState> {
-    state: {
-        errors: never[];
-        resource: undefined;
-    };
-    handleError: (err: Error) => never;
+    state: ResourceCollectionLayerState;
+    handleError: (error: Error) => never;
     createResource(): void;
     componentDidMount(): void;
     componentDidUpdate(): void;
+    reload(): void;
     render(): {} | null | undefined;
 }

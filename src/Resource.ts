@@ -25,11 +25,12 @@ export class Resource extends ResourceBase<any | null> {
   }
 
   async tryWithLoading(p: Promise<any>): Promise<any> {
+    this.error = undefined;
     this.loading = true;
     try {
       return await p;
     } catch (err) {
-      throw err;
+      this.error = err;
     } finally {
       this.loading = false;
     }
@@ -61,12 +62,7 @@ export class Resource extends ResourceBase<any | null> {
     }
 
     const res = await this.tryWithLoading(
-      this.dataSource.create(
-        this.name,
-        values,
-        fields,
-        this.arguments
-      )
+      this.dataSource.create(this.name, values, fields, this.arguments)
     );
     this.data = res;
     this.id = res.id;

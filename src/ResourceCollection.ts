@@ -37,22 +37,28 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   }
 
   get = async () => {
+    this.error = undefined;
     this.loading = true;
-    let res = await this.dataSource.list(
-      this.name,
-      this.fields,
-      this.filters,
-      this.search,
-      this.sorting,
-      this.offset,
-      this.limit,
-      this.arguments
-    );
-    if (res) {
-      this.data = res.items || [];
-      this.count = res.count;
+    try {
+      let res = await this.dataSource.list(
+        this.name,
+        this.fields,
+        this.filters,
+        this.search,
+        this.sorting,
+        this.offset,
+        this.limit,
+        this.arguments
+      );
+      if (res) {
+        this.data = res.items || [];
+        this.count = res.count;
+      }
+    } catch (err) {
+      this.error = err;
+    } finally {
+      this.loading = false;
     }
-    this.loading = false;
   };
 
   delete = async (id: string | number) => {

@@ -18,6 +18,8 @@ export class ResourceBase<T> {
   loading: boolean = false;
   @observable
   data: T | undefined = undefined;
+  @observable
+  error: Error | undefined = undefined;
 
   constructor(config: ResourceBaseConfig) {
     this.dataSource = config.dataSource;

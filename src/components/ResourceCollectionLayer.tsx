@@ -22,7 +22,6 @@ export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
 }
 
 export interface ResourceCollectionLayerState {
-  errors: Error[];
   resource?: ResourceCollection;
 }
 
@@ -31,13 +30,12 @@ export class ResourceCollectionLayer extends React.Component<
   ResourceCollectionLayerProps,
   ResourceCollectionLayerState
 > {
-  state = {
-    errors: [],
+  state: ResourceCollectionLayerState = {
     resource: undefined
   };
 
-  handleError = (err: Error) => {
-    throw err;
+  handleError = (error: Error) => {
+    throw error;
   };
 
   createResource() {
@@ -89,11 +87,21 @@ export class ResourceCollectionLayer extends React.Component<
       hasChange = true;
     }
 
-    if (hasChange) _resource.get();
+    if (hasChange) this.reload();
+  }
+
+  reload() {
+    const resource = this.state.resource;
+    if (!resource) {
+      return;
+    }
+    const _resource = resource as ResourceCollection;
+    _resource.get().catch(this.handleError);
   }
 
   render() {
-    const resource = this.state.resource;
+    const { resource } = this.state;
+
     if (!resource) {
       return 'Resource not initialized';
     }

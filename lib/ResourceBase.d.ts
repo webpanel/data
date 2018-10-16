@@ -16,6 +16,7 @@ export declare class ResourceBase<T> {
     };
     loading: boolean;
     data: T | undefined;
+    error: Error | undefined;
     constructor(config: ResourceBaseConfig);
     getRawData(): T | undefined;
 }

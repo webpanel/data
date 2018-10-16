@@ -65,6 +65,6 @@ export class HTTPConnector implements Connector {
   ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
     const req = this.transformRequest(request);
     const res = await this.sendHttpRequest(req);
-    return this.transformResponse(res.data, request);
+    return this.transformResponse(res, request);
   }
 }

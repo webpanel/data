@@ -28,10 +28,11 @@ export class GraphQLConnector extends HTTPConnector {
 
     if (response.data && response.data.errors) {
       let authorization = false;
-      const errors = response.data.errors.map((e: Error) => {
+      const errors = response.data.errors.map((e: any) => {
         if (
           e.message === 'jwt must be provided' ||
-          e.message === 'jwt malformed'
+          e.message === 'jwt malformed' ||
+          e.authorization
         ) {
           authorization = true;
         }
@@ -42,7 +43,8 @@ export class GraphQLConnector extends HTTPConnector {
 
     let fetchFieldName = this.fetchFieldNameForRequest(request);
 
-    const data = response.data && response.data[fetchFieldName];
+    const data =
+      response.data && response.data.data && response.data.data[fetchFieldName];
     if (null === data) {
       return data;
     }
