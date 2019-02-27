@@ -32,6 +32,7 @@ export class GraphQLConnector extends HTTPConnector {
         if (
           e.message === 'jwt must be provided' ||
           e.message === 'jwt malformed' ||
+          e.code === 'UNAUTHORIZED' ||
           e.authorization
         ) {
           authorization = true;
