@@ -76,19 +76,6 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     this.error = undefined;
     this.loading = true;
     try {
-      global.console.log(
-        'load??',
-        JSON.stringify({
-          name: this.name,
-          fields: this.fields,
-          filters: this.filters,
-          search: this.search,
-          sorting: this.sorting,
-          offset: this.offset,
-          limit: this.limit,
-          arguments: this.arguments
-        })
-      );
       let res = await this.dataSource.list(
         this.name,
         this.fields,
