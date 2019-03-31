@@ -29,10 +29,15 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable
   limit?: number;
 
+  initialConfig: ResourceCollectionConfig;
   autopersistConfigKey?: string;
+
+  @observable
+  hasFilterChanges: boolean = false;
 
   constructor(config: ResourceCollectionConfig) {
     super(config);
+    this.initialConfig = config;
 
     if (config.autopersistConfigKey) {
       this.autopersistConfigKey = config.autopersistConfigKey;
@@ -51,12 +56,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
       }
     }
 
-    this.search = config.initialSearch;
-    this.sorting = config.initialSorting;
-    this.offset = config.initialOffset;
-    this.limit = config.initialLimit;
-
-    this.updateFilters(config.initialFilters, false, false);
+    this.setInitialValues(config);
   }
 
   private autopersistConfig() {
@@ -118,6 +118,23 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     return item;
   };
 
+  setInitialValues = (values: ResourceCollectionConfig) => {
+    this.search = values.initialSearch;
+    this.sorting = values.initialSorting;
+    this.offset = values.initialOffset;
+    this.limit = values.initialLimit;
+
+    this.updateFilters(values.initialFilters, false, false);
+  };
+
+  resetFilters = () => {
+    this.setInitialValues(this.initialConfig);
+  };
+
+  resetPagination = () => {
+    this.offset = 0;
+  };
+
   async updateFilters(
     filters?: DataSourceArgumentMap,
     autoreload: boolean = true,
@@ -137,12 +154,19 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     autoreload: boolean = true,
     autopersist: boolean = true
   ) {
+    const filtersBefore = JSON.stringify(this.filters);
     this.filters = this.filters || {};
     if (filters) {
       this.filters[key] = filters;
     } else {
       delete this.filters[key];
     }
+    const filtersAfter = JSON.stringify(this.filters);
+    const filtersChanged = filtersBefore !== filtersAfter;
+
+    this.hasFilterChanges = this.hasFilterChanges || filtersChanged;
+
+    if (filtersChanged) this.resetPagination();
     if (autopersist) this.autopersistConfig();
     if (autoreload) return this.get();
   }
@@ -156,6 +180,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     autoreload: boolean = true
   ): Promise<void> {
     this.search = search;
+    this.resetPagination();
     this.autopersistConfig();
     if (autoreload) return this.get();
   }

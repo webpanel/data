@@ -19,18 +19,23 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     sorting?: any;
     offset?: number;
     limit?: number;
+    initialConfig: ResourceCollectionConfig;
     autopersistConfigKey?: string;
+    hasFilterChanges: boolean;
     constructor(config: ResourceCollectionConfig);
     private autopersistConfig;
     get: () => Promise<void>;
-    delete: (id: import("csstype").AnimationIterationCountProperty) => Promise<any>;
+    delete: (id: string | number) => Promise<any>;
     getItem: (props: {
-        id: import("csstype").AnimationIterationCountProperty;
+        id: string | number;
         args?: {
             [key: string]: any;
         } | undefined;
         autoload?: boolean | undefined;
     }) => Resource;
+    setInitialValues: (values: ResourceCollectionConfig) => void;
+    resetFilters: () => void;
+    resetPagination: () => void;
     updateFilters(filters?: DataSourceArgumentMap, autoreload?: boolean, autopersist?: boolean): Promise<void>;
     updateNamedFilters(key: string, filters?: DataSourceArgumentMap, autoreload?: boolean, autopersist?: boolean): Promise<void>;
     namedFilter(key: string): DataSourceArgumentMap | undefined;
