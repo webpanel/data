@@ -1,10 +1,13 @@
-import { observable } from 'mobx';
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+
 import { DataSourceArgumentMap } from './DataSource';
-import { SortInfo } from './DataSourceRequest';
 import { Resource } from './Resource';
+import { SortInfo } from './DataSourceRequest';
+import { observable } from 'mobx';
 
 export interface ResourceCollectionConfig extends ResourceBaseConfig {
+  autopersistConfigKey?: string;
+
   initialFilters?: DataSourceArgumentMap;
   initialSearch?: string;
   initialSorting?: SortInfo[];
@@ -26,20 +29,66 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable
   limit?: number;
 
+  autopersistConfigKey?: string;
+
   constructor(config: ResourceCollectionConfig) {
     super(config);
+
+    if (config.autopersistConfigKey) {
+      this.autopersistConfigKey = config.autopersistConfigKey;
+      const storedConfig = localStorage.getItem(this.autopersistConfigKey);
+      if (storedConfig) {
+        const c = JSON.parse(storedConfig);
+
+        this.search = c.search;
+        this.sorting = c.sorting;
+        this.offset = c.offset;
+        this.limit = c.limit;
+
+        this.filters = c.filters;
+
+        return;
+      }
+    }
+
     this.search = config.initialSearch;
     this.sorting = config.initialSorting;
     this.offset = config.initialOffset;
     this.limit = config.initialLimit;
 
-    this.updateFilters(config.initialFilters, false);
+    this.updateFilters(config.initialFilters, false, false);
+  }
+
+  private autopersistConfig() {
+    if (this.autopersistConfigKey) {
+      const config = {
+        filters: this.filters,
+        search: this.search,
+        sorting: this.sorting,
+        offset: this.offset,
+        limit: this.limit
+      };
+      localStorage.setItem(this.autopersistConfigKey, JSON.stringify(config));
+    }
   }
 
   get = async () => {
     this.error = undefined;
     this.loading = true;
     try {
+      global.console.log(
+        'load??',
+        JSON.stringify({
+          name: this.name,
+          fields: this.fields,
+          filters: this.filters,
+          search: this.search,
+          sorting: this.sorting,
+          offset: this.offset,
+          limit: this.limit,
+          arguments: this.arguments
+        })
+      );
       let res = await this.dataSource.list(
         this.name,
         this.fields,
@@ -84,15 +133,22 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
 
   async updateFilters(
     filters?: DataSourceArgumentMap,
-    autoreload: boolean = true
+    autoreload: boolean = true,
+    autopersist: boolean = true
   ): Promise<void> {
-    return this.updateNamedFilters('_default', filters, autoreload);
+    return this.updateNamedFilters(
+      '_default',
+      filters,
+      autoreload,
+      autopersist
+    );
   }
 
   async updateNamedFilters(
     key: string,
     filters?: DataSourceArgumentMap,
-    autoreload: boolean = true
+    autoreload: boolean = true,
+    autopersist: boolean = true
   ) {
     this.filters = this.filters || {};
     if (filters) {
@@ -100,6 +156,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     } else {
       delete this.filters[key];
     }
+    if (autopersist) this.autopersistConfig();
     if (autoreload) return this.get();
   }
 
@@ -112,6 +169,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     autoreload: boolean = true
   ): Promise<void> {
     this.search = search;
+    this.autopersistConfig();
     if (autoreload) return this.get();
   }
 
@@ -120,6 +178,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     autoreload: boolean = true
   ): Promise<void> {
     this.sorting = sorting;
+    this.autopersistConfig();
     if (autoreload) return this.get();
   }
 
@@ -128,11 +187,13 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     autoreload: boolean = true
   ): Promise<void> {
     this.offset = offset;
+    this.autopersistConfig();
     if (autoreload) return this.get();
   }
 
   async updateLimit(limit?: number, autoreload: boolean = true): Promise<void> {
     this.limit = limit;
+    this.autopersistConfig();
     if (autoreload) return this.get();
   }
 }
