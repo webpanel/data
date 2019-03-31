@@ -41,7 +41,9 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
 
     if (config.autopersistConfigKey) {
       this.autopersistConfigKey = config.autopersistConfigKey;
-      const storedConfig = localStorage.getItem(this.autopersistConfigKey);
+      const storage = sessionStorage || localStorage;
+      const storedConfig =
+        storage && storage.getItem(this.autopersistConfigKey);
       if (storedConfig) {
         const c = JSON.parse(storedConfig);
 
@@ -68,7 +70,9 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
         offset: this.offset,
         limit: this.limit
       };
-      localStorage.setItem(this.autopersistConfigKey, JSON.stringify(config));
+      const storage = sessionStorage || localStorage;
+      if (storage)
+        storage.setItem(this.autopersistConfigKey, JSON.stringify(config));
     }
   }
 
