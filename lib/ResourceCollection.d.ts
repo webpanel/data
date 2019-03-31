@@ -23,9 +23,9 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     constructor(config: ResourceCollectionConfig);
     private autopersistConfig;
     get: () => Promise<void>;
-    delete: (id: string | number) => Promise<any>;
+    delete: (id: import("csstype").AnimationIterationCountProperty) => Promise<any>;
     getItem: (props: {
-        id: string | number;
+        id: import("csstype").AnimationIterationCountProperty;
         args?: {
             [key: string]: any;
         } | undefined;
@@ -38,4 +38,5 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     updateSorting(sorting?: SortInfo[], autoreload?: boolean): Promise<void>;
     updateOffset(offset?: number, autoreload?: boolean): Promise<void>;
     updateLimit(limit?: number, autoreload?: boolean): Promise<void>;
+    readonly page: number;
 }

@@ -196,4 +196,10 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     this.autopersistConfig();
     if (autoreload) return this.get();
   }
+
+  public get page(): number {
+    const limit = this.limit || 30;
+    const offset = this.offset || 0;
+    return Math.ceil(offset / limit);
+  }
 }
