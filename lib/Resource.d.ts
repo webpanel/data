@@ -5,21 +5,21 @@ export interface ResourceConfig extends ResourceBaseConfig {
     initialValues?: {
         [key: string]: any;
     };
-    onCreate?: ((id: ResourceID, values: {
+    onCreate?: (id: ResourceID, values: {
         [key: string]: any;
-    }) => void);
-    onUpdate?: ((values: {
+    }) => void;
+    onUpdate?: (values: {
         [key: string]: any;
-    }) => void);
+    }) => void;
 }
 export declare class Resource extends ResourceBase<any | null> {
     id?: ResourceID;
-    onCreate?: ((id: ResourceID, values: {
+    onCreate?: (id: ResourceID, values: {
         [key: string]: any;
-    }) => void);
-    onUpdate?: ((values: {
+    }) => void;
+    onUpdate?: (values: {
         [key: string]: any;
-    }) => void);
+    }) => void;
     constructor(config: ResourceConfig);
     tryWithLoading(p: Promise<any>): Promise<any>;
     getIfHasID: () => Promise<any>;
@@ -29,6 +29,12 @@ export declare class Resource extends ResourceBase<any | null> {
     }) => Promise<any>;
     update: (values: {
         [key: string]: any;
+    }) => Promise<any>;
+    updateValues: (props: {
+        values: {
+            [key: string]: any;
+        };
+        fields?: string[] | undefined;
     }) => Promise<any>;
     delete: () => Promise<any>;
     isPersisted: () => boolean;

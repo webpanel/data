@@ -5,14 +5,14 @@ type ResourceID = string | number;
 export interface ResourceConfig extends ResourceBaseConfig {
   id?: ResourceID;
   initialValues?: { [key: string]: any };
-  onCreate?: ((id: ResourceID, values: { [key: string]: any }) => void);
-  onUpdate?: ((values: { [key: string]: any }) => void);
+  onCreate?: (id: ResourceID, values: { [key: string]: any }) => void;
+  onUpdate?: (values: { [key: string]: any }) => void;
 }
 
 export class Resource extends ResourceBase<any | null> {
   id?: ResourceID;
-  onCreate?: ((id: ResourceID, values: { [key: string]: any }) => void);
-  onUpdate?: ((values: { [key: string]: any }) => void);
+  onCreate?: (id: ResourceID, values: { [key: string]: any }) => void;
+  onUpdate?: (values: { [key: string]: any }) => void;
 
   constructor(config: ResourceConfig) {
     super(config);
@@ -89,6 +89,29 @@ export class Resource extends ResourceBase<any | null> {
       )
     );
     this.data = res;
+    if (this.onUpdate) {
+      this.onUpdate(res);
+    }
+    return res;
+  };
+  updateValues = async (props: {
+    values: { [key: string]: any };
+    fields?: string[];
+  }) => {
+    if (!this.id) {
+      throw new Error('resource id is missing');
+    }
+    let res = await this.tryWithLoading(
+      this.dataSource.update(
+        this.name,
+        this.id,
+        props.values,
+        props.fields || this.fields,
+        this.arguments
+      )
+    );
+
+    this.data = Object.assign({}, this.data, res);
     if (this.onUpdate) {
       this.onUpdate(res);
     }
