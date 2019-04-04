@@ -20,6 +20,8 @@ export class ResourceBase<T> {
   @observable
   loading: boolean = false;
   @observable
+  polling: boolean = false;
+  @observable
   data: T | undefined = undefined;
   @observable
   error: Error | undefined = undefined;
@@ -39,7 +41,11 @@ export class ResourceBase<T> {
 
   public startPolling(interval: number) {
     if (typeof this.pollRefreshInterval === 'undefined') {
-      this.pollRefreshInterval = setInterval(() => this.get(), interval);
+      this.pollRefreshInterval = setInterval(async () => {
+        this.polling = true;
+        await this.get();
+        this.polling = false;
+      }, interval);
     }
   }
 
