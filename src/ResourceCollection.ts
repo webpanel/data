@@ -101,6 +101,11 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     }
   }
 
+  public async reload() {
+    this.resetPolling();
+    return this.get();
+  }
+
   delete = async (id: string | number) => {
     let res = await this.dataSource.delete(this.name, id, ['id']);
     return res;
@@ -172,7 +177,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
 
     if (filtersChanged) this.resetPagination();
     if (autopersist) this.autopersistConfig();
-    if (autoreload) return this.get();
+    if (autoreload) return this.reload();
   }
 
   namedFilter(key: string): DataSourceArgumentMap | undefined {
@@ -186,7 +191,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     this.search = search;
     this.resetPagination();
     this.autopersistConfig();
-    if (autoreload) return this.get();
+    if (autoreload) return this.reload();
   }
 
   async updateSorting(
@@ -195,7 +200,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   ): Promise<void> {
     this.sorting = sorting;
     this.autopersistConfig();
-    if (autoreload) return this.get();
+    if (autoreload) return this.reload();
   }
 
   async updateOffset(
@@ -204,13 +209,13 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   ): Promise<void> {
     this.offset = offset;
     this.autopersistConfig();
-    if (autoreload) return this.get();
+    if (autoreload) return this.reload();
   }
 
   async updateLimit(limit?: number, autoreload: boolean = true): Promise<void> {
     this.limit = limit;
     this.autopersistConfig();
-    if (autoreload) return this.get();
+    if (autoreload) return this.reload();
   }
 
   public get page(): number {

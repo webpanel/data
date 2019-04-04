@@ -9,13 +9,11 @@ export interface ResourceLayerState {
     resource?: Resource;
 }
 export declare class ResourceLayer extends React.Component<ResourceLayerProps, ResourceLayerState> {
-    state: {
-        errors: never[];
-        resource: undefined;
-    };
+    state: ResourceLayerState;
     handleError: (err: Error) => never;
     createResource(): void;
     componentWillMount(): void;
+    componentWillUnmount(): void;
     componentDidUpdate(): void;
     render(): {} | null | undefined;
 }

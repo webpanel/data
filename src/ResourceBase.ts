@@ -16,6 +16,7 @@ export class ResourceBase<T> {
   dataSource: DataSource;
   fields?: string[];
   arguments?: { [key: string]: any };
+  pollInterval?: number;
 
   @observable
   loading: boolean = false;
@@ -33,19 +34,24 @@ export class ResourceBase<T> {
     this.name = config.name;
     this.fields = config.fields;
     this.arguments = config.initialArgs;
-
-    if (config.pollInterval) {
-      this.startPolling(config.pollInterval);
-    }
+    this.pollInterval = config.pollInterval;
   }
 
-  public startPolling(interval: number) {
-    if (typeof this.pollRefreshInterval === 'undefined') {
+  public resetPolling() {
+    this.stopPolling();
+    this.startPolling();
+  }
+
+  public startPolling() {
+    if (
+      typeof this.pollInterval !== 'undefined' &&
+      typeof this.pollRefreshInterval === 'undefined'
+    ) {
       this.pollRefreshInterval = setInterval(async () => {
         this.polling = true;
         await this.get();
         this.polling = false;
-      }, interval);
+      }, this.pollInterval);
     }
   }
 

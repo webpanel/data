@@ -15,13 +15,15 @@ export declare class ResourceBase<T> {
     arguments?: {
         [key: string]: any;
     };
+    pollInterval?: number;
     loading: boolean;
     polling: boolean;
     data: T | undefined;
     error: Error | undefined;
     private pollRefreshInterval?;
     constructor(config: ResourceBaseConfig);
-    startPolling(interval: number): void;
+    resetPolling(): void;
+    startPolling(): void;
     stopPolling(): void;
     get(): Promise<void>;
     getRawData(): T | undefined;

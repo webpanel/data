@@ -1,11 +1,13 @@
 import * as React from 'react';
+
 import {
   ResourceCollection,
   ResourceCollectionConfig
 } from '../ResourceCollection';
-import { observer } from 'mobx-react';
+
 import { DataSourceArgumentMap } from '../DataSource';
 import { SortInfo } from '../DataSourceRequest';
+import { observer } from 'mobx-react';
 
 export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
   autoload?: boolean;
@@ -50,6 +52,16 @@ export class ResourceCollectionLayer extends React.Component<
 
   componentDidMount() {
     this.createResource();
+
+    if (this.state.resource) {
+      this.state.resource.startPolling();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.resource) {
+      this.state.resource.stopPolling();
+    }
   }
 
   componentDidUpdate() {

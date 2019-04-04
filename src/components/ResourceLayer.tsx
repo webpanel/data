@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { Resource, ResourceConfig } from '../Resource';
+
 import { observer } from 'mobx-react';
 
 export interface ResourceLayerProps extends ResourceConfig {
@@ -17,7 +19,7 @@ export class ResourceLayer extends React.Component<
   ResourceLayerProps,
   ResourceLayerState
 > {
-  state = { errors: [], resource: undefined };
+  state: ResourceLayerState = { errors: [], resource: undefined };
 
   handleError = (err: Error) => {
     throw err;
@@ -37,6 +39,16 @@ export class ResourceLayer extends React.Component<
 
   componentWillMount() {
     this.createResource();
+
+    if (this.state.resource) {
+      this.state.resource.startPolling();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.resource) {
+      this.state.resource.stopPolling();
+    }
   }
 
   componentDidUpdate() {
