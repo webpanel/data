@@ -6,6 +6,7 @@ export interface ResourceBaseConfig {
     initialArgs?: {
         [key: string]: any;
     };
+    pollInterval?: number;
 }
 export declare class ResourceBase<T> {
     name: string;
@@ -17,6 +18,10 @@ export declare class ResourceBase<T> {
     loading: boolean;
     data: T | undefined;
     error: Error | undefined;
+    private pollRefreshInterval?;
     constructor(config: ResourceBaseConfig);
+    startPolling(interval: number): void;
+    stopPolling(): void;
+    get(): Promise<void>;
     getRawData(): T | undefined;
 }

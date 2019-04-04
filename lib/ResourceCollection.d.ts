@@ -24,10 +24,10 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     hasFilterChanges: boolean;
     constructor(config: ResourceCollectionConfig);
     private autopersistConfig;
-    get: () => Promise<void>;
-    delete: (id: string | number) => Promise<any>;
+    get(): Promise<void>;
+    delete: (id: import("csstype").AnimationIterationCountProperty) => Promise<any>;
     getItem: (props: {
-        id: string | number;
+        id: import("csstype").AnimationIterationCountProperty;
         args?: {
             [key: string]: any;
         } | undefined;

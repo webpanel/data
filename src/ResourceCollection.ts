@@ -76,7 +76,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     }
   }
 
-  get = async () => {
+  public async get() {
     this.error = undefined;
     this.loading = true;
     try {
@@ -99,7 +99,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
     } finally {
       this.loading = false;
     }
-  };
+  }
 
   delete = async (id: string | number) => {
     let res = await this.dataSource.delete(this.name, id, ['id']);
