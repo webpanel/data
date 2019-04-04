@@ -48,6 +48,7 @@ export class ResourceCollectionLayer extends React.Component<
       resource.get().catch(this.handleError);
     }
     this.setState({ resource });
+    resource.startPolling();
   }
 
   componentDidMount() {

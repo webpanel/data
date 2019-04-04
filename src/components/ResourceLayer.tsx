@@ -35,6 +35,7 @@ export class ResourceLayer extends React.Component<
     }
 
     this.setState({ resource });
+    resource.startPolling();
   }
 
   componentWillMount() {
