@@ -1,17 +1,17 @@
-import { AuthSession } from 'webpanel-auth';
-import fetch from 'node-fetch';
-
 import {
   Connector,
-  HTTPResponse,
+  DataSourceRequest,
   HTTPRequest,
-  DataSourceRequest
+  HTTPResponse
 } from './Connector';
 import {
-  ResponseDataTransformer,
+  ResourceCollectionResponse,
   ResourceResponse,
-  ResourceCollectionResponse
+  ResponseDataTransformer
 } from './ResponseDataTransformer';
+
+import { AuthSession } from 'webpanel-auth';
+import fetch from 'node-fetch';
 
 export interface HTTPConnectorConfiguration {
   responseDataTransformer?: ResponseDataTransformer;
@@ -40,13 +40,19 @@ export class HTTPConnector implements Connector {
       body: request.data,
       headers
     });
-
-    let json = res.status !== 204 ? await res.json() : null;
+    let json =
+      res.status !== 204 && res.headers['content-type'] === 'application/json'
+        ? await res.json()
+        : null;
     return new HTTPResponse(json, res.status);
   }
 
   getErrorMessageFromResponse(res: HTTPResponse): string {
-    return res.data.error_description || res.data.error || res.data.message;
+    return (
+      (res.data &&
+        (res.data.error_description || res.data.error || res.data.message)) ||
+      res.data
+    );
   }
 
   protected transformRequest(request: DataSourceRequest): HTTPRequest {

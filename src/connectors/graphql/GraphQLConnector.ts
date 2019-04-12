@@ -1,31 +1,38 @@
 import * as inflection from 'inflection';
 
 import {
+  ConnectorError,
+  DataSourceOperation,
+  DataSourceRequest,
   HTTPRequest,
   HTTPResponse,
-  ConnectorError,
-  DataSourceRequest,
-  DataSourceOperation,
-  ResourceResponse,
-  ResourceCollectionResponse
+  ResourceCollectionResponse,
+  ResourceResponse
 } from '../../connectors/Connector';
-import { GraphQLQuery, GraphQLField, GraphQLArgumentMap } from './GraphQLQuery';
+import { GraphQLArgumentMap, GraphQLField, GraphQLQuery } from './GraphQLQuery';
+
 import { HTTPConnector } from '../HTTPConnector';
 
 export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
 
 export class GraphQLConnector extends HTTPConnector {
+  protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
+    let res = await super.sendHttpRequest(request);
+
+    if (res.status == 401) {
+      throw new ConnectorError(true, [
+        new Error(this.getErrorMessageFromResponse(res))
+      ]);
+    }
+
+    return res;
+  }
+
   async transformResponse(
     response: HTTPResponse,
     request: DataSourceRequest
   ): Promise<ResourceResponse | ResourceCollectionResponse | null> {
-    if (response.status === 401) {
-      throw new ConnectorError(true, [
-        new Error(this.getErrorMessageFromResponse(response))
-      ]);
-    }
-
     if (response.data && response.data.errors) {
       let authorization = false;
       const errors = response.data.errors.map((e: any) => {

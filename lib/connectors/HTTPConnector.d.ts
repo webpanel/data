@@ -1,5 +1,5 @@
-import { Connector, HTTPResponse, HTTPRequest, DataSourceRequest } from './Connector';
-import { ResponseDataTransformer, ResourceResponse, ResourceCollectionResponse } from './ResponseDataTransformer';
+import { Connector, DataSourceRequest, HTTPRequest, HTTPResponse } from './Connector';
+import { ResourceCollectionResponse, ResourceResponse, ResponseDataTransformer } from './ResponseDataTransformer';
 export interface HTTPConnectorConfiguration {
     responseDataTransformer?: ResponseDataTransformer;
 }

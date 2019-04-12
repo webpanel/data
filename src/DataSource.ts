@@ -1,16 +1,16 @@
-import { AuthSession } from 'webpanel-auth';
-
 import {
-  isConnectorError,
   Connector,
-  DataSourceRequest
+  DataSourceRequest,
+  isConnectorError
 } from './connectors/Connector';
-// import { HTTPResponse } from './utils/HTTPResponse';
-import { DataSourceOperation } from './DataSourceRequest';
 import {
   ResourceCollectionResponse,
   ResourceResponse
 } from './connectors/ResponseDataTransformer';
+
+import { AuthSession } from 'webpanel-auth';
+// import { HTTPResponse } from './utils/HTTPResponse';
+import { DataSourceOperation } from './DataSourceRequest';
 
 export type DataSourceArgumentType =
   | DataSourceArgumentMap

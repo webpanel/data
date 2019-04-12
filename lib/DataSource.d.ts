@@ -1,6 +1,6 @@
 import { Connector } from './connectors/Connector';
-import { DataSourceOperation } from './DataSourceRequest';
 import { ResourceCollectionResponse, ResourceResponse } from './connectors/ResponseDataTransformer';
+import { DataSourceOperation } from './DataSourceRequest';
 export declare type DataSourceArgumentType = DataSourceArgumentMap | string | number | null;
 export interface DataSourceArgumentMap {
     [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
