@@ -1,3 +1,4 @@
+/// <reference types="lodash" />
 import * as React from 'react';
 import { Resource, ResourceConfig } from '../Resource';
 export interface ResourceLayerProps extends ResourceConfig {
@@ -15,5 +16,5 @@ export declare class ResourceLayer extends React.Component<ResourceLayerProps, R
     componentWillMount(): void;
     componentWillUnmount(): void;
     componentDidUpdate(): void;
-    render(): {} | null | undefined;
+    render(): import("lodash").NotVoid;
 }

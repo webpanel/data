@@ -173,6 +173,9 @@ export class GraphQLConnector extends HTTPConnector {
   }
 
   transformData(res: HTTPResponse, request: DataSourceRequest): any {
+    if (!res.data) {
+      return null;
+    }
     const keys = Object.keys(res.data.data);
     return res.data.data[keys[0]];
   }

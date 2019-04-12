@@ -40,11 +40,19 @@ export class HTTPConnector implements Connector {
       body: request.data,
       headers
     });
-    let json =
-      res.status !== 204 && res.headers['content-type'] === 'application/json'
-        ? await res.json()
-        : null;
-    return new HTTPResponse(json, res.status);
+
+    let data = null;
+    if (res.status !== 204) {
+      switch (res.headers.get('content-type')) {
+        case 'application/json':
+          data = await res.json();
+          break;
+        default:
+          data = await res.text();
+      }
+    }
+
+    return new HTTPResponse(data, res.status);
   }
 
   getErrorMessageFromResponse(res: HTTPResponse): string {

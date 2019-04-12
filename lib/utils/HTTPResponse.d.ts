@@ -1,5 +1,5 @@
 export declare class HTTPResponse {
     status: number;
-    data: any;
+    data: any | string | null;
     constructor(data: any, status: number);
 }
