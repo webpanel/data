@@ -112,7 +112,7 @@ export class ResourceCollectionLayer extends React.Component<
     _resource.get().catch(this.handleError);
   }
 
-  render() {
+  render(): React.ReactNode {
     const { resource } = this.state;
 
     if (!resource) {

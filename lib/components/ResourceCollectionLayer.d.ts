@@ -1,4 +1,3 @@
-/// <reference types="lodash" />
 import * as React from 'react';
 import { ResourceCollection, ResourceCollectionConfig } from '../ResourceCollection';
 import { DataSourceArgumentMap } from '../DataSource';
@@ -25,5 +24,5 @@ export declare class ResourceCollectionLayer extends React.Component<ResourceCol
     componentWillUnmount(): void;
     componentDidUpdate(): void;
     reload(): void;
-    render(): import("lodash").NotVoid;
+    render(): React.ReactNode;
 }

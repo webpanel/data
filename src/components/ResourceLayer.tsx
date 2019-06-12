@@ -75,7 +75,7 @@ export class ResourceLayer extends React.Component<
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     const resource = this.state.resource;
     if (!resource) {
       return 'not initialized';
