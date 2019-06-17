@@ -71,7 +71,7 @@ export class GraphQLField {
       (<any>sorting).map(
         (sort: any) =>
           sort.columnKey.toUpperCase() +
-          (sort.order === SortInfoOrder.descend ? '_DESC' : '')
+          (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
       )
     );
   }
