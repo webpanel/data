@@ -17,6 +17,24 @@ export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
 
 export class GraphQLConnector extends HTTPConnector {
+  public filterInputTypeName(request: DataSourceRequest): string {
+    let fieldName = this.fetchFieldNameForRequest(request);
+    return `${inflection.singularize(
+      inflection.camelize(fieldName, false)
+    )}FilterType`;
+  }
+  public sortInputTypeName(request: DataSourceRequest): string {
+    let fieldName = this.fetchFieldNameForRequest(request);
+    return `${inflection.singularize(
+      inflection.camelize(fieldName, false)
+    )}SortType`;
+  }
+  public inputTypeName(request: DataSourceRequest): string {
+    return `${inflection.singularize(
+      inflection.camelize(request.name, false)
+    )}Raw${inflection.camelize(request.operation)}Input`;
+  }
+
   protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
     let res = await super.sendHttpRequest(request);
 
@@ -144,21 +162,15 @@ export class GraphQLConnector extends HTTPConnector {
         switch (key) {
           case 'filter':
             if (!args[key]) return '';
-            return `$${key}: ${inflection.singularize(
-              inflection.camelize(fieldName, false)
-            )}FilterType`;
+            return `$${key}: ${this.filterInputTypeName(request)}`;
 
           case 'sort':
             if (!args[key]) return '';
-            return `$${key}: [${inflection.singularize(
-              inflection.camelize(fieldName, false)
-            )}SortType!]`;
+            return `$${key}: [${this.sortInputTypeName(request)}!]`;
 
           case 'input':
             if (!args[key]) return '';
-            return `$${key}: ${inflection.singularize(
-              inflection.camelize(request.name, false)
-            )}Raw${inflection.camelize(request.operation)}Input!`;
+            return `$${key}: ${this.inputTypeName(request)}!`;
 
           default:
             return '';
