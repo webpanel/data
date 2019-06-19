@@ -3,17 +3,21 @@ export declare type GraphQLArgumentType = GraphQLArgumentMap | SortInfo | string
 export interface GraphQLArgumentMap {
     [key: string]: GraphQLArgumentType | GraphQLArgumentType[];
 }
+export interface GraphQLFieldOptions {
+    sortingFormatter: (sorting: SortInfo[]) => string[];
+}
 export declare class GraphQLField {
     private name?;
+    protected options: GraphQLFieldOptions;
     private _fields;
     private _args;
-    constructor(name: string);
+    constructor(name: string, options?: GraphQLFieldOptions);
     field(field: GraphQLField | string): GraphQLField;
     fields(fields: GraphQLField[] | string[]): GraphQLField;
     arg(key: string, value: GraphQLArgumentType): GraphQLField;
     args(value: GraphQLArgumentMap): GraphQLField;
     toString(): string;
-    formatSortInfo(sorting: object): any;
+    formatSortInfo(sorting: SortInfo[]): string[];
     private serializeArgs;
     private serializeArg;
     readonly arguments: object;
@@ -21,7 +25,7 @@ export declare class GraphQLField {
 export declare type GraphQLQueryType = 'query' | 'mutation';
 export declare class GraphQLQuery extends GraphQLField {
     type: GraphQLQueryType;
-    constructor(type: GraphQLQueryType, name: string);
+    constructor(type: GraphQLQueryType, name: string, options?: GraphQLFieldOptions);
     toString(): string;
     readonly variables: {};
 }

@@ -10,6 +10,7 @@ import {
   ResourceResponse
 } from '../../connectors/Connector';
 import { GraphQLArgumentMap, GraphQLField, GraphQLQuery } from './GraphQLQuery';
+import { SortInfo, SortInfoOrder } from '../../DataSourceRequest';
 
 import { HTTPConnector } from '../HTTPConnector';
 
@@ -33,6 +34,12 @@ export class GraphQLConnector extends HTTPConnector {
     return `${inflection.singularize(
       inflection.camelize(request.name, false)
     )}Raw${inflection.camelize(request.operation)}Input`;
+  }
+  public sortFormatName(sort: SortInfo): string {
+    return (
+      sort.columnKey.toUpperCase() +
+      (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
+    );
   }
 
   protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
@@ -134,7 +141,12 @@ export class GraphQLConnector extends HTTPConnector {
       request.operation === 'read' || request.operation === 'list'
         ? 'query'
         : 'mutation',
-      this.generateQueryParams(request, args)
+      this.generateQueryParams(request, args),
+      {
+        sortingFormatter: (sorting: SortInfo[]) => {
+          return sorting.map(x => this.sortFormatName(x));
+        }
+      }
     );
 
     const field = this.fieldForOperation(

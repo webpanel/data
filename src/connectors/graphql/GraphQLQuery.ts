@@ -18,13 +18,21 @@ function isGraphQLArgumentMap(arg: any): arg is GraphQLArgumentMap {
   return arg !== null && typeof arg === 'object';
 }
 
+export interface GraphQLFieldOptions {
+  sortingFormatter: (sorting: SortInfo[]) => string[];
+}
+
 export class GraphQLField {
   private name?: string;
+  protected options: GraphQLFieldOptions;
   private _fields: GraphQLField[] = [];
   private _args: GraphQLArgumentMap = {};
 
-  constructor(name: string) {
+  constructor(name: string, options?: GraphQLFieldOptions) {
     this.name = name;
+    this.options = options || {
+      sortingFormatter: this.formatSortInfo
+    };
   }
 
   field(field: GraphQLField | string): GraphQLField {
@@ -65,10 +73,10 @@ export class GraphQLField {
     return str + ' ';
   }
 
-  formatSortInfo(sorting: object) {
+  formatSortInfo(sorting: SortInfo[]): string[] {
     return (
       sorting &&
-      (<any>sorting).map(
+      sorting.map(
         (sort: any) =>
           sort.columnKey.toUpperCase() +
           (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
@@ -127,8 +135,12 @@ export type GraphQLQueryType = 'query' | 'mutation';
 export class GraphQLQuery extends GraphQLField {
   type: GraphQLQueryType;
 
-  constructor(type: GraphQLQueryType, name: string) {
-    super(name);
+  constructor(
+    type: GraphQLQueryType,
+    name: string,
+    options?: GraphQLFieldOptions
+  ) {
+    super(name, options);
     this.type = type;
   }
 
@@ -144,8 +156,11 @@ export class GraphQLQuery extends GraphQLField {
     const processedArgs = {};
     for (const key in args) {
       if (key === 'sort' || key === 'filter' || key === 'input') {
+        const val = args[key];
         processedArgs[`${key}`] =
-          key === 'sort' ? this.formatSortInfo(<Object>args[key]) : args[key];
+          key === 'sort'
+            ? this.options.sortingFormatter(<SortInfo[]>(val || []))
+            : val;
       }
     }
     return processedArgs;
