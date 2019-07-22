@@ -35,6 +35,11 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable
   hasFilterChanges: boolean = false;
 
+  // this hash is used to simulate "cancelling" behaviour of loading requests
+  // it's compared with the latest generated requst hash to make sure that resource collection displays only latest loading request
+  // this is required in case of multiple get calls with different params (eg. autocompletion)
+  private loadingHash: string = '';
+
   constructor(config: ResourceCollectionConfig) {
     super(config);
     this.initialConfig = config;
@@ -79,6 +84,10 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   public async get() {
     this.error = undefined;
     this.loading = true;
+    const currentHash = Math.random()
+      .toString(36)
+      .substring(2);
+    this.loadingHash = currentHash;
     try {
       let res = await this.dataSource.list(
         this.name,
@@ -90,14 +99,18 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
         this.limit,
         this.arguments
       );
-      if (res) {
+      if (res && this.loadingHash == currentHash) {
         this.data = res.items || [];
         this.count = res.count;
       }
     } catch (err) {
-      this.error = err;
+      if (this.loadingHash == currentHash) {
+        this.error = err;
+      }
     } finally {
-      this.loading = false;
+      if (this.loadingHash == currentHash) {
+        this.loading = false;
+      }
     }
   }
 

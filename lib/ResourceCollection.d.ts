@@ -22,6 +22,7 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     initialConfig: ResourceCollectionConfig;
     autopersistConfigKey?: string;
     hasFilterChanges: boolean;
+    private loadingHash;
     constructor(config: ResourceCollectionConfig);
     private autopersistConfig;
     get(): Promise<void>;
