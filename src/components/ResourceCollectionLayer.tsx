@@ -79,7 +79,10 @@ export class ResourceCollectionLayer extends React.Component<
 
     let hasChange = false;
 
-    if (_resource.namedFilter('$_layer') !== filters) {
+    if (
+      JSON.stringify(_resource.namedFilter('$_layer')) !==
+      JSON.stringify(filters)
+    ) {
       _resource.updateNamedFilters('$_layer', filters, false);
       hasChange = true;
     }

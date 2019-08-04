@@ -66,7 +66,7 @@ export class ResourceLayer extends React.Component<
     if (_resource.id !== (id || undefined)) {
       hasChange = true;
     }
-    if (_resource.fields !== fields) {
+    if (JSON.stringify(_resource.fields) !== JSON.stringify(fields)) {
       hasChange = true;
     }
 
