@@ -16,6 +16,7 @@ export type DataSourceArgumentType =
   | DataSourceArgumentMap
   | string
   | number
+  | boolean
   | null;
 export interface DataSourceArgumentMap {
   [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
