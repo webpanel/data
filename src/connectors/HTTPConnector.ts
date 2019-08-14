@@ -43,7 +43,8 @@ export class HTTPConnector implements Connector {
 
     let data = null;
     if (res.status !== 204) {
-      switch (res.headers.get('content-type')) {
+      const contentType=res.headers.get('content-type')
+      switch (contentType && contentType.split(';')[0]) {
         case 'application/json':
           data = await res.json();
           break;
