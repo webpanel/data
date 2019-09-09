@@ -20,6 +20,8 @@ export declare class Resource extends ResourceBase<any | null> {
     onUpdate?: (values: {
         [key: string]: any;
     }) => void;
+    private updatingHash;
+    private patchHash;
     constructor(config: ResourceConfig);
     tryWithLoading(p: Promise<any>): Promise<any>;
     getIfHasID: () => Promise<any>;
@@ -29,6 +31,9 @@ export declare class Resource extends ResourceBase<any | null> {
     }) => Promise<any>;
     update: (values: {
         [key: string]: any;
+    }) => Promise<void>;
+    put: (values: {
+        [key: string]: any;
     }) => Promise<any>;
     updateValues: (props: {
         values: {
@@ -36,6 +41,11 @@ export declare class Resource extends ResourceBase<any | null> {
         };
         fields?: string[] | undefined;
     }) => Promise<any>;
+    patch: (values: {
+        [key: string]: any;
+    }, props?: {
+        fields?: string[] | undefined;
+    } | undefined) => Promise<any>;
     delete: () => Promise<any>;
     isPersisted: () => boolean;
     save: (values: {
