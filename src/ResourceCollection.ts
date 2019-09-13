@@ -15,7 +15,10 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
   initialLimit?: number;
 }
 
-export class ResourceCollection extends ResourceBase<any[] | null> {
+export class ResourceCollection<
+  T = any[] | null,
+  C extends ResourceCollectionConfig = ResourceCollectionConfig
+> extends ResourceBase<T> {
   @observable
   count: number | undefined = undefined;
   @observable
@@ -29,7 +32,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   @observable
   limit?: number;
 
-  initialConfig: ResourceCollectionConfig;
+  initialConfig: C;
   autopersistConfigKey?: string;
 
   @observable
@@ -40,7 +43,7 @@ export class ResourceCollection extends ResourceBase<any[] | null> {
   // this is required in case of multiple get calls with different params (eg. autocompletion)
   private loadingHash: string = '';
 
-  constructor(config: ResourceCollectionConfig) {
+  constructor(config: C) {
     super(config);
     this.initialConfig = config;
 

@@ -10,7 +10,7 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
     initialOffset?: number;
     initialLimit?: number;
 }
-export declare class ResourceCollection extends ResourceBase<any[] | null> {
+export declare class ResourceCollection<T = any[] | null, C extends ResourceCollectionConfig = ResourceCollectionConfig> extends ResourceBase<T> {
     count: number | undefined;
     filters?: {
         [key: string]: DataSourceArgumentMap;
@@ -19,11 +19,11 @@ export declare class ResourceCollection extends ResourceBase<any[] | null> {
     sorting?: any;
     offset?: number;
     limit?: number;
-    initialConfig: ResourceCollectionConfig;
+    initialConfig: C;
     autopersistConfigKey?: string;
     hasFilterChanges: boolean;
     private loadingHash;
-    constructor(config: ResourceCollectionConfig);
+    constructor(config: C);
     private autopersistConfig;
     get(): Promise<void>;
     reload(): Promise<void>;
