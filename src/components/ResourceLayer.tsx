@@ -4,7 +4,7 @@ import { Resource, ResourceConfig } from '../Resource';
 
 import { observer } from 'mobx-react';
 
-export interface ResourceLayerProps extends ResourceConfig {
+export interface ResourceLayerProps<T> extends ResourceConfig<T> {
   autoload?: boolean;
   render: (resource: Resource) => React.ReactNode;
 }
@@ -15,8 +15,8 @@ export interface ResourceLayerState {
 }
 
 @observer
-export class ResourceLayer extends React.Component<
-  ResourceLayerProps,
+export class ResourceLayer<T = { [key: string]: any }> extends React.Component<
+  ResourceLayerProps<T>,
   ResourceLayerState
 > {
   state: ResourceLayerState = { errors: [], resource: undefined };

@@ -27,14 +27,18 @@ export declare class ResourceCollection<T = any[] | null, C extends ResourceColl
     private autopersistConfig;
     get(): Promise<void>;
     reload(): Promise<void>;
-    delete: (id: string | number) => Promise<any>;
+    delete: (id: import("./Resource").ResourceID) => Promise<any>;
     getItem: (props: {
-        id: string | number;
+        id: import("./Resource").ResourceID;
         args?: {
             [key: string]: any;
         } | undefined;
         autoload?: boolean | undefined;
-    }) => Resource;
+    }) => Resource<{
+        [key: string]: any;
+    }, import("./Resource").ResourceConfig<{
+        [key: string]: any;
+    }>>;
     setInitialValues: (values: ResourceCollectionConfig) => void;
     resetFilters: () => void;
     resetPagination: () => void;

@@ -1,18 +1,23 @@
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 
-type ResourceID = string | number;
+export type ResourceID = string | number;
 
-export interface ResourceConfig extends ResourceBaseConfig {
+export interface ResourceConfig<T> extends ResourceBaseConfig {
   id?: ResourceID;
-  initialValues?: { [key: string]: any };
-  onCreate?: (id: ResourceID, values: { [key: string]: any }) => void;
-  onUpdate?: (values: { [key: string]: any }) => void;
+  initialValues?: T;
+  onCreate?: (id: ResourceID, values: T) => void;
+  onUpdate?: (values: Partial<T>) => void;
+  onDelete?: (values: T) => void;
 }
 
-export class Resource extends ResourceBase<any | null> {
+export class Resource<
+  T = { [key: string]: any },
+  C extends ResourceConfig<T> = ResourceConfig<T>
+> extends ResourceBase<T> {
   id?: ResourceID;
-  onCreate?: (id: ResourceID, values: { [key: string]: any }) => void;
-  onUpdate?: (values: { [key: string]: any }) => void;
+  onCreate?: (id: ResourceID, values: T) => void;
+  onUpdate?: (values: Partial<T>) => void;
+  onDelete?: (values: T) => void;
 
   // this hash is used to simulate "cancelling" behaviour of loading requests
   // it's compared with the latest generated requst hash to make sure that resource collection displays only latest loading request
@@ -20,11 +25,12 @@ export class Resource extends ResourceBase<any | null> {
   private updatingHash: string = '';
   private patchHash: string = '';
 
-  constructor(config: ResourceConfig) {
+  constructor(config: C) {
     super(config);
     this.id = config.id || undefined;
     this.onCreate = config.onCreate;
     this.onUpdate = config.onUpdate;
+    this.onDelete = config.onDelete;
     if (!this.id) {
       this.data = config.initialValues;
     }
@@ -59,7 +65,7 @@ export class Resource extends ResourceBase<any | null> {
     return res;
   };
 
-  create = async (values: { [key: string]: any }) => {
+  create = async (values: T) => {
     values = Object.assign({}, this.data, values);
 
     const fields = [...(this.fields || [])];
@@ -81,10 +87,10 @@ export class Resource extends ResourceBase<any | null> {
   };
 
   // deprecated, please use put
-  update = async (values: { [key: string]: any }) => {
+  update = async (values: T) => {
     this.put(values);
   };
-  put = async (values: { [key: string]: any }) => {
+  put = async (values: T) => {
     if (!this.id) {
       throw new Error('resource id is missing');
     }
@@ -114,15 +120,12 @@ export class Resource extends ResourceBase<any | null> {
   };
 
   // deprecated, use patch
-  updateValues = async (props: {
-    values: { [key: string]: any };
-    fields?: string[];
-  }) => {
+  updateValues = async (props: { values: Partial<T>; fields?: string[] }) => {
     const { values, ...rest } = props;
     return this.patch(values, rest);
   };
   patch = async (
-    values: { [key: string]: any },
+    values: Partial<T>,
     props?: {
       fields?: string[];
     }
@@ -163,6 +166,9 @@ export class Resource extends ResourceBase<any | null> {
       this.dataSource.delete(this.name, this.id, this.fields, this.arguments)
     );
     this.data = res;
+    if (this.onDelete) {
+      this.onDelete(res);
+    }
     return res;
   };
 
@@ -170,7 +176,7 @@ export class Resource extends ResourceBase<any | null> {
     return !!this.id;
   };
 
-  save = async (values: { [key: string]: any }) => {
+  save = async (values: T) => {
     values = Object.assign({}, this.data, values);
     if (!this.id) {
       return this.create(values);

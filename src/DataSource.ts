@@ -57,7 +57,7 @@ export class DataSource {
   }
   async create(
     name: string,
-    data: { [key: string]: string },
+    data: any,
     fields?: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {
@@ -86,7 +86,7 @@ export class DataSource {
   async update(
     name: string,
     id: string | number,
-    data: { [key: string]: string },
+    data: any,
     fields?: string[],
     args?: DataSourceArgumentMap
   ): Promise<any> {

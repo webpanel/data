@@ -13,13 +13,9 @@ export declare class DataSource {
     list(name: string, fields?: string[], filters?: {
         [key: string]: DataSourceArgumentMap;
     }, search?: string, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;
-    create(name: string, data: {
-        [key: string]: string;
-    }, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
+    create(name: string, data: any, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
     read(name: string, id: string | number | undefined, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
-    update(name: string, id: string | number, data: {
-        [key: string]: string;
-    }, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
+    update(name: string, id: string | number, data: any, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
     delete(name: string, id: string | number, fields?: string[], args?: DataSourceArgumentMap): Promise<any>;
     send(params: {
         operation: DataSourceOperation;

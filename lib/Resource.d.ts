@@ -1,55 +1,36 @@
 import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
-declare type ResourceID = string | number;
-export interface ResourceConfig extends ResourceBaseConfig {
+export declare type ResourceID = string | number;
+export interface ResourceConfig<T> extends ResourceBaseConfig {
     id?: ResourceID;
-    initialValues?: {
-        [key: string]: any;
-    };
-    onCreate?: (id: ResourceID, values: {
-        [key: string]: any;
-    }) => void;
-    onUpdate?: (values: {
-        [key: string]: any;
-    }) => void;
+    initialValues?: T;
+    onCreate?: (id: ResourceID, values: T) => void;
+    onUpdate?: (values: Partial<T>) => void;
+    onDelete?: (values: T) => void;
 }
-export declare class Resource extends ResourceBase<any | null> {
+export declare class Resource<T = {
+    [key: string]: any;
+}, C extends ResourceConfig<T> = ResourceConfig<T>> extends ResourceBase<T> {
     id?: ResourceID;
-    onCreate?: (id: ResourceID, values: {
-        [key: string]: any;
-    }) => void;
-    onUpdate?: (values: {
-        [key: string]: any;
-    }) => void;
+    onCreate?: (id: ResourceID, values: T) => void;
+    onUpdate?: (values: Partial<T>) => void;
+    onDelete?: (values: T) => void;
     private updatingHash;
     private patchHash;
-    constructor(config: ResourceConfig);
+    constructor(config: C);
     tryWithLoading(p: Promise<any>): Promise<any>;
     getIfHasID: () => Promise<any>;
     get: () => Promise<any>;
-    create: (values: {
-        [key: string]: any;
-    }) => Promise<any>;
-    update: (values: {
-        [key: string]: any;
-    }) => Promise<void>;
-    put: (values: {
-        [key: string]: any;
-    }) => Promise<any>;
+    create: (values: T) => Promise<any>;
+    update: (values: T) => Promise<void>;
+    put: (values: T) => Promise<any>;
     updateValues: (props: {
-        values: {
-            [key: string]: any;
-        };
+        values: Partial<T>;
         fields?: string[] | undefined;
     }) => Promise<any>;
-    patch: (values: {
-        [key: string]: any;
-    }, props?: {
+    patch: (values: Partial<T>, props?: {
         fields?: string[] | undefined;
     } | undefined) => Promise<any>;
     delete: () => Promise<any>;
     isPersisted: () => boolean;
-    save: (values: {
-        [key: string]: any;
-    }) => Promise<any>;
+    save: (values: T) => Promise<any>;
 }
-export {};

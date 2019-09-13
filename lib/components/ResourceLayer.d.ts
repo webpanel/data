@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Resource, ResourceConfig } from '../Resource';
-export interface ResourceLayerProps extends ResourceConfig {
+export interface ResourceLayerProps<T> extends ResourceConfig<T> {
     autoload?: boolean;
     render: (resource: Resource) => React.ReactNode;
 }
@@ -8,7 +8,9 @@ export interface ResourceLayerState {
     errors: Error[];
     resource?: Resource;
 }
-export declare class ResourceLayer extends React.Component<ResourceLayerProps, ResourceLayerState> {
+export declare class ResourceLayer<T = {
+    [key: string]: any;
+}> extends React.Component<ResourceLayerProps<T>, ResourceLayerState> {
     state: ResourceLayerState;
     handleError: (err: Error) => never;
     createResource(): void;

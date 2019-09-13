@@ -7,7 +7,8 @@ export {
 } from './DataSourceRequest';
 export { ResourceLayer } from './components/ResourceLayer';
 export { ResourceCollectionLayer } from './components/ResourceCollectionLayer';
-export { Resource, ResourceConfig } from './Resource';
+export { Resource, ResourceID, ResourceConfig } from './Resource';
+export { DummyResource } from './DummyResource';
 export { ResourceCollection } from './ResourceCollection';
 export { DummyResourceCollection } from './DummyResourceCollection';
 
