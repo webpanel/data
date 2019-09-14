@@ -37,12 +37,12 @@ export class ResourceBase<T> {
     this.pollInterval = config.pollInterval;
   }
 
-  public resetPolling() {
+  public resetPolling = () => {
     this.stopPolling();
     this.startPolling();
-  }
+  };
 
-  public startPolling() {
+  public startPolling = () => {
     if (
       typeof this.pollInterval !== 'undefined' &&
       typeof this.pollRefreshInterval === 'undefined'
@@ -53,20 +53,20 @@ export class ResourceBase<T> {
         this.polling = false;
       }, this.pollInterval);
     }
-  }
+  };
 
-  public stopPolling() {
+  public stopPolling = () => {
     if (typeof this.pollRefreshInterval !== 'undefined') {
       clearInterval(this.pollRefreshInterval);
     }
-  }
+  };
 
-  public async get() {
+  public get = async (): Promise<void> => {
     throw new Error('get method not implemented');
-  }
+  };
 
-  getRawData(): T | undefined {
+  getRawData = (): T | undefined => {
     const data = toJS(this.data);
     return data;
-  }
+  };
 }

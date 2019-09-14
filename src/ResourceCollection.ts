@@ -69,7 +69,7 @@ export class ResourceCollection<
     this.setInitialValues(config);
   }
 
-  private autopersistConfig() {
+  private autopersistConfig = () => {
     if (this.autopersistConfigKey) {
       const config = {
         filters: this.filters,
@@ -82,9 +82,9 @@ export class ResourceCollection<
       if (storage)
         storage.setItem(this.autopersistConfigKey, JSON.stringify(config));
     }
-  }
+  };
 
-  public async get() {
+  public get = async (): Promise<void> => {
     this.error = undefined;
     this.loading = true;
     const currentHash = Math.random()
@@ -115,12 +115,12 @@ export class ResourceCollection<
         this.loading = false;
       }
     }
-  }
+  };
 
-  public async reload() {
+  public reload = async () => {
     this.resetPolling();
     return this.get();
-  }
+  };
 
   delete = async (id: string | number) => {
     let res = await this.dataSource.delete(this.name, id, ['id']);
@@ -160,25 +160,25 @@ export class ResourceCollection<
     this.offset = 0;
   };
 
-  async updateFilters(
+  updateFilters = async (
     filters?: DataSourceArgumentMap,
     autoreload: boolean = true,
     autopersist: boolean = true
-  ): Promise<void> {
+  ): Promise<void> => {
     return this.updateNamedFilters(
       '_default',
       filters,
       autoreload,
       autopersist
     );
-  }
+  };
 
-  async updateNamedFilters(
+  updateNamedFilters = async (
     key: string,
     filters?: DataSourceArgumentMap,
     autoreload: boolean = true,
     autopersist: boolean = true
-  ) {
+  ) => {
     const filtersBefore = JSON.stringify(this.filters);
     this.filters = this.filters || {};
     if (filters) {
@@ -194,45 +194,48 @@ export class ResourceCollection<
     if (filtersChanged) this.resetPagination();
     if (autopersist) this.autopersistConfig();
     if (autoreload) return this.reload();
-  }
+  };
 
-  namedFilter(key: string): DataSourceArgumentMap | undefined {
+  namedFilter = (key: string): DataSourceArgumentMap | undefined => {
     return this.filters && this.filters[key];
-  }
+  };
 
-  async updateSearch(
+  updateSearch = async (
     search?: string,
     autoreload: boolean = true
-  ): Promise<void> {
+  ): Promise<void> => {
     this.search = search;
     this.resetPagination();
     this.autopersistConfig();
     if (autoreload) return this.reload();
-  }
+  };
 
-  async updateSorting(
+  updateSorting = async (
     sorting?: SortInfo[],
     autoreload: boolean = true
-  ): Promise<void> {
+  ): Promise<void> => {
     this.sorting = sorting;
     this.autopersistConfig();
     if (autoreload) return this.reload();
-  }
+  };
 
-  async updateOffset(
+  updateOffset = async (
     offset?: number,
     autoreload: boolean = true
-  ): Promise<void> {
+  ): Promise<void> => {
     this.offset = offset;
     this.autopersistConfig();
     if (autoreload) return this.reload();
-  }
+  };
 
-  async updateLimit(limit?: number, autoreload: boolean = true): Promise<void> {
+  updateLimit = async (
+    limit?: number,
+    autoreload: boolean = true
+  ): Promise<void> => {
     this.limit = limit;
     this.autopersistConfig();
     if (autoreload) return this.reload();
-  }
+  };
 
   public get page(): number {
     const limit = this.limit || 30;

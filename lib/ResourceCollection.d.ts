@@ -25,11 +25,11 @@ export declare class ResourceCollection<T = any[] | null, C extends ResourceColl
     private loadingHash;
     constructor(config: C);
     private autopersistConfig;
-    get(): Promise<void>;
-    reload(): Promise<void>;
-    delete: (id: import("./Resource").ResourceID) => Promise<any>;
+    get: () => Promise<void>;
+    reload: () => Promise<void>;
+    delete: (id: string | number) => Promise<any>;
     getItem: (props: {
-        id: import("./Resource").ResourceID;
+        id: string | number;
         args?: {
             [key: string]: any;
         } | undefined;
@@ -42,12 +42,12 @@ export declare class ResourceCollection<T = any[] | null, C extends ResourceColl
     setInitialValues: (values: ResourceCollectionConfig) => void;
     resetFilters: () => void;
     resetPagination: () => void;
-    updateFilters(filters?: DataSourceArgumentMap, autoreload?: boolean, autopersist?: boolean): Promise<void>;
-    updateNamedFilters(key: string, filters?: DataSourceArgumentMap, autoreload?: boolean, autopersist?: boolean): Promise<void>;
-    namedFilter(key: string): DataSourceArgumentMap | undefined;
-    updateSearch(search?: string, autoreload?: boolean): Promise<void>;
-    updateSorting(sorting?: SortInfo[], autoreload?: boolean): Promise<void>;
-    updateOffset(offset?: number, autoreload?: boolean): Promise<void>;
-    updateLimit(limit?: number, autoreload?: boolean): Promise<void>;
+    updateFilters: (filters?: DataSourceArgumentMap | undefined, autoreload?: boolean, autopersist?: boolean) => Promise<void>;
+    updateNamedFilters: (key: string, filters?: DataSourceArgumentMap | undefined, autoreload?: boolean, autopersist?: boolean) => Promise<void>;
+    namedFilter: (key: string) => DataSourceArgumentMap | undefined;
+    updateSearch: (search?: string | undefined, autoreload?: boolean) => Promise<void>;
+    updateSorting: (sorting?: SortInfo[] | undefined, autoreload?: boolean) => Promise<void>;
+    updateOffset: (offset?: number | undefined, autoreload?: boolean) => Promise<void>;
+    updateLimit: (limit?: number | undefined, autoreload?: boolean) => Promise<void>;
     readonly page: number;
 }

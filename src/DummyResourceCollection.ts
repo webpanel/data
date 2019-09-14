@@ -12,8 +12,8 @@ export class DummyResourceCollection<T> extends ResourceCollection<
   T[],
   DummyResourceCollectionConfig<T>
 > {
-  public async get() {
+  public get = async (): Promise<void> => {
     this.data = this.initialConfig.initialData;
     this.count = this.initialConfig.initialData.length;
-  }
+  };
 }

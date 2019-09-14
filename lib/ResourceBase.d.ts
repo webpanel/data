@@ -22,9 +22,9 @@ export declare class ResourceBase<T> {
     error: Error | undefined;
     private pollRefreshInterval?;
     constructor(config: ResourceBaseConfig);
-    resetPolling(): void;
-    startPolling(): void;
-    stopPolling(): void;
-    get(): Promise<void>;
-    getRawData(): T | undefined;
+    resetPolling: () => void;
+    startPolling: () => void;
+    stopPolling: () => void;
+    get: () => Promise<void>;
+    getRawData: () => T | undefined;
 }
