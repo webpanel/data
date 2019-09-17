@@ -21,7 +21,7 @@ export declare class Resource<T = {
     getIfHasID: () => Promise<any>;
     get: () => Promise<any>;
     create: (values: T) => Promise<any>;
-    update: (values: T) => Promise<void>;
+    update: (values: T) => Promise<any>;
     put: (values: T) => Promise<any>;
     updateValues: (props: {
         values: Partial<T>;

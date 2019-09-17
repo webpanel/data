@@ -88,7 +88,7 @@ export class Resource<
 
   // deprecated, please use put
   update = async (values: T) => {
-    this.put(values);
+    return this.put(values);
   };
   put = async (values: T) => {
     if (!this.id) {
