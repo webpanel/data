@@ -149,7 +149,13 @@ export class GraphQLConnector extends HTTPConnector {
       this.generateQueryParams(request, args),
       {
         sortingFormatter: (sorting: SortInfo[]) => {
-          return sorting.map(x => this.sortFormatName(x));
+          const splitSorting: SortInfo[] = [];
+          for (const _sorting of sorting) {
+            for (const s of _sorting.columnKey.split(',')) {
+              splitSorting.push({ ..._sorting, columnKey: s });
+            }
+          }
+          return splitSorting.map(x => this.sortFormatName(x));
         }
       }
     );
