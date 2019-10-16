@@ -1,10 +1,13 @@
 import { SortInfo } from '../../DataSourceRequest';
 export declare type GraphQLArgumentType = GraphQLArgumentMap | SortInfo | string | number | null | undefined;
+export declare type SortInfoValue = string | {
+    [key: string]: any;
+};
 export interface GraphQLArgumentMap {
     [key: string]: GraphQLArgumentType | GraphQLArgumentType[];
 }
 export interface GraphQLFieldOptions {
-    sortingFormatter: (sorting: SortInfo[]) => string[];
+    sortingFormatter: (sorting: SortInfo[]) => SortInfoValue[];
 }
 export declare class GraphQLField {
     private name?;
@@ -17,7 +20,7 @@ export declare class GraphQLField {
     arg(key: string, value: GraphQLArgumentType): GraphQLField;
     args(value: GraphQLArgumentMap): GraphQLField;
     toString(): string;
-    formatSortInfo(sorting: SortInfo[]): string[];
+    formatSortInfo(sorting: SortInfo[]): SortInfoValue[];
     private serializeArgs;
     private serializeArg;
     readonly arguments: object;

@@ -10,6 +10,12 @@ export type GraphQLArgumentType =
   | number
   | null
   | undefined;
+
+export type SortInfoValue =
+  | string
+  | {
+      [key: string]: any;
+    };
 export interface GraphQLArgumentMap {
   [key: string]: GraphQLArgumentType | GraphQLArgumentType[];
 }
@@ -19,7 +25,7 @@ function isGraphQLArgumentMap(arg: any): arg is GraphQLArgumentMap {
 }
 
 export interface GraphQLFieldOptions {
-  sortingFormatter: (sorting: SortInfo[]) => string[];
+  sortingFormatter: (sorting: SortInfo[]) => SortInfoValue[];
 }
 
 export class GraphQLField {
@@ -73,7 +79,7 @@ export class GraphQLField {
     return str + ' ';
   }
 
-  formatSortInfo(sorting: SortInfo[]): string[] {
+  formatSortInfo(sorting: SortInfo[]): SortInfoValue[] {
     return (
       sorting &&
       sorting.map(
