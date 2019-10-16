@@ -1,4 +1,5 @@
 import { DataSourceRequest, HTTPRequest, HTTPResponse, ResourceCollectionResponse, ResourceResponse } from '../../connectors/Connector';
+import { SortInfoValue } from './GraphQLQuery';
 import { SortInfo } from '../../DataSourceRequest';
 import { HTTPConnector } from '../HTTPConnector';
 export declare type GraphQLFieldSource = {
@@ -9,7 +10,7 @@ export declare class GraphQLConnector extends HTTPConnector {
     filterInputTypeName(request: DataSourceRequest): string;
     sortInputTypeName(request: DataSourceRequest): string;
     inputTypeName(request: DataSourceRequest): string;
-    sortFormatName(sort: SortInfo): string;
+    sortFormatName(sort: SortInfo): SortInfoValue;
     protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;
     transformResponse(response: HTTPResponse, request: DataSourceRequest): Promise<ResourceResponse | ResourceCollectionResponse | null>;
     fetchFieldNameForRequest(request: DataSourceRequest): string;

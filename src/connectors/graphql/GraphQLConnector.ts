@@ -9,7 +9,12 @@ import {
   ResourceCollectionResponse,
   ResourceResponse
 } from '../../connectors/Connector';
-import { GraphQLArgumentMap, GraphQLField, GraphQLQuery } from './GraphQLQuery';
+import {
+  GraphQLArgumentMap,
+  GraphQLField,
+  GraphQLQuery,
+  SortInfoValue
+} from './GraphQLQuery';
 import { SortInfo, SortInfoOrder } from '../../DataSourceRequest';
 
 import { HTTPConnector } from '../HTTPConnector';
@@ -35,7 +40,7 @@ export class GraphQLConnector extends HTTPConnector {
       inflection.camelize(request.name, false)
     )}Raw${inflection.camelize(request.operation)}Input`;
   }
-  public sortFormatName(sort: SortInfo): string {
+  public sortFormatName(sort: SortInfo): SortInfoValue {
     return (
       sort.columnKey.toUpperCase() +
       (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
