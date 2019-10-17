@@ -8,6 +8,9 @@ export declare type GraphQLFieldSource = {
 export declare type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
 export declare class GraphQLConnector extends HTTPConnector {
     filterInputTypeName(request: DataSourceRequest): string;
+    transformFilterObject(request: DataSourceRequest): {
+        [key: string]: any;
+    };
     sortInputTypeName(request: DataSourceRequest): string;
     inputTypeName(request: DataSourceRequest): string;
     sortFormatName(sort: SortInfo): SortInfoValue;

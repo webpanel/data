@@ -29,6 +29,17 @@ export class GraphQLConnector extends HTTPConnector {
       inflection.camelize(fieldName, false)
     )}FilterType`;
   }
+  public transformFilterObject(
+    request: DataSourceRequest
+  ): { [key: string]: any } {
+    const filter: { [key: string]: any } = {};
+    for (const filterName of Object.keys(request.filters)) {
+      for (const key of Object.keys(request.filters[filterName])) {
+        filter[key] = request.filters[filterName][key];
+      }
+    }
+    return filter;
+  }
   public sortInputTypeName(request: DataSourceRequest): string {
     let fieldName = this.fetchFieldNameForRequest(request);
     return `${inflection.singularize(
@@ -124,12 +135,7 @@ export class GraphQLConnector extends HTTPConnector {
   transformRequest(request: DataSourceRequest): HTTPRequest {
     let fetchFieldName = this.fetchFieldNameForRequest(request);
 
-    let filter: { [key: string]: any } = {};
-    for (const filterName of Object.keys(request.filters)) {
-      for (const key of Object.keys(request.filters[filterName])) {
-        filter[key] = request.filters[filterName][key];
-      }
-    }
+    const filter = this.transformFilterObject(request);
 
     const args =
       request.operation === DataSourceOperation.list
