@@ -33,6 +33,7 @@ export class Resource<
     this.onDelete = config.onDelete;
     if (!this.id) {
       this.data = config.initialValues;
+      this.initialized = true;
     }
   }
 
