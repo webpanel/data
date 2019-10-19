@@ -16,6 +16,7 @@ export declare class ResourceBase<T> {
         [key: string]: any;
     };
     pollInterval?: number;
+    initialized: boolean;
     loading: boolean;
     polling: boolean;
     data: T | undefined;

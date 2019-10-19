@@ -19,6 +19,8 @@ export class ResourceBase<T> {
   pollInterval?: number;
 
   @observable
+  initialized: boolean = false;
+  @observable
   loading: boolean = false;
   @observable
   polling: boolean = false;

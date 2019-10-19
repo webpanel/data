@@ -36,13 +36,16 @@ export class Resource<
     }
   }
 
-  async tryWithLoading(p: Promise<any>): Promise<any> {
+  async tryWithLoading(p: Promise<any>, saveError = true): Promise<any> {
     this.error = undefined;
     this.loading = true;
     try {
       return await p;
     } catch (err) {
-      this.error = err;
+      if (saveError) {
+        this.error = err;
+      }
+      throw err;
     } finally {
       this.loading = false;
     }
@@ -61,6 +64,7 @@ export class Resource<
     let res = await this.tryWithLoading(
       this.dataSource.read(this.name, this.id, this.fields, this.arguments)
     );
+    this.initialized = true;
     this.data = res;
     return res;
   };
@@ -74,7 +78,8 @@ export class Resource<
     }
 
     const res = await this.tryWithLoading(
-      this.dataSource.create(this.name, values, fields, this.arguments)
+      this.dataSource.create(this.name, values, fields, this.arguments),
+      false
     );
     this.data = res;
     this.id = res.id;
@@ -108,7 +113,8 @@ export class Resource<
         values,
         this.fields,
         this.arguments
-      )
+      ),
+      false
     );
     if (this.updatingHash == currentHash) {
       this.data = res;

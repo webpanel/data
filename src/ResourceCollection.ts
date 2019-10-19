@@ -105,6 +105,7 @@ export class ResourceCollection<
       if (res && this.loadingHash == currentHash) {
         this.data = res.items || [];
         this.count = res.count;
+        this.initialized = true;
       }
     } catch (err) {
       if (this.loadingHash == currentHash) {
