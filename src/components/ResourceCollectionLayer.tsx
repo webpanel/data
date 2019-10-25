@@ -9,7 +9,8 @@ import { DataSourceArgumentMap } from '../DataSource';
 import { SortInfo } from '../DataSourceRequest';
 import { observer } from 'mobx-react';
 
-export interface ResourceCollectionLayerProps extends ResourceCollectionConfig {
+export interface ResourceCollectionLayerProps<T = any>
+  extends ResourceCollectionConfig<T> {
   autoload?: boolean;
   render: (resource: ResourceCollection) => React.ReactNode;
 

@@ -2,16 +2,17 @@ import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
-export interface ResourceCollectionOptions {
+export interface ResourceCollectionOptions<T> {
     autopersistConfigKey?: string;
     initialFilters?: DataSourceArgumentMap;
     initialSearch?: string;
     initialSorting?: SortInfo[];
     initialOffset?: number;
     initialLimit?: number;
+    dataTransform?: (items: T[]) => T[];
 }
-export declare type ResourceCollectionConfig = ResourceBaseConfig & ResourceCollectionOptions;
-export declare class ResourceCollection<T = any[] | null, C extends ResourceCollectionConfig = ResourceCollectionConfig> extends ResourceBase<T> {
+export declare type ResourceCollectionConfig<T> = ResourceBaseConfig & ResourceCollectionOptions<T>;
+export declare class ResourceCollection<T = any, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
     count: number | undefined;
     filters?: {
         [key: string]: DataSourceArgumentMap;
@@ -40,7 +41,7 @@ export declare class ResourceCollection<T = any[] | null, C extends ResourceColl
     }, import("./Resource").ResourceConfig<{
         [key: string]: any;
     }>>;
-    setInitialValues: (values: ResourceCollectionConfig) => void;
+    setInitialValues: (values: ResourceCollectionConfig<T>) => void;
     resetFilters: () => void;
     resetPagination: () => void;
     updateFilters: (filters?: DataSourceArgumentMap | undefined, autoreload?: boolean, autopersist?: boolean) => Promise<void>;

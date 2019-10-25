@@ -4,12 +4,12 @@ import {
 } from './ResourceCollection';
 
 export interface DummyResourceCollectionConfig<T>
-  extends ResourceCollectionConfig {
+  extends ResourceCollectionConfig<T> {
   initialData: T[];
 }
 
 export class DummyResourceCollection<T> extends ResourceCollection<
-  T[],
+  T,
   DummyResourceCollectionConfig<T>
 > {
   public get = async (): Promise<void> => {

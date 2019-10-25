@@ -5,7 +5,7 @@ import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
 import { observable } from 'mobx';
 
-export interface ResourceCollectionOptions {
+export interface ResourceCollectionOptions<T> {
   autopersistConfigKey?: string;
 
   initialFilters?: DataSourceArgumentMap;
@@ -13,15 +13,17 @@ export interface ResourceCollectionOptions {
   initialSorting?: SortInfo[];
   initialOffset?: number;
   initialLimit?: number;
+
+  dataTransform?: (items: T[]) => T[];
 }
 
-export type ResourceCollectionConfig = ResourceBaseConfig &
-  ResourceCollectionOptions;
+export type ResourceCollectionConfig<T> = ResourceBaseConfig &
+  ResourceCollectionOptions<T>;
 
 export class ResourceCollection<
-  T = any[] | null,
-  C extends ResourceCollectionConfig = ResourceCollectionConfig
-> extends ResourceBase<T> {
+  T = any,
+  C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>
+> extends ResourceBase<T[]> {
   @observable
   count: number | undefined = undefined;
   @observable
@@ -147,7 +149,7 @@ export class ResourceCollection<
     return item;
   };
 
-  setInitialValues = (values: ResourceCollectionConfig) => {
+  setInitialValues = (values: ResourceCollectionConfig<T>) => {
     this.search = values.initialSearch;
     this.sorting = values.initialSorting;
     this.offset = values.initialOffset;
