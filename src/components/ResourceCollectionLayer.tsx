@@ -12,7 +12,7 @@ import { observer } from 'mobx-react';
 export interface ResourceCollectionLayerProps<T = any>
   extends ResourceCollectionConfig<T> {
   autoload?: boolean;
-  render: (resource: ResourceCollection) => React.ReactNode;
+  render: (resource: ResourceCollection<T>) => React.ReactNode;
 
   // observed properties
   values?: {
@@ -25,7 +25,7 @@ export interface ResourceCollectionLayerProps<T = any>
 }
 
 export interface ResourceCollectionLayerState {
-  resource?: ResourceCollection;
+  resource?: ResourceCollection<any>;
 }
 
 @observer
@@ -76,7 +76,7 @@ export class ResourceCollectionLayer extends React.Component<
     if (!resource) {
       return;
     }
-    const _resource = resource as ResourceCollection;
+    const _resource = resource as ResourceCollection<any>;
 
     let hasChange = false;
 
@@ -112,7 +112,7 @@ export class ResourceCollectionLayer extends React.Component<
     if (!resource) {
       return;
     }
-    const _resource = resource as ResourceCollection;
+    const _resource = resource as ResourceCollection<any>;
     _resource.get().catch(this.handleError);
   }
 

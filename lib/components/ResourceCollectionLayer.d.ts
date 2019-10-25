@@ -4,7 +4,7 @@ import { DataSourceArgumentMap } from '../DataSource';
 import { SortInfo } from '../DataSourceRequest';
 export interface ResourceCollectionLayerProps<T = any> extends ResourceCollectionConfig<T> {
     autoload?: boolean;
-    render: (resource: ResourceCollection) => React.ReactNode;
+    render: (resource: ResourceCollection<T>) => React.ReactNode;
     values?: {
         filters?: DataSourceArgumentMap;
         search?: string;
@@ -14,7 +14,7 @@ export interface ResourceCollectionLayerProps<T = any> extends ResourceCollectio
     };
 }
 export interface ResourceCollectionLayerState {
-    resource?: ResourceCollection;
+    resource?: ResourceCollection<any>;
 }
 export declare class ResourceCollectionLayer extends React.Component<ResourceCollectionLayerProps, ResourceCollectionLayerState> {
     state: ResourceCollectionLayerState;

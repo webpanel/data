@@ -1,11 +1,15 @@
-import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+import {
+  ResourceBase,
+  ResourceBaseConfig,
+  ResourceBaseOptions
+} from './ResourceBase';
 
 import { DataSourceArgumentMap } from './DataSource';
 import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
 import { observable } from 'mobx';
 
-export interface ResourceCollectionOptions<T> {
+export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
   autopersistConfigKey?: string;
 
   initialFilters?: DataSourceArgumentMap;
@@ -13,15 +17,13 @@ export interface ResourceCollectionOptions<T> {
   initialSorting?: SortInfo[];
   initialOffset?: number;
   initialLimit?: number;
-
-  dataTransform?: (items: T[]) => T[];
 }
 
 export type ResourceCollectionConfig<T> = ResourceBaseConfig &
   ResourceCollectionOptions<T>;
 
 export class ResourceCollection<
-  T = any,
+  T,
   C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>
 > extends ResourceBase<T[]> {
   @observable
@@ -108,7 +110,7 @@ export class ResourceCollection<
         this.arguments
       );
       if (res && this.loadingHash == currentHash) {
-        this.data = res.items || [];
+        this.setRawData(res.items || []);
         this.count = res.count;
         this.initialized = true;
       }

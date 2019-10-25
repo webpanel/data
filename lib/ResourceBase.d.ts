@@ -1,4 +1,7 @@
 import { DataSource } from './DataSource';
+export interface ResourceBaseOptions<T> {
+    dataTransform?: (items: T) => T;
+}
 export interface ResourceBaseConfig {
     dataSource: DataSource;
     name: string;
@@ -9,6 +12,7 @@ export interface ResourceBaseConfig {
     pollInterval?: number;
 }
 export declare class ResourceBase<T> {
+    private config;
     name: string;
     dataSource: DataSource;
     fields?: string[];
@@ -22,10 +26,11 @@ export declare class ResourceBase<T> {
     data: T | undefined;
     error: Error | undefined;
     private pollRefreshInterval?;
-    constructor(config: ResourceBaseConfig);
+    constructor(config: ResourceBaseConfig & ResourceBaseOptions<T>);
     resetPolling: () => void;
     startPolling: () => void;
     stopPolling: () => void;
     get: () => Promise<void>;
+    setRawData: (data: T | undefined) => void;
     getRawData: () => T | undefined;
 }

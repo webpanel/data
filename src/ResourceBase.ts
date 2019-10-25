@@ -2,6 +2,10 @@ import { observable, toJS } from 'mobx';
 
 import { DataSource } from './DataSource';
 
+export interface ResourceBaseOptions<T> {
+  dataTransform?: (items: T) => T;
+}
+
 export interface ResourceBaseConfig {
   dataSource: DataSource;
   name: string;
@@ -31,7 +35,7 @@ export class ResourceBase<T> {
 
   private pollRefreshInterval?: NodeJS.Timer;
 
-  constructor(config: ResourceBaseConfig) {
+  constructor(private config: ResourceBaseConfig & ResourceBaseOptions<T>) {
     this.dataSource = config.dataSource;
     this.name = config.name;
     this.fields = config.fields;
@@ -65,6 +69,14 @@ export class ResourceBase<T> {
 
   public get = async (): Promise<void> => {
     throw new Error('get method not implemented');
+  };
+
+  setRawData = (data: T | undefined) => {
+    if (this.config.dataTransform && typeof data !== 'undefined') {
+      this.data = this.config.dataTransform(data);
+    } else {
+      this.data = data;
+    }
   };
 
   getRawData = (): T | undefined => {

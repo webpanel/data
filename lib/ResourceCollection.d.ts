@@ -1,18 +1,17 @@
-import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
-export interface ResourceCollectionOptions<T> {
+export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
     autopersistConfigKey?: string;
     initialFilters?: DataSourceArgumentMap;
     initialSearch?: string;
     initialSorting?: SortInfo[];
     initialOffset?: number;
     initialLimit?: number;
-    dataTransform?: (items: T[]) => T[];
 }
 export declare type ResourceCollectionConfig<T> = ResourceBaseConfig & ResourceCollectionOptions<T>;
-export declare class ResourceCollection<T = any, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
+export declare class ResourceCollection<T, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
     count: number | undefined;
     filters?: {
         [key: string]: DataSourceArgumentMap;
