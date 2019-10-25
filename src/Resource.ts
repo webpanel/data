@@ -2,13 +2,15 @@ import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 
 export type ResourceID = string | number;
 
-export interface ResourceConfig<T> extends ResourceBaseConfig {
+export interface ResourceOptions<T> {
   id?: ResourceID;
   initialValues?: T;
   onCreate?: (id: ResourceID, values: T) => void;
   onUpdate?: (values: Partial<T>) => void;
   onDelete?: (values: T) => void;
 }
+
+export type ResourceConfig<T> = ResourceOptions<T> & ResourceBaseConfig;
 
 export class Resource<
   T = { [key: string]: any },

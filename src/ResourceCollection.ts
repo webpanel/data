@@ -5,7 +5,7 @@ import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
 import { observable } from 'mobx';
 
-export interface ResourceCollectionConfig extends ResourceBaseConfig {
+export interface ResourceCollectionOptions {
   autopersistConfigKey?: string;
 
   initialFilters?: DataSourceArgumentMap;
@@ -14,6 +14,9 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
   initialOffset?: number;
   initialLimit?: number;
 }
+
+export type ResourceCollectionConfig = ResourceBaseConfig &
+  ResourceCollectionOptions;
 
 export class ResourceCollection<
   T = any[] | null,

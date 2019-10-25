@@ -2,7 +2,7 @@ import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
 import { DataSourceArgumentMap } from './DataSource';
 import { Resource } from './Resource';
 import { SortInfo } from './DataSourceRequest';
-export interface ResourceCollectionConfig extends ResourceBaseConfig {
+export interface ResourceCollectionOptions {
     autopersistConfigKey?: string;
     initialFilters?: DataSourceArgumentMap;
     initialSearch?: string;
@@ -10,6 +10,7 @@ export interface ResourceCollectionConfig extends ResourceBaseConfig {
     initialOffset?: number;
     initialLimit?: number;
 }
+export declare type ResourceCollectionConfig = ResourceBaseConfig & ResourceCollectionOptions;
 export declare class ResourceCollection<T = any[] | null, C extends ResourceCollectionConfig = ResourceCollectionConfig> extends ResourceBase<T> {
     count: number | undefined;
     filters?: {
@@ -27,9 +28,9 @@ export declare class ResourceCollection<T = any[] | null, C extends ResourceColl
     private autopersistConfig;
     get: () => Promise<void>;
     reload: () => Promise<void>;
-    delete: (id: string | number) => Promise<any>;
+    delete: (id: import("./Resource").ResourceID) => Promise<any>;
     getItem: (props: {
-        id: string | number;
+        id: import("./Resource").ResourceID;
         args?: {
             [key: string]: any;
         } | undefined;
