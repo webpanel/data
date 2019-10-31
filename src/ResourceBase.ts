@@ -4,6 +4,7 @@ import { DataSource } from './DataSource';
 
 export interface ResourceBaseOptions<T> {
   dataTransform?: (items: T) => T;
+  pollInterval?: number;
 }
 
 export interface ResourceBaseConfig {
@@ -12,7 +13,6 @@ export interface ResourceBaseConfig {
   fields?: string[];
   initialArgs?: { [key: string]: any };
   // automatically refresh data (calls get internally)
-  pollInterval?: number;
 }
 
 export class ResourceBase<T> {

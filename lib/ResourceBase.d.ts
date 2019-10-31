@@ -1,6 +1,7 @@
 import { DataSource } from './DataSource';
 export interface ResourceBaseOptions<T> {
     dataTransform?: (items: T) => T;
+    pollInterval?: number;
 }
 export interface ResourceBaseConfig {
     dataSource: DataSource;
@@ -9,7 +10,6 @@ export interface ResourceBaseConfig {
     initialArgs?: {
         [key: string]: any;
     };
-    pollInterval?: number;
 }
 export declare class ResourceBase<T> {
     private config;

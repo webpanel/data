@@ -1,8 +1,12 @@
-import { ResourceBase, ResourceBaseConfig } from './ResourceBase';
+import {
+  ResourceBase,
+  ResourceBaseConfig,
+  ResourceBaseOptions
+} from './ResourceBase';
 
 export type ResourceID = string | number;
 
-export interface ResourceOptions<T> {
+export interface ResourceOptions<T> extends ResourceBaseOptions<T> {
   id?: ResourceID;
   initialValues?: T;
   onCreate?: (id: ResourceID, values: T) => void;
