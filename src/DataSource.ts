@@ -2,22 +2,23 @@ import {
   Connector,
   DataSourceRequest,
   isConnectorError
-} from './connectors/Connector';
+} from "./connectors/Connector";
 import {
   ResourceCollectionResponse,
   ResourceResponse
-} from './connectors/ResponseDataTransformer';
+} from "./connectors/ResponseDataTransformer";
 
-import { AuthSession } from 'webpanel-auth';
+import { AuthSession } from "webpanel-auth";
 // import { HTTPResponse } from './utils/HTTPResponse';
-import { DataSourceOperation } from './DataSourceRequest';
+import { DataSourceOperation } from "./DataSourceRequest";
 
 export type DataSourceArgumentType =
   | DataSourceArgumentMap
   | string
   | number
   | boolean
-  | null;
+  | null
+  | undefined;
 export interface DataSourceArgumentMap {
   [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
 }

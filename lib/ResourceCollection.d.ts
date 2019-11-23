@@ -28,9 +28,9 @@ export declare class ResourceCollection<T, C extends ResourceCollectionConfig<T>
     private autopersistConfig;
     get: () => Promise<void>;
     reload: () => Promise<void>;
-    delete: (id: import("./Resource").ResourceID) => Promise<any>;
+    delete: (id: string | number) => Promise<any>;
     getItem: (props: {
-        id: import("./Resource").ResourceID;
+        id: string | number;
         args?: {
             [key: string]: any;
         } | undefined;
