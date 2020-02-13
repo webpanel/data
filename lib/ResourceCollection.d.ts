@@ -1,7 +1,7 @@
-import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from './ResourceBase';
-import { DataSourceArgumentMap } from './DataSource';
-import { Resource } from './Resource';
-import { SortInfo } from './DataSourceRequest';
+import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from "./ResourceBase";
+import { DataSourceArgumentMap } from "./DataSource";
+import { Resource, ResourceID } from "./Resource";
+import { SortInfo } from "./DataSourceRequest";
 export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
     autopersistConfigKey?: string;
     initialFilters?: DataSourceArgumentMap;
@@ -11,7 +11,9 @@ export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
     initialLimit?: number;
 }
 export declare type ResourceCollectionConfig<T> = ResourceBaseConfig & ResourceCollectionOptions<T>;
-export declare class ResourceCollection<T, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
+export declare class ResourceCollection<T extends {
+    id: ResourceID;
+}, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
     count: number | undefined;
     filters?: {
         [key: string]: DataSourceArgumentMap;
@@ -40,6 +42,7 @@ export declare class ResourceCollection<T, C extends ResourceCollectionConfig<T>
     }, import("./Resource").ResourceConfig<{
         [key: string]: any;
     }>>;
+    patchItemValues(id: ResourceID, values: Partial<T>): Promise<Resource>;
     setInitialValues: (values: ResourceCollectionConfig<T>) => void;
     resetFilters: () => void;
     resetPagination: () => void;
@@ -50,5 +53,5 @@ export declare class ResourceCollection<T, C extends ResourceCollectionConfig<T>
     updateSorting: (sorting?: SortInfo[] | undefined, autoreload?: boolean) => Promise<void>;
     updateOffset: (offset?: number | undefined, autoreload?: boolean) => Promise<void>;
     updateLimit: (limit?: number | undefined, autoreload?: boolean) => Promise<void>;
-    readonly page: number;
+    get page(): number;
 }

@@ -1,8 +1,11 @@
-import * as React from 'react';
-import { ResourceCollection, ResourceCollectionConfig } from '../ResourceCollection';
-import { DataSourceArgumentMap } from '../DataSource';
-import { SortInfo } from '../DataSourceRequest';
-export interface ResourceCollectionLayerProps<T = any> extends ResourceCollectionConfig<T> {
+import * as React from "react";
+import { ResourceCollection, ResourceCollectionConfig } from "../ResourceCollection";
+import { DataSourceArgumentMap } from "../DataSource";
+import { SortInfo } from "../DataSourceRequest";
+import { ResourceID } from "../Resource";
+export interface ResourceCollectionLayerProps<T extends {
+    id: ResourceID;
+} = any> extends ResourceCollectionConfig<T> {
     autoload?: boolean;
     render: (resource: ResourceCollection<T>) => React.ReactNode;
     values?: {

@@ -23,12 +23,12 @@ export declare class GraphQLField {
     formatSortInfo(sorting: SortInfo[]): SortInfoValue[];
     private serializeArgs;
     private serializeArg;
-    readonly arguments: object;
+    get arguments(): object;
 }
 export declare type GraphQLQueryType = 'query' | 'mutation';
 export declare class GraphQLQuery extends GraphQLField {
     type: GraphQLQueryType;
     constructor(type: GraphQLQueryType, name: string, options?: GraphQLFieldOptions);
     toString(): string;
-    readonly variables: {};
+    get variables(): {};
 }

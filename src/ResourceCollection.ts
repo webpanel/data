@@ -2,12 +2,12 @@ import {
   ResourceBase,
   ResourceBaseConfig,
   ResourceBaseOptions
-} from './ResourceBase';
+} from "./ResourceBase";
 
-import { DataSourceArgumentMap } from './DataSource';
-import { Resource } from './Resource';
-import { SortInfo } from './DataSourceRequest';
-import { observable } from 'mobx';
+import { DataSourceArgumentMap } from "./DataSource";
+import { Resource, ResourceID } from "./Resource";
+import { SortInfo } from "./DataSourceRequest";
+import { observable } from "mobx";
 
 export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
   autopersistConfigKey?: string;
@@ -23,7 +23,7 @@ export type ResourceCollectionConfig<T> = ResourceBaseConfig &
   ResourceCollectionOptions<T>;
 
 export class ResourceCollection<
-  T,
+  T extends { id: ResourceID },
   C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>
 > extends ResourceBase<T[]> {
   @observable
@@ -48,7 +48,7 @@ export class ResourceCollection<
   // this hash is used to simulate "cancelling" behaviour of loading requests
   // it's compared with the latest generated requst hash to make sure that resource collection displays only latest loading request
   // this is required in case of multiple get calls with different params (eg. autocompletion)
-  private loadingHash: string = '';
+  private loadingHash: string = "";
 
   constructor(config: C) {
     super(config);
@@ -131,7 +131,7 @@ export class ResourceCollection<
   };
 
   delete = async (id: string | number) => {
-    let res = await this.dataSource.delete(this.name, id, ['id']);
+    let res = await this.dataSource.delete(this.name, id, ["id"]);
     return res;
   };
 
@@ -150,6 +150,33 @@ export class ResourceCollection<
 
     return item;
   };
+
+  // item has to be loaded in current dataset
+  public async patchItemValues(
+    id: ResourceID,
+    values: Partial<T>
+  ): Promise<Resource> {
+    const itemData = this.data?.find(x => x.id == id);
+
+    if (typeof itemData === "undefined") {
+      throw new Error(
+        `item with id ${id} not found in current collection dataset`
+      );
+    }
+
+    const res = this.getItem({ id });
+    res.setRawData(itemData);
+    await res.patch(values);
+
+    const newData = this.data?.map(x =>
+      x.id == id && res.data ? res.data : x
+    );
+    if (newData) {
+      this.setRawData(newData as T[]);
+    }
+
+    return res;
+  }
 
   setInitialValues = (values: ResourceCollectionConfig<T>) => {
     this.search = values.initialSearch;
@@ -174,7 +201,7 @@ export class ResourceCollection<
     autopersist: boolean = true
   ): Promise<void> => {
     return this.updateNamedFilters(
-      '_default',
+      "_default",
       filters,
       autoreload,
       autopersist

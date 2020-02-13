@@ -23,6 +23,7 @@
     "@types/react": "*",
     "mobx": "^5.0.2",
     "mobx-react": "^5.2.3",
+    "typescript": "^3.7.5",
     "webpanel-auth": "*"
   },
   "peerDependencies": {

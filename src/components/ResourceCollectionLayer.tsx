@@ -1,16 +1,18 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   ResourceCollection,
   ResourceCollectionConfig
-} from '../ResourceCollection';
+} from "../ResourceCollection";
 
-import { DataSourceArgumentMap } from '../DataSource';
-import { SortInfo } from '../DataSourceRequest';
-import { observer } from 'mobx-react';
+import { DataSourceArgumentMap } from "../DataSource";
+import { SortInfo } from "../DataSourceRequest";
+import { observer } from "mobx-react";
+import { ResourceID } from "../Resource";
 
-export interface ResourceCollectionLayerProps<T = any>
-  extends ResourceCollectionConfig<T> {
+export interface ResourceCollectionLayerProps<
+  T extends { id: ResourceID } = any
+> extends ResourceCollectionConfig<T> {
   autoload?: boolean;
   render: (resource: ResourceCollection<T>) => React.ReactNode;
 
@@ -45,7 +47,7 @@ export class ResourceCollectionLayer extends React.Component<
     const { render, ...props } = this.props;
 
     const resource = new ResourceCollection(props);
-    if (this.props.autoload || typeof this.props.autoload === 'undefined') {
+    if (this.props.autoload || typeof this.props.autoload === "undefined") {
       resource.get().catch(this.handleError);
     }
     this.setState({ resource });
@@ -81,10 +83,10 @@ export class ResourceCollectionLayer extends React.Component<
     let hasChange = false;
 
     if (
-      JSON.stringify(_resource.namedFilter('$_layer')) !==
+      JSON.stringify(_resource.namedFilter("$_layer")) !==
       JSON.stringify(filters)
     ) {
-      _resource.updateNamedFilters('$_layer', filters, false);
+      _resource.updateNamedFilters("$_layer", filters, false);
       hasChange = true;
     }
     if (_resource.search !== search) {
@@ -120,7 +122,7 @@ export class ResourceCollectionLayer extends React.Component<
     const { resource } = this.state;
 
     if (!resource) {
-      return 'Resource not initialized';
+      return "Resource not initialized";
     }
     return this.props.render(resource);
   }
