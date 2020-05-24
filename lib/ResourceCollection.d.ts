@@ -37,11 +37,7 @@ export declare class ResourceCollection<T extends {
             [key: string]: any;
         } | undefined;
         autoload?: boolean | undefined;
-    }) => Resource<{
-        [key: string]: any;
-    }, import("./Resource").ResourceConfig<{
-        [key: string]: any;
-    }>>;
+    }) => Resource;
     patchItemValues(id: ResourceID, values: Partial<T>): Promise<Resource>;
     setInitialValues: (values: ResourceCollectionConfig<T>) => void;
     resetFilters: () => void;

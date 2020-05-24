@@ -1,15 +1,13 @@
 import {
   Connector,
   DataSourceRequest,
-  isConnectorError
+  isConnectorError,
 } from "./connectors/Connector";
 import {
   ResourceCollectionResponse,
-  ResourceResponse
+  ResourceResponse,
 } from "./connectors/ResponseDataTransformer";
 
-import { AuthSession } from "webpanel-auth";
-// import { HTTPResponse } from './utils/HTTPResponse';
 import { DataSourceOperation } from "./DataSourceRequest";
 
 export type DataSourceArgumentType =
@@ -22,13 +20,21 @@ export type DataSourceArgumentType =
 export interface DataSourceArgumentMap {
   [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
 }
+export interface DataSourceArgumentOptions {
+  onAuthorizationError?: (error: Error) => void;
+}
 
 export class DataSource {
   name: string;
   connector: Connector;
   url: string;
 
-  constructor(name: string, connector: Connector, url: string) {
+  constructor(
+    name: string,
+    connector: Connector,
+    url: string,
+    private options?: DataSourceArgumentOptions
+  ) {
     this.name = name;
     this.connector = connector;
     this.url = url;
@@ -53,7 +59,7 @@ export class DataSource {
       sorting,
       offset,
       limit,
-      args
+      args,
     });
   }
   async create(
@@ -67,7 +73,7 @@ export class DataSource {
       name,
       fields,
       data,
-      args
+      args,
     });
   }
   async read(
@@ -81,7 +87,7 @@ export class DataSource {
       name,
       fields,
       id,
-      args
+      args,
     });
   }
   async update(
@@ -97,7 +103,7 @@ export class DataSource {
       fields,
       id,
       data,
-      args
+      args,
     });
   }
   async delete(
@@ -111,7 +117,7 @@ export class DataSource {
       name,
       fields,
       id,
-      args
+      args,
     });
   }
 
@@ -140,15 +146,15 @@ export class DataSource {
       sorting: params.sorting,
       offset: params.offset,
       limit: params.limit,
-      arguments: params.args
+      arguments: params.args,
     });
 
     try {
       return await this.connector.send(dataSourceRequest);
     } catch (err) {
       if (isConnectorError(err)) {
-        if (err.authorization) {
-          AuthSession.current().logout();
+        if (err.authorization && this.options?.onAuthorizationError) {
+          this.options?.onAuthorizationError(err);
           return null;
         }
       }

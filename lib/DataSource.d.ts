@@ -5,11 +5,15 @@ export declare type DataSourceArgumentType = DataSourceArgumentMap | string | nu
 export interface DataSourceArgumentMap {
     [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
 }
+export interface DataSourceArgumentOptions {
+    onAuthorizationError?: (error: Error) => void;
+}
 export declare class DataSource {
+    private options?;
     name: string;
     connector: Connector;
     url: string;
-    constructor(name: string, connector: Connector, url: string);
+    constructor(name: string, connector: Connector, url: string, options?: DataSourceArgumentOptions | undefined);
     list(name: string, fields?: string[], filters?: {
         [key: string]: DataSourceArgumentMap;
     }, search?: string, sorting?: string[], offset?: number, limit?: number, args?: DataSourceArgumentMap): Promise<any>;

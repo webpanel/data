@@ -2,50 +2,50 @@ import {
   Connector,
   DataSourceRequest,
   HTTPRequest,
-  HTTPResponse
-} from './Connector';
+  HTTPResponse,
+} from "./Connector";
 import {
   ResourceCollectionResponse,
   ResourceResponse,
-  ResponseDataTransformer
-} from './ResponseDataTransformer';
+  ResponseDataTransformer,
+} from "./ResponseDataTransformer";
+import { Thunk, resolveOptionalThunk } from "ts-thunk";
 
-import { AuthSession } from 'webpanel-auth';
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 export interface HTTPConnectorConfiguration {
   responseDataTransformer?: ResponseDataTransformer;
+  headers?: Thunk<{ [key: string]: string }>;
 }
 
 export class HTTPConnector implements Connector {
   responseTransformer: ResponseDataTransformer;
 
-  constructor(config: HTTPConnectorConfiguration = {}) {
+  constructor(private config: HTTPConnectorConfiguration = {}) {
     this.responseTransformer =
       config.responseDataTransformer || new ResponseDataTransformer();
   }
 
   protected async sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse> {
-    const accessToken = AuthSession.current().accessToken;
-
-    let headers: { [index: string]: string } = {
-      'content-type': 'application/json'
+    let defaultHeaders: { [index: string]: string } = {
+      "content-type": "application/json",
     };
-    if (accessToken) {
-      headers.authorization = `Bearer ${accessToken}`;
-    }
+    const headers = {
+      ...defaultHeaders,
+      ...resolveOptionalThunk(this.config.headers),
+    };
 
     let res = await fetch(request.getUrl(), {
       method: request.method,
       body: request.data,
-      headers
+      headers,
     });
 
     let data = null;
     if (res.status !== 204) {
-      const contentType=res.headers.get('content-type')
-      switch (contentType && contentType.split(';')[0]) {
-        case 'application/json':
+      const contentType = res.headers.get("content-type");
+      switch (contentType && contentType.split(";")[0]) {
+        case "application/json":
           data = await res.json();
           break;
         default:
@@ -65,7 +65,7 @@ export class HTTPConnector implements Connector {
   }
 
   protected transformRequest(request: DataSourceRequest): HTTPRequest {
-    throw new Error('build request must be implemented');
+    throw new Error("build request must be implemented");
   }
 
   protected async transformResponse(

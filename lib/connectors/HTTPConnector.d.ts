@@ -1,9 +1,14 @@
-import { Connector, DataSourceRequest, HTTPRequest, HTTPResponse } from './Connector';
-import { ResourceCollectionResponse, ResourceResponse, ResponseDataTransformer } from './ResponseDataTransformer';
+import { Connector, DataSourceRequest, HTTPRequest, HTTPResponse } from "./Connector";
+import { ResourceCollectionResponse, ResourceResponse, ResponseDataTransformer } from "./ResponseDataTransformer";
+import { Thunk } from "ts-thunk";
 export interface HTTPConnectorConfiguration {
     responseDataTransformer?: ResponseDataTransformer;
+    headers?: Thunk<{
+        [key: string]: string;
+    }>;
 }
 export declare class HTTPConnector implements Connector {
+    private config;
     responseTransformer: ResponseDataTransformer;
     constructor(config?: HTTPConnectorConfiguration);
     protected sendHttpRequest(request: HTTPRequest): Promise<HTTPResponse>;

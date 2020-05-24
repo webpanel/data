@@ -13,6 +13,7 @@
     "node-fetch": "^2.1.2",
     "querystring": "^0.2.0",
     "react": "^16.8.6",
+    "ts-thunk": "^0.1.1",
     "url": "^0.11.0"
   },
   "devDependencies": {
@@ -23,13 +24,11 @@
     "@types/react": "^16.8.14",
     "mobx": "^5.0.2",
     "mobx-react": "^5.2.3",
-    "typescript": "^3.7.5",
-    "webpanel-auth": "*"
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
     "mobx": "*",
-    "mobx-react": "*",
-    "webpanel-auth": "*"
+    "mobx-react": "*"
   },
   "repository": {
     "type": "git",
