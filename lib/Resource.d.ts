@@ -1,4 +1,4 @@
-import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from './ResourceBase';
+import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from "./ResourceBase";
 export declare type ResourceID = string | number;
 export interface ResourceOptions<T> extends ResourceBaseOptions<T> {
     id?: ResourceID;

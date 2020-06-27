@@ -1,8 +1,8 @@
 import {
   ResourceBase,
   ResourceBaseConfig,
-  ResourceBaseOptions
-} from './ResourceBase';
+  ResourceBaseOptions,
+} from "./ResourceBase";
 
 export type ResourceID = string | number;
 
@@ -28,8 +28,8 @@ export class Resource<
   // this hash is used to simulate "cancelling" behaviour of loading requests
   // it's compared with the latest generated requst hash to make sure that resource collection displays only latest loading request
   // this is required in case of multiple get calls with different params (eg. autocompletion)
-  private updatingHash: string = '';
-  private patchHash: string = '';
+  private updatingHash: string = "";
+  private patchHash: string = "";
 
   constructor(config: C) {
     super(config);
@@ -51,8 +51,10 @@ export class Resource<
     } catch (err) {
       if (saveError) {
         this.error = err;
+      } else {
+        this.loading = false;
+        throw err;
       }
-      throw err;
     } finally {
       this.loading = false;
     }
@@ -66,7 +68,7 @@ export class Resource<
 
   get = async () => {
     if (!this.id) {
-      throw new Error('resource id is missing');
+      throw new Error("resource id is missing");
     }
     let res = await this.tryWithLoading(
       this.dataSource.read(this.name, this.id, this.fields, this.arguments)
@@ -80,8 +82,8 @@ export class Resource<
     values = Object.assign({}, this.data, values);
 
     const fields = [...(this.fields || [])];
-    if (fields.indexOf('id') === -1) {
-      fields.push('id');
+    if (fields.indexOf("id") === -1) {
+      fields.push("id");
     }
 
     const res = await this.tryWithLoading(
@@ -104,13 +106,11 @@ export class Resource<
   };
   put = async (values: T) => {
     if (!this.id) {
-      throw new Error('resource id is missing');
+      throw new Error("resource id is missing");
     }
 
     values = Object.assign({}, this.data, values);
-    const currentHash = Math.random()
-      .toString(36)
-      .substring(2);
+    const currentHash = Math.random().toString(36).substring(2);
     this.updatingHash = currentHash;
 
     let res = await this.tryWithLoading(
@@ -144,12 +144,10 @@ export class Resource<
     }
   ) => {
     if (!this.id) {
-      throw new Error('resource id is missing');
+      throw new Error("resource id is missing");
     }
 
-    const currentHash = Math.random()
-      .toString(36)
-      .substring(2);
+    const currentHash = Math.random().toString(36).substring(2);
     this.patchHash = currentHash;
 
     let res = await this.tryWithLoading(
@@ -173,7 +171,7 @@ export class Resource<
 
   delete = async () => {
     if (!this.id) {
-      throw new Error('resource id is missing');
+      throw new Error("resource id is missing");
     }
     let res = await this.tryWithLoading(
       this.dataSource.delete(this.name, this.id, this.fields, this.arguments)
