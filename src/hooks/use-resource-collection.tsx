@@ -28,6 +28,10 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
       load();
       setConf(stringConf);
     }
+    resourceCollection.startPolling();
+    return () => {
+      resourceCollection.stopPolling();
+    };
   });
 
   return resourceCollection;

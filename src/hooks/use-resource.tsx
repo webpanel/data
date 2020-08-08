@@ -2,12 +2,12 @@ import { Resource, ResourceConfig } from "../Resource";
 import { useEffect, useState } from "react";
 
 export function useResource<T = any>(config: ResourceConfig<T>): Resource<T> {
-  const [vaaa, setVersion] = useState(0);
+  const [version, setVersion] = useState(0);
   const [resource, setResource] = useState<Resource<T>>(new Resource(config));
   const [conf, setConf] = useState("");
 
   const updateVersion = () => {
-    setVersion(vaaa + 1);
+    setVersion(version + 1);
   };
 
   const stringConf = JSON.stringify(config);
