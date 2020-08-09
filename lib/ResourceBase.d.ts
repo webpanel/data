@@ -1,4 +1,4 @@
-import { DataSource } from './DataSource';
+import { DataSource } from "./DataSource";
 export interface ResourceBaseOptions<T> {
     dataTransform?: (items: T) => T;
     pollInterval?: number;
@@ -28,6 +28,7 @@ export declare class ResourceBase<T> {
     private pollRefreshInterval?;
     constructor(config: ResourceBaseConfig & ResourceBaseOptions<T>);
     resetPolling: () => void;
+    private runPoll;
     startPolling: () => void;
     stopPolling: () => void;
     get: () => Promise<void>;

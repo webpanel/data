@@ -1,6 +1,6 @@
-import { observable, toJS } from 'mobx';
+import { observable, toJS } from "mobx";
 
-import { DataSource } from './DataSource';
+import { DataSource } from "./DataSource";
 
 export interface ResourceBaseOptions<T> {
   dataTransform?: (items: T) => T;
@@ -48,31 +48,37 @@ export class ResourceBase<T> {
     this.startPolling();
   };
 
+  private runPoll = async () => {
+    if (!this.loading && !this.polling) {
+      this.polling = true;
+      await this.get();
+      this.polling = false;
+    }
+  };
+
   public startPolling = () => {
     if (
-      typeof this.pollInterval !== 'undefined' &&
-      typeof this.pollRefreshInterval === 'undefined'
+      typeof this.pollInterval !== "undefined" &&
+      typeof this.pollRefreshInterval === "undefined"
     ) {
-      this.pollRefreshInterval = setInterval(async () => {
-        this.polling = true;
-        await this.get();
-        this.polling = false;
+      this.pollRefreshInterval = setInterval(() => {
+        this.runPoll();
       }, this.pollInterval);
     }
   };
 
   public stopPolling = () => {
-    if (typeof this.pollRefreshInterval !== 'undefined') {
+    if (typeof this.pollRefreshInterval !== "undefined") {
       clearInterval(this.pollRefreshInterval);
     }
   };
 
   public get = async (): Promise<void> => {
-    throw new Error('get method not implemented');
+    throw new Error("get method not implemented");
   };
 
   setRawData = (data: T | undefined) => {
-    if (this.config.dataTransform && typeof data !== 'undefined') {
+    if (this.config.dataTransform && typeof data !== "undefined") {
       this.data = this.config.dataTransform(data);
     } else {
       this.data = data;

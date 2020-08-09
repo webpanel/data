@@ -28,11 +28,14 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
       load();
       setConf(stringConf);
     }
+  });
+
+  useEffect(() => {
     resourceCollection.startPolling();
     return () => {
       resourceCollection.stopPolling();
     };
-  });
+  }, [config.pollInterval]);
 
   return resourceCollection;
 }
