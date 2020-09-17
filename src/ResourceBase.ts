@@ -74,6 +74,7 @@ export class ResourceBase<T> {
   public stopPolling = () => {
     if (typeof this.pollRefreshInterval !== "undefined") {
       clearInterval(this.pollRefreshInterval);
+      this.pollRefreshInterval = undefined;
     }
   };
 
