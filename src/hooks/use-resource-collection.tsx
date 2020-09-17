@@ -12,12 +12,11 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
   const [resourceCollection, setCollection] = useState<ResourceCollection<T>>(
     new ResourceCollection(config)
   );
-  const [version, setVersion] = useState(0);
+  const [_, setVersion] = useState(0);
   const [conf, setConf] = useState("");
 
   const stringConf = JSON.stringify(config);
   resourceCollection.onPollHandler = () => {
-    console.log("poll1", version);
     setCollection(resourceCollection);
     setVersion(new Date().getTime());
   };
@@ -25,7 +24,6 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
     const load = async () => {
       const newCollection = new ResourceCollection<T>(config);
       newCollection.onPollHandler = () => {
-        console.log("poll2", version);
         setCollection(newCollection);
         setVersion(new Date().getTime());
       };
