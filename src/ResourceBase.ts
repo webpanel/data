@@ -21,6 +21,7 @@ export class ResourceBase<T> {
   fields?: string[];
   arguments?: { [key: string]: any };
   pollInterval?: number;
+  public onPollHandler?: () => {};
 
   @observable
   initialized: boolean = false;
@@ -53,6 +54,9 @@ export class ResourceBase<T> {
       this.polling = true;
       await this.get();
       this.polling = false;
+      if (this.onPollHandler) {
+        this.onPollHandler();
+      }
     }
   };
 
