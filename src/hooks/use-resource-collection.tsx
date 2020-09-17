@@ -12,17 +12,20 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
   const [resourceCollection, setCollection] = useState<ResourceCollection<T>>(
     new ResourceCollection(config)
   );
-  const [version, setVersion] = useState(0);
   const [conf, setConf] = useState("");
 
   const stringConf = JSON.stringify(config);
-
+  resourceCollection.onPollHandler = () => {
+    setCollection(resourceCollection);
+  };
   useEffect(() => {
     const load = async () => {
-      const newCollection = new ResourceCollection(config);
-      setCollection(newCollection as ResourceCollection<T>);
+      const newCollection = new ResourceCollection<T>(config);
+      newCollection.onPollHandler = () => {
+        setCollection(newCollection);
+      };
       await newCollection.get();
-      setVersion(version + 1);
+      setCollection(newCollection as ResourceCollection<T>);
     };
     if (conf !== stringConf) {
       load();

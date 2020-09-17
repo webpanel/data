@@ -20,7 +20,7 @@ export declare class ResourceBase<T> {
         [key: string]: any;
     };
     pollInterval?: number;
-    onPollHandler?: () => {};
+    onPollHandler?: () => void;
     initialized: boolean;
     loading: boolean;
     polling: boolean;
