@@ -6,12 +6,18 @@ import { useEffect, useState } from "react";
 
 import { ResourceID } from "../Resource";
 
+interface ResourceCollectionHookConfig<T> extends ResourceCollectionConfig<T> {
+  disabled?: boolean;
+}
+
 export function useResourceCollection<T extends { id: ResourceID } = any>(
-  config: ResourceCollectionConfig<T>
+  config: ResourceCollectionHookConfig<T>
 ): ResourceCollection<T> {
   const [resourceCollection, setCollection] = useState<ResourceCollection<T>>(
     new ResourceCollection(config)
   );
+
+  // @ts-ignore
   const [_, setVersion] = useState(0);
   const [conf, setConf] = useState("");
 
@@ -31,7 +37,7 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
       setCollection(newCollection as ResourceCollection<T>);
       setVersion(new Date().getTime());
     };
-    if (conf !== stringConf) {
+    if (conf !== stringConf && !config.disabled) {
       load();
       setConf(stringConf);
     }
