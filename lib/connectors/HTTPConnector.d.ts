@@ -1,9 +1,9 @@
 import { Connector, DataSourceRequest, HTTPRequest, HTTPResponse } from "./Connector";
 import { ResourceCollectionResponse, ResourceResponse, ResponseDataTransformer } from "./ResponseDataTransformer";
-import { Thunk } from "ts-thunk";
+import { ThunkAsync } from "ts-thunk";
 export interface HTTPConnectorConfiguration {
     responseDataTransformer?: ResponseDataTransformer;
-    headers?: Thunk<{
+    headers?: ThunkAsync<{
         [key: string]: string;
     }>;
 }

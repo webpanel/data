@@ -9,13 +9,13 @@ import {
   ResourceResponse,
   ResponseDataTransformer,
 } from "./ResponseDataTransformer";
-import { Thunk, resolveOptionalThunk } from "ts-thunk";
+import { ThunkAsync, resolveOptionalThunkAsync } from "ts-thunk";
 
 import fetch from "node-fetch";
 
 export interface HTTPConnectorConfiguration {
   responseDataTransformer?: ResponseDataTransformer;
-  headers?: Thunk<{ [key: string]: string }>;
+  headers?: ThunkAsync<{ [key: string]: string }>;
 }
 
 export class HTTPConnector implements Connector {
@@ -32,7 +32,7 @@ export class HTTPConnector implements Connector {
     };
     const headers = {
       ...defaultHeaders,
-      ...resolveOptionalThunk(this.config.headers),
+      ...(await resolveOptionalThunkAsync(this.config.headers)),
     };
 
     let res = await fetch(request.getUrl(), {
