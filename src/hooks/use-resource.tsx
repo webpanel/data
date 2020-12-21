@@ -26,17 +26,23 @@ export function useResource<T = any>(config: ResourceConfig<T>): Resource<T> {
   };
 
   useEffect(() => {
+    let mounted = true;
     const load = async () => {
       const newResource = new Resource(config);
       setResource(newResource as Resource<T>);
       await newResource.getIfHasID();
-      updateVersion();
+      if (mounted) {
+        updateVersion();
+      }
     };
 
     if (conf !== stringConf) {
       load();
       setConf(stringConf);
     }
+    return () => {
+      mounted = false;
+    };
   });
 
   return resource;

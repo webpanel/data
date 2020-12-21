@@ -27,6 +27,7 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
     setVersion(new Date().getTime());
   };
   useEffect(() => {
+    let mounted = true;
     const load = async () => {
       const newCollection = new ResourceCollection<T>(config);
       newCollection.onPollHandler = () => {
@@ -34,13 +35,18 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
         setVersion(new Date().getTime());
       };
       await newCollection.get();
-      setCollection(newCollection as ResourceCollection<T>);
-      setVersion(new Date().getTime());
+      if (mounted) {
+        setCollection(newCollection as ResourceCollection<T>);
+        setVersion(new Date().getTime());
+      }
     };
-    if (conf !== stringConf && !config.disabled) {
+    if (mounted && conf !== stringConf && !config.disabled) {
       load();
       setConf(stringConf);
     }
+    return () => {
+      mounted = false;
+    };
   });
 
   useEffect(() => {
