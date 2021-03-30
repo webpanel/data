@@ -1,7 +1,13 @@
 import { Resource, ResourceConfig } from "../Resource";
 import { useEffect, useState } from "react";
 
-export function useResource<T = any>(config: ResourceConfig<T>): Resource<T> {
+export interface ResourceHookConfig<T> extends ResourceConfig<T> {
+  disabled?: boolean;
+}
+
+export function useResource<T = any>(
+  config: ResourceHookConfig<T>
+): Resource<T> {
   const [version, setVersion] = useState(0);
   const [resource, setResource] = useState<Resource<T>>(new Resource(config));
   const [conf, setConf] = useState("");
@@ -36,7 +42,7 @@ export function useResource<T = any>(config: ResourceConfig<T>): Resource<T> {
       }
     };
 
-    if (conf !== stringConf) {
+    if (mounted && conf !== stringConf && !config.disabled) {
       load();
       setConf(stringConf);
     }

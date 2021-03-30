@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 
 import { ResourceID } from "../Resource";
 
-interface ResourceCollectionHookConfig<T> extends ResourceCollectionConfig<T> {
+export interface ResourceCollectionHookConfig<T>
+  extends ResourceCollectionConfig<T> {
   disabled?: boolean;
 }
 

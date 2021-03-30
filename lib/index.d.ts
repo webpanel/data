@@ -12,5 +12,5 @@ export { ResponseDataTransformer, ResourceResponse, ResourceCollectionResponse, 
 export { HTTPConnector, HTTPConnectorConfiguration, } from "./connectors/HTTPConnector";
 export { GraphQLConnector } from "./connectors/graphql/GraphQLConnector";
 export { RestConnector } from "./connectors/rest/RestConnector";
-export { useResource } from "./hooks/use-resource";
-export { useResourceCollection } from "./hooks/use-resource-collection";
+export { useResource, ResourceHookConfig } from "./hooks/use-resource";
+export { useResourceCollection, ResourceCollectionHookConfig, } from "./hooks/use-resource-collection";
