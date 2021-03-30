@@ -48,7 +48,7 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
     return () => {
       mounted = false;
     };
-  });
+  }, [stringConf]);
 
   useEffect(() => {
     resourceCollection.startPolling();

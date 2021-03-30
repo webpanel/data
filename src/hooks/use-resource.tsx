@@ -49,7 +49,7 @@ export function useResource<T = any>(
     return () => {
       mounted = false;
     };
-  });
+  }, [stringConf]);
 
   return resource;
 }
