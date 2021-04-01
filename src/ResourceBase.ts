@@ -1,5 +1,3 @@
-import { observable, toJS } from "mobx";
-
 import { DataSource } from "./DataSource";
 
 export interface ResourceBaseOptions<T> {
@@ -23,15 +21,10 @@ export class ResourceBase<T> {
   pollInterval?: number;
   public onPollHandler?: () => void;
 
-  @observable
   initialized: boolean = false;
-  @observable
   loading: boolean = false;
-  @observable
   polling: boolean = false;
-  @observable
   data: T | undefined = undefined;
-  @observable
   error: Error | undefined = undefined;
 
   private pollRefreshInterval?: NodeJS.Timer;
@@ -82,7 +75,7 @@ export class ResourceBase<T> {
     throw new Error("get method not implemented");
   };
 
-  setRawData = (data: T | undefined) => {
+  setData = (data: T | undefined) => {
     if (this.config.dataTransform && typeof data !== "undefined") {
       this.data = this.config.dataTransform(data);
     } else {
@@ -90,8 +83,7 @@ export class ResourceBase<T> {
     }
   };
 
-  getRawData = (): T | undefined => {
-    const data = toJS(this.data);
-    return data;
+  getData = (): T | undefined => {
+    return this.data;
   };
 }

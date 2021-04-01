@@ -1,7 +1,5 @@
 export { DataSource } from "./DataSource";
 export { DataSourceRequest, DataSourceOperation, SortInfoOrder, SortInfo, } from "./DataSourceRequest";
-export { ResourceLayer } from "./components/ResourceLayer";
-export { ResourceCollectionLayer } from "./components/ResourceCollectionLayer";
 export { Resource, ResourceID, ResourceOptions, ResourceConfig, } from "./Resource";
 export { DummyResource } from "./DummyResource";
 export { ResourceCollection, ResourceCollectionOptions, } from "./ResourceCollection";

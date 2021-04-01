@@ -38,7 +38,7 @@ export class Resource<
     this.onUpdate = config.onUpdate;
     this.onDelete = config.onDelete;
     if (!this.id) {
-      this.setRawData(config.initialValues);
+      this.setData(config.initialValues);
       this.initialized = true;
     }
   }
@@ -74,7 +74,7 @@ export class Resource<
       this.dataSource.read(this.name, this.id, this.fields, this.arguments)
     );
     this.initialized = true;
-    this.setRawData(res);
+    this.setData(res);
     return res;
   };
 
@@ -90,7 +90,7 @@ export class Resource<
       this.dataSource.create(this.name, values, fields, this.arguments),
       false
     );
-    this.setRawData(res);
+    this.setData(res);
     this.id = res.id;
 
     if (this.onCreate) {
@@ -124,7 +124,7 @@ export class Resource<
       false
     );
     if (this.updatingHash == currentHash) {
-      this.setRawData(res);
+      this.setData(res);
     }
     if (this.onUpdate) {
       this.onUpdate(res);
@@ -161,7 +161,7 @@ export class Resource<
     );
 
     if (this.patchHash == currentHash) {
-      this.setRawData(Object.assign({}, this.data, res));
+      this.setData(Object.assign({}, this.data, res));
     }
     if (this.onUpdate) {
       this.onUpdate(res);
@@ -176,7 +176,7 @@ export class Resource<
     let res = await this.tryWithLoading(
       this.dataSource.delete(this.name, this.id, this.fields, this.arguments)
     );
-    this.setRawData(res);
+    this.setData(res);
     if (this.onDelete) {
       this.onDelete(res);
     }

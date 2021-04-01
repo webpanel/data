@@ -1,13 +1,12 @@
+import { Resource, ResourceID } from "./Resource";
 import {
   ResourceBase,
   ResourceBaseConfig,
-  ResourceBaseOptions
+  ResourceBaseOptions,
 } from "./ResourceBase";
 
 import { DataSourceArgumentMap } from "./DataSource";
-import { Resource, ResourceID } from "./Resource";
 import { SortInfo } from "./DataSourceRequest";
-import { observable } from "mobx";
 
 export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
   autopersistConfigKey?: string;
@@ -26,23 +25,16 @@ export class ResourceCollection<
   T extends { id: ResourceID },
   C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>
 > extends ResourceBase<T[]> {
-  @observable
   count: number | undefined = undefined;
-  @observable
   filters?: { [key: string]: DataSourceArgumentMap };
-  @observable
   search?: string;
-  @observable
   sorting?: any;
-  @observable
   offset?: number;
-  @observable
   limit?: number;
 
   initialConfig: C;
   autopersistConfigKey?: string;
 
-  @observable
   hasFilterChanges: boolean = false;
 
   // this hash is used to simulate "cancelling" behaviour of loading requests
@@ -83,7 +75,7 @@ export class ResourceCollection<
         search: this.search,
         sorting: this.sorting,
         offset: this.offset,
-        limit: this.limit
+        limit: this.limit,
       };
       const storage = sessionStorage || localStorage;
       if (storage)
@@ -94,9 +86,7 @@ export class ResourceCollection<
   public get = async (): Promise<void> => {
     this.error = undefined;
     this.loading = true;
-    const currentHash = Math.random()
-      .toString(36)
-      .substring(2);
+    const currentHash = Math.random().toString(36).substring(2);
     this.loadingHash = currentHash;
     try {
       let res = await this.dataSource.list(
@@ -110,7 +100,7 @@ export class ResourceCollection<
         this.arguments
       );
       if (res && this.loadingHash == currentHash) {
-        this.setRawData(res.items || []);
+        this.setData(res.items || []);
         this.count = res.count;
         this.initialized = true;
       }
@@ -145,7 +135,7 @@ export class ResourceCollection<
       id: props.id,
       initialArgs: props.args,
       dataSource: this.dataSource,
-      fields: this.fields
+      fields: this.fields,
     });
 
     return item;
@@ -156,7 +146,7 @@ export class ResourceCollection<
     id: ResourceID,
     values: Partial<T>
   ): Promise<Resource> {
-    const itemData = this.data?.find(x => x.id == id);
+    const itemData = this.data?.find((x) => x.id == id);
 
     if (typeof itemData === "undefined") {
       throw new Error(
@@ -165,14 +155,14 @@ export class ResourceCollection<
     }
 
     const res = this.getItem({ id });
-    res.setRawData(itemData);
+    res.setData(itemData);
     await res.patch(values);
 
-    const newData = this.data?.map(x =>
+    const newData = this.data?.map((x) =>
       x.id == id && res.data ? res.data : x
     );
     if (newData) {
-      this.setRawData(newData as T[]);
+      this.setData(newData as T[]);
     }
 
     return res;

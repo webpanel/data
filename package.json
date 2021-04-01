@@ -21,14 +21,8 @@
     "@types/node": "^10.17.21",
     "@types/node-fetch": "^2.1.1",
     "@types/react": "^16.8.14",
-    "mobx": "^5.0.2",
-    "mobx-react": "^5.2.3",
     "react": "^17.0.1",
     "typescript": "^3.7.5"
-  },
-  "peerDependencies": {
-    "mobx": "*",
-    "mobx-react": "*"
   },
   "repository": {
     "type": "git",

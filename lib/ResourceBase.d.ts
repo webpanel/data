@@ -33,6 +33,6 @@ export declare class ResourceBase<T> {
     startPolling: () => void;
     stopPolling: () => void;
     get: () => Promise<void>;
-    setRawData: (data: T | undefined) => void;
-    getRawData: () => T | undefined;
+    setData: (data: T | undefined) => void;
+    getData: () => T | undefined;
 }

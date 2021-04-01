@@ -5,8 +5,6 @@ export {
   SortInfoOrder,
   SortInfo,
 } from "./DataSourceRequest";
-export { ResourceLayer } from "./components/ResourceLayer";
-export { ResourceCollectionLayer } from "./components/ResourceCollectionLayer";
 export {
   Resource,
   ResourceID,
