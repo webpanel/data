@@ -22,7 +22,16 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
   const [_, setVersion] = useState(0);
   const [conf, setConf] = useState("");
 
-  const stringConf = JSON.stringify(config);
+  const stringConf = JSON.stringify([
+    config.autopersistConfigKey,
+    config.aggregations,
+    config.initialFilters,
+    config.initialSearch,
+    config.initialSorting,
+    config.initialOffset,
+    config.initialLimit,
+    config.pollInterval,
+  ]);
   resourceCollection.onPollHandler = () => {
     setCollection(resourceCollection);
     setVersion(new Date().getTime());

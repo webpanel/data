@@ -16,7 +16,13 @@ export function useResource<T = any>(
     setVersion(version + 1);
   };
 
-  const stringConf = JSON.stringify(config);
+  const stringConf = JSON.stringify([
+    config.name,
+    config.id,
+    config.fields,
+    config.initialArgs,
+    config.pollInterval,
+  ]);
 
   resource.onCreate = (id, values) => {
     updateVersion();

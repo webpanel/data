@@ -257,7 +257,6 @@ export class GraphQLConnector extends HTTPConnector {
       }
       this.fillFieldsFromObject(entityItemsField, req.fields);
 
-      console.log("????", req.aggregations);
       if (req.aggregations) {
         const aggs = field.addField(new GraphQLField("aggregations"));
         for (const agg of req.aggregations) {
