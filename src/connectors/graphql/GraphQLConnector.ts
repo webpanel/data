@@ -1,4 +1,4 @@
-import * as inflection from 'inflection';
+import * as inflection from "inflection";
 
 import {
   ConnectorError,
@@ -7,17 +7,17 @@ import {
   HTTPRequest,
   HTTPResponse,
   ResourceCollectionResponse,
-  ResourceResponse
-} from '../../connectors/Connector';
+  ResourceResponse,
+} from "../../connectors/Connector";
 import {
   GraphQLArgumentMap,
   GraphQLField,
   GraphQLQuery,
-  SortInfoValue
-} from './GraphQLQuery';
-import { SortInfo, SortInfoOrder } from '../../DataSourceRequest';
+  SortInfoValue,
+} from "./GraphQLQuery";
+import { SortInfo, SortInfoOrder } from "../../DataSourceRequest";
 
-import { HTTPConnector } from '../HTTPConnector';
+import { HTTPConnector } from "../HTTPConnector";
 
 export type GraphQLFieldSource = { [key: string]: any } | string;
 export type GraphQLFieldSourceMap = GraphQLFieldSource | GraphQLFieldSource[];
@@ -54,7 +54,7 @@ export class GraphQLConnector extends HTTPConnector {
   public sortFormatName(sort: SortInfo): SortInfoValue {
     return (
       sort.columnKey.toUpperCase() +
-      (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
+      (sort.order === SortInfoOrder.descend ? "_DESC" : "_ASC")
     );
   }
 
@@ -63,7 +63,7 @@ export class GraphQLConnector extends HTTPConnector {
 
     if (res.status == 401) {
       throw new ConnectorError(true, [
-        new Error(this.getErrorMessageFromResponse(res))
+        new Error(this.getErrorMessageFromResponse(res)),
       ]);
     }
 
@@ -78,9 +78,9 @@ export class GraphQLConnector extends HTTPConnector {
       let authorization = false;
       const errors = response.data.errors.map((e: any) => {
         if (
-          e.message === 'jwt must be provided' ||
-          e.message === 'jwt malformed' ||
-          e.code === 'UNAUTHORIZED' ||
+          e.message === "jwt must be provided" ||
+          e.message === "jwt malformed" ||
+          e.code === "UNAUTHORIZED" ||
           e.authorization
         ) {
           authorization = true;
@@ -144,41 +144,41 @@ export class GraphQLConnector extends HTTPConnector {
             q: request.search,
             offset: request.offset,
             limit: request.limit,
-            sort: request.sorting
+            sort: request.sorting,
           }
         : { id: request.id, input: request.data };
 
     const query = new GraphQLQuery(
-      request.operation === 'read' || request.operation === 'list'
-        ? 'query'
-        : 'mutation',
+      request.operation === "read" || request.operation === "list"
+        ? "query"
+        : "mutation",
       this.generateQueryParams(request, args),
       {
         sortingFormatter: (sorting: SortInfo[]) => {
           const splitSorting: SortInfo[] = [];
           for (const _sorting of sorting) {
-            for (const s of _sorting.columnKey.split(',')) {
+            for (const s of _sorting.columnKey.split(",")) {
               splitSorting.push({ ..._sorting, columnKey: s });
             }
           }
-          return splitSorting.map(x => this.sortFormatName(x));
-        }
+          return splitSorting.map((x) => this.sortFormatName(x));
+        },
       }
     );
 
     const field = this.fieldForOperation(
       request.operation,
       fetchFieldName,
-      request.fields,
+      request,
       args
     );
 
-    query.field(field);
+    query.addField(field);
 
     return new HTTPRequest({
       url: request.url,
-      method: 'POST',
-      data: query.toString()
+      method: "POST",
+      data: query.toString(),
     });
   }
 
@@ -189,24 +189,24 @@ export class GraphQLConnector extends HTTPConnector {
       .keys(args)
       .map((key: string) => {
         switch (key) {
-          case 'filter':
-            if (!args[key]) return '';
+          case "filter":
+            if (!args[key]) return "";
             return `$${key}: ${this.filterInputTypeName(request)}`;
 
-          case 'sort':
-            if (!args[key]) return '';
+          case "sort":
+            if (!args[key]) return "";
             return `$${key}: [${this.sortInputTypeName(request)}!]`;
 
-          case 'input':
-            if (!args[key]) return '';
+          case "input":
+            if (!args[key]) return "";
             return `$${key}: ${this.inputTypeName(request)}!`;
 
           default:
-            return '';
+            return "";
         }
       })
       .filter((x: string) => !!x)
-      .join(',');
+      .join(",");
     if (header) {
       header = `(${header})`;
     }
@@ -229,35 +229,43 @@ export class GraphQLConnector extends HTTPConnector {
       for (let f of obj) {
         this.fillFieldsFromObject(field, f);
       }
-    } else if (typeof obj === 'object') {
+    } else if (typeof obj === "object") {
       for (let key of Object.keys(obj)) {
         const f = new GraphQLField(key);
-        field.field(f);
+        field.addField(f);
         this.fillFieldsFromObject(f, obj[key]);
       }
-    } else if (typeof obj === 'string') {
-      field.field(new GraphQLField(obj));
+    } else if (typeof obj === "string") {
+      field.addField(new GraphQLField(obj));
     }
   }
 
   private fieldForOperation(
     operation: DataSourceOperation,
     fetchFieldName: string,
-    fields: GraphQLFieldSourceMap,
+    req: DataSourceRequest,
     args: GraphQLArgumentMap = {}
   ): GraphQLField {
     let field = new GraphQLField(fetchFieldName);
 
-    if (operation === 'list') {
-      const entityItemsField = new GraphQLField('items');
-      field.field(entityItemsField);
-      field.field('count');
+    if (operation === "list") {
+      const entityItemsField = new GraphQLField("items");
+      field.addField(entityItemsField);
+      field.addField("count");
       if (args) {
         field.args(args);
       }
-      this.fillFieldsFromObject(entityItemsField, fields);
+      this.fillFieldsFromObject(entityItemsField, req.fields);
+
+      console.log("????", req.aggregations);
+      if (req.aggregations) {
+        const aggs = field.addField(new GraphQLField("aggregations"));
+        for (const agg of req.aggregations) {
+          aggs.addField(agg.name + agg.function);
+        }
+      }
     } else {
-      this.fillFieldsFromObject(field, fields);
+      this.fillFieldsFromObject(field, req.fields);
       if (args) {
         field.args(args);
       }

@@ -1,17 +1,21 @@
-import { cloneDeep } from 'lodash';
-import { DataSourceArgumentMap } from './DataSource';
+import {
+  DataSourceAggregationField,
+  DataSourceArgumentMap,
+} from "./DataSource";
+
+import { cloneDeep } from "lodash";
 
 export enum DataSourceOperation {
-  list = 'list',
-  create = 'create',
-  read = 'read',
-  update = 'update',
-  delete = 'delete'
+  list = "list",
+  create = "create",
+  read = "read",
+  update = "update",
+  delete = "delete",
 }
 
 export enum SortInfoOrder {
-  ascend = 'ascend',
-  descend = 'descend'
+  ascend = "ascend",
+  descend = "descend",
 }
 
 export interface SortInfo {
@@ -26,6 +30,7 @@ export class DataSourceRequest {
   offset: number = 0;
   limit?: number;
   fields: { [key: string]: string } = {};
+  aggregations: DataSourceAggregationField[];
   filters: { [key: string]: DataSourceArgumentMap } = {};
   search?: string;
   sorting: SortInfo[] = [];
@@ -40,6 +45,7 @@ export class DataSourceRequest {
     this.operation = cloned.operation;
     this.offset = cloned.offset || 0;
     this.limit = cloned.limit;
+    this.aggregations = cloned.aggregations;
     this.fields = cloned.fields || {};
     this.filters = cloned.filters || {};
     this.search = cloned.search;

@@ -1,4 +1,4 @@
-import { DataSourceArgumentMap } from './DataSource';
+import { DataSourceAggregationField, DataSourceArgumentMap } from "./DataSource";
 export declare enum DataSourceOperation {
     list = "list",
     create = "create",
@@ -23,6 +23,7 @@ export declare class DataSourceRequest {
     fields: {
         [key: string]: string;
     };
+    aggregations: DataSourceAggregationField[];
     filters: {
         [key: string]: DataSourceArgumentMap;
     };

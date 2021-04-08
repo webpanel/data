@@ -1,7 +1,7 @@
-import { DataSourceRequest, HTTPRequest, HTTPResponse, ResourceCollectionResponse, ResourceResponse } from '../../connectors/Connector';
-import { SortInfoValue } from './GraphQLQuery';
-import { SortInfo } from '../../DataSourceRequest';
-import { HTTPConnector } from '../HTTPConnector';
+import { DataSourceRequest, HTTPRequest, HTTPResponse, ResourceCollectionResponse, ResourceResponse } from "../../connectors/Connector";
+import { SortInfoValue } from "./GraphQLQuery";
+import { SortInfo } from "../../DataSourceRequest";
+import { HTTPConnector } from "../HTTPConnector";
 export declare type GraphQLFieldSource = {
     [key: string]: any;
 } | string;

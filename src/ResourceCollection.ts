@@ -1,3 +1,7 @@
+import {
+  DataSourceAggregationField,
+  DataSourceArgumentMap,
+} from "./DataSource";
 import { Resource, ResourceID } from "./Resource";
 import {
   ResourceBase,
@@ -5,12 +9,12 @@ import {
   ResourceBaseOptions,
 } from "./ResourceBase";
 
-import { DataSourceArgumentMap } from "./DataSource";
 import { SortInfo } from "./DataSourceRequest";
 
 export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
   autopersistConfigKey?: string;
 
+  aggregations?: DataSourceAggregationField[];
   initialFilters?: DataSourceArgumentMap;
   initialSearch?: string;
   initialSorting?: SortInfo[];
@@ -92,6 +96,7 @@ export class ResourceCollection<
       let res = await this.dataSource.list(
         this.name,
         this.fields,
+        this.initialConfig.aggregations,
         this.filters,
         this.search,
         this.sorting,

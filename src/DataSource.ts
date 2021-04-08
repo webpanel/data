@@ -17,6 +17,11 @@ export type DataSourceArgumentType =
   | boolean
   | null
   | undefined;
+
+export interface DataSourceAggregationField {
+  name: string;
+  function: string;
+}
 export interface DataSourceArgumentMap {
   [key: string]: DataSourceArgumentType | DataSourceArgumentType[];
 }
@@ -43,6 +48,7 @@ export class DataSource {
   async list(
     name: string,
     fields?: string[],
+    aggregations?: DataSourceAggregationField[],
     filters?: { [key: string]: DataSourceArgumentMap },
     search?: string,
     sorting?: string[],
@@ -53,6 +59,7 @@ export class DataSource {
     return this.send({
       operation: DataSourceOperation.list,
       name,
+      aggregations,
       fields,
       filters,
       search,
@@ -127,6 +134,7 @@ export class DataSource {
     fields?: string[];
     id?: string | number;
     data?: any;
+    aggregations?: DataSourceAggregationField[];
     filters?: { [key: string]: DataSourceArgumentMap };
     search?: string;
     sorting?: string[];
@@ -140,6 +148,7 @@ export class DataSource {
       operation: params.operation,
       id: params.id,
       data: params.data,
+      aggregations: params.aggregations,
       fields: params.fields,
       filters: params.filters,
       search: params.search,

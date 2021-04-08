@@ -1,7 +1,7 @@
 // use local version until: https://github.com/codemeasandwich/graphql-query-builder/pull/9
 // import Query from './graphql-query';
 
-import { SortInfo, SortInfoOrder } from '../../DataSourceRequest';
+import { SortInfo, SortInfoOrder } from "../../DataSourceRequest";
 
 export type GraphQLArgumentType =
   | GraphQLArgumentMap
@@ -21,7 +21,7 @@ export interface GraphQLArgumentMap {
 }
 
 function isGraphQLArgumentMap(arg: any): arg is GraphQLArgumentMap {
-  return arg !== null && typeof arg === 'object';
+  return arg !== null && typeof arg === "object";
 }
 
 export interface GraphQLFieldOptions {
@@ -37,12 +37,12 @@ export class GraphQLField {
   constructor(name: string, options?: GraphQLFieldOptions) {
     this.name = name;
     this.options = options || {
-      sortingFormatter: this.formatSortInfo
+      sortingFormatter: this.formatSortInfo,
     };
   }
 
-  field(field: GraphQLField | string): GraphQLField {
-    if (typeof field === 'string') {
+  addField(field: GraphQLField | string): GraphQLField {
+    if (typeof field === "string") {
       field = new GraphQLField(field);
     }
     this._fields.push(field);
@@ -51,7 +51,7 @@ export class GraphQLField {
 
   fields(fields: GraphQLField[] | string[]): GraphQLField {
     for (let field of fields) {
-      this.field(field);
+      this.addField(field);
     }
     return this;
   }
@@ -70,13 +70,13 @@ export class GraphQLField {
     if (Object.keys(this._args).length > 0) {
       let serializedArgs = this.serializeArgs(this._args);
       if (serializedArgs) {
-        str += '(' + serializedArgs.substr(1, serializedArgs.length - 2) + ')';
+        str += "(" + serializedArgs.substr(1, serializedArgs.length - 2) + ")";
       }
     }
     if (this._fields.length > 0) {
-      str += ' {' + this._fields.map(x => x.toString()).join(' ') + '}';
+      str += " {" + this._fields.map((x) => x.toString()).join(" ") + "}";
     }
-    return str + ' ';
+    return str + " ";
   }
 
   formatSortInfo(sorting: SortInfo[]): SortInfoValue[] {
@@ -85,7 +85,7 @@ export class GraphQLField {
       sorting.map(
         (sort: any) =>
           sort.columnKey.toUpperCase() +
-          (sort.order === SortInfoOrder.descend ? '_DESC' : '_ASC')
+          (sort.order === SortInfoOrder.descend ? "_DESC" : "_ASC")
       )
     );
   }
@@ -98,8 +98,8 @@ export class GraphQLField {
       if (value !== null && !value) {
         continue;
       }
-      if (typeof serialized !== 'undefined') {
-        if (key === 'filter' || key === 'sort' || key === 'input') {
+      if (typeof serialized !== "undefined") {
+        if (key === "filter" || key === "sort" || key === "input") {
           res.push(`${key}:$${key}`);
         } else {
           res.push(`${key}:${serialized}`);
@@ -109,15 +109,15 @@ export class GraphQLField {
     if (res.length === 0) {
       return null;
     }
-    return `{${res.join(',')}}`;
+    return `{${res.join(",")}}`;
   }
   private serializeArg(
     value: GraphQLArgumentType | GraphQLArgumentType[]
   ): SortInfo | string | number | null | undefined {
     let res = undefined;
     if (Array.isArray(value)) {
-      res = '[' + value.map((x: any) => this.serializeArg(x)).join(',') + ']';
-    } else if (typeof value === 'string') {
+      res = "[" + value.map((x: any) => this.serializeArg(x)).join(",") + "]";
+    } else if (typeof value === "string") {
       res = JSON.stringify(value);
     } else if (isGraphQLArgumentMap(value)) {
       res = this.serializeArgs(value);
@@ -131,12 +131,12 @@ export class GraphQLField {
     return Object.assign(
       {},
       this._args,
-      ...this._fields.map(field => field.arguments)
+      ...this._fields.map((field) => field.arguments)
     );
   }
 }
 
-export type GraphQLQueryType = 'query' | 'mutation';
+export type GraphQLQueryType = "query" | "mutation";
 
 export class GraphQLQuery extends GraphQLField {
   type: GraphQLQueryType;
@@ -152,8 +152,8 @@ export class GraphQLQuery extends GraphQLField {
 
   toString(): string {
     return JSON.stringify({
-      query: this.type + ' ' + super.toString(),
-      variables: this.variables
+      query: this.type + " " + super.toString(),
+      variables: this.variables,
     });
   }
 
@@ -161,10 +161,10 @@ export class GraphQLQuery extends GraphQLField {
     const args = this.arguments;
     const processedArgs = {};
     for (const key in args) {
-      if (key === 'sort' || key === 'filter' || key === 'input') {
+      if (key === "sort" || key === "filter" || key === "input") {
         const val = args[key];
         processedArgs[`${key}`] =
-          key === 'sort'
+          key === "sort"
             ? this.options.sortingFormatter(<SortInfo[]>(val || []))
             : val;
       }
