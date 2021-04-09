@@ -2,9 +2,10 @@ import { Connector } from "./connectors/Connector";
 import { ResourceCollectionResponse, ResourceResponse } from "./connectors/ResponseDataTransformer";
 import { DataSourceOperation } from "./DataSourceRequest";
 export declare type DataSourceArgumentType = DataSourceArgumentMap | string | number | boolean | null | undefined;
+export declare type DataSourceAggregationFunction = "MIN" | "MAX" | "AVG" | "SUM";
 export interface DataSourceAggregationField {
     name: string;
-    function: string;
+    function: DataSourceAggregationFunction;
 }
 export interface DataSourceArgumentMap {
     [key: string]: DataSourceArgumentType | DataSourceArgumentType[];

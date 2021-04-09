@@ -18,9 +18,11 @@ export type DataSourceArgumentType =
   | null
   | undefined;
 
+export type DataSourceAggregationFunction = "MIN" | "MAX" | "AVG" | "SUM";
+
 export interface DataSourceAggregationField {
   name: string;
-  function: string;
+  function: DataSourceAggregationFunction;
 }
 export interface DataSourceArgumentMap {
   [key: string]: DataSourceArgumentType | DataSourceArgumentType[];

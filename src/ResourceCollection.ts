@@ -30,6 +30,7 @@ export class ResourceCollection<
   C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>
 > extends ResourceBase<T[]> {
   count: number | undefined = undefined;
+  aggregations?: { [key: string]: any };
   filters?: { [key: string]: DataSourceArgumentMap };
   search?: string;
   sorting?: any;
@@ -106,8 +107,9 @@ export class ResourceCollection<
         this.arguments
       );
       if (res && this.loadingHash == currentHash) {
-        this.setData(res.items || []);
         this.count = res.count;
+        this.aggregations = res.aggregations;
+        this.setData(res.items || []);
         this.initialized = true;
       }
     } catch (err) {

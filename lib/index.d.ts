@@ -1,4 +1,4 @@
-export { DataSource } from "./DataSource";
+export { DataSource, DataSourceAggregationFunction } from "./DataSource";
 export { DataSourceRequest, DataSourceOperation, SortInfoOrder, SortInfo, } from "./DataSourceRequest";
 export { Resource, ResourceID, ResourceOptions, ResourceConfig, } from "./Resource";
 export { DummyResource } from "./DummyResource";

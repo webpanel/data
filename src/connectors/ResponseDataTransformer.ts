@@ -1,10 +1,11 @@
-import { DataSourceOperation } from '../DataSourceRequest';
+import { DataSourceOperation } from "../DataSourceRequest";
 
 export interface ResourceResponse {
   data: any;
 }
 export interface ResourceCollectionResponse {
   items: any[];
+  aggregations: { [key: string]: any };
   count: number;
 }
 
@@ -27,7 +28,8 @@ export class ResponseDataTransformer {
   async list(data: any): Promise<ResourceCollectionResponse> {
     return {
       items: data.items,
-      count: data.count
+      aggregations: data.aggregations,
+      count: data.count,
     };
   }
 

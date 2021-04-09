@@ -16,6 +16,9 @@ export declare class ResourceCollection<T extends {
     id: ResourceID;
 }, C extends ResourceCollectionConfig<T> = ResourceCollectionConfig<T>> extends ResourceBase<T[]> {
     count: number | undefined;
+    aggregations?: {
+        [key: string]: any;
+    };
     filters?: {
         [key: string]: DataSourceArgumentMap;
     };

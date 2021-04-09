@@ -1,9 +1,12 @@
-import { DataSourceOperation } from '../DataSourceRequest';
+import { DataSourceOperation } from "../DataSourceRequest";
 export interface ResourceResponse {
     data: any;
 }
 export interface ResourceCollectionResponse {
     items: any[];
+    aggregations: {
+        [key: string]: any;
+    };
     count: number;
 }
 export declare class ResponseDataTransformer {

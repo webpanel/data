@@ -258,9 +258,12 @@ export class GraphQLConnector extends HTTPConnector {
       this.fillFieldsFromObject(entityItemsField, req.fields);
 
       if (req.aggregations) {
-        const aggs = field.addField(new GraphQLField("aggregations"));
+        const aggs = new GraphQLField("aggregations");
+        field.addField(aggs);
         for (const agg of req.aggregations) {
-          aggs.addField(agg.name + agg.function);
+          aggs.addField(
+            agg.name + inflection.camelize(agg.function.toLowerCase(), false)
+          );
         }
       }
     } else {
