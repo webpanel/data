@@ -92,6 +92,7 @@ export class ResourceCollection<
     this.loading = true;
     const currentHash = Math.random().toString(36).substring(2);
     this.loadingHash = currentHash;
+    this.triggerOnChangeIfNeeded();
     try {
       let res = await this.dataSource.list(
         this.name,
@@ -117,6 +118,7 @@ export class ResourceCollection<
       if (this.loadingHash == currentHash) {
         this.loading = false;
       }
+      this.triggerOnChangeIfNeeded();
     }
   };
 
@@ -180,14 +182,17 @@ export class ResourceCollection<
     this.limit = values.initialLimit;
 
     this.updateFilters(values.initialFilters, false, false);
+    this.triggerOnChangeIfNeeded();
   };
 
   resetFilters = () => {
     this.setInitialValues(this.initialConfig);
+    this.triggerOnChangeIfNeeded();
   };
 
   resetPagination = () => {
     this.offset = 0;
+    this.triggerOnChangeIfNeeded();
   };
 
   updateFilters = async (
@@ -223,6 +228,7 @@ export class ResourceCollection<
 
     if (filtersChanged) this.resetPagination();
     if (autopersist) this.autopersistConfig();
+    this.triggerOnChangeIfNeeded();
     if (autoreload) return this.reload();
   };
 
@@ -237,6 +243,7 @@ export class ResourceCollection<
     this.search = search;
     this.resetPagination();
     this.autopersistConfig();
+    this.triggerOnChangeIfNeeded();
     if (autoreload) return this.reload();
   };
 
@@ -246,6 +253,7 @@ export class ResourceCollection<
   ): Promise<void> => {
     this.sorting = sorting;
     this.autopersistConfig();
+    this.triggerOnChangeIfNeeded();
     if (autoreload) return this.reload();
   };
 
@@ -255,6 +263,7 @@ export class ResourceCollection<
   ): Promise<void> => {
     this.offset = offset;
     this.autopersistConfig();
+    this.triggerOnChangeIfNeeded();
     if (autoreload) return this.reload();
   };
 
@@ -264,6 +273,7 @@ export class ResourceCollection<
   ): Promise<void> => {
     this.limit = limit;
     this.autopersistConfig();
+    this.triggerOnChangeIfNeeded();
     if (autoreload) return this.reload();
   };
 

@@ -22,6 +22,7 @@ export function useResource<T = any>(
     config.fields,
     config.initialArgs,
     config.pollInterval,
+    config.disabled,
   ]);
 
   resource.onCreate = (id, values) => {

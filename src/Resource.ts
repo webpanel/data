@@ -43,23 +43,6 @@ export class Resource<
     }
   }
 
-  async tryWithLoading(p: Promise<any>, saveError = true): Promise<any> {
-    this.error = undefined;
-    this.loading = true;
-    try {
-      return await p;
-    } catch (err) {
-      if (saveError) {
-        this.error = err;
-      } else {
-        this.loading = false;
-        throw err;
-      }
-    } finally {
-      this.loading = false;
-    }
-  }
-
   getIfHasID = async () => {
     if (this.id) {
       return this.get();

@@ -18,7 +18,6 @@ export declare class Resource<T = {
     private updatingHash;
     private patchHash;
     constructor(config: C);
-    tryWithLoading(p: Promise<any>, saveError?: boolean): Promise<any>;
     getIfHasID: () => Promise<any>;
     get: () => Promise<any>;
     create: (values: T) => Promise<any>;

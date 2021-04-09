@@ -20,6 +20,8 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
 
   // @ts-ignore
   const [_, setVersion] = useState(0);
+  // @ts-ignore
+  const [_, setDataVersion] = useState(0);
   const [conf, setConf] = useState("");
 
   const stringConf = JSON.stringify([
@@ -31,6 +33,7 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
     config.initialOffset,
     config.initialLimit,
     config.pollInterval,
+    config.disabled,
   ]);
   resourceCollection.onPollHandler = () => {
     setCollection(resourceCollection);
@@ -39,12 +42,18 @@ export function useResourceCollection<T extends { id: ResourceID } = any>(
   useEffect(() => {
     let mounted = true;
     const load = async () => {
-      const newCollection = new ResourceCollection<T>(config);
+      const newCollection = new ResourceCollection<T>({
+        ...config,
+        onDidChange: () => {
+          setDataVersion(new Date().getTime());
+        },
+      });
+
       newCollection.onPollHandler = () => {
         setCollection(newCollection);
         setVersion(new Date().getTime());
       };
-      await newCollection.get();
+      newCollection.get();
       if (mounted) {
         setCollection(newCollection as ResourceCollection<T>);
         setVersion(new Date().getTime());

@@ -2,6 +2,7 @@ import { DataSource } from "./DataSource";
 
 export interface ResourceBaseOptions<T> {
   dataTransform?: (items: T) => T;
+  onDidChange?: () => void; // called when resource state changes (attributes, data, ...)
   pollInterval?: number;
 }
 
@@ -53,6 +54,28 @@ export class ResourceBase<T> {
     }
   };
 
+  protected async tryWithLoading(
+    p: Promise<any>,
+    saveError = true
+  ): Promise<any> {
+    this.error = undefined;
+    this.loading = true;
+    this.triggerOnChangeIfNeeded();
+    try {
+      return await p;
+    } catch (err) {
+      if (saveError) {
+        this.error = err;
+      } else {
+        this.loading = false;
+        throw err;
+      }
+    } finally {
+      this.loading = false;
+      this.triggerOnChangeIfNeeded();
+    }
+  }
+
   public startPolling = () => {
     if (
       typeof this.pollInterval !== "undefined" &&
@@ -81,7 +104,14 @@ export class ResourceBase<T> {
     } else {
       this.data = data;
     }
+    this.triggerOnChangeIfNeeded();
   };
+
+  protected triggerOnChangeIfNeeded() {
+    if (this.config.onDidChange) {
+      this.config.onDidChange();
+    }
+  }
 
   getData = (): T | undefined => {
     return this.data;
