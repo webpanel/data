@@ -10,6 +10,8 @@ export function useResource<T = any>(
 ): Resource<T> {
   const [version, setVersion] = useState(0);
   const [resource, setResource] = useState<Resource<T>>(new Resource(config));
+  // @ts-ignore
+  const [_, setDataVersion] = useState(0);
   const [conf, setConf] = useState("");
 
   const updateVersion = () => {
@@ -31,6 +33,7 @@ export function useResource<T = any>(
       config.onCreate(id, values as T);
     }
   };
+
   resource.onUpdate = (values) => {
     updateVersion();
     if (config.onUpdate) {
@@ -41,7 +44,12 @@ export function useResource<T = any>(
   useEffect(() => {
     let mounted = true;
     const load = async () => {
-      const newResource = new Resource(config);
+      const newResource = new Resource({
+        ...config,
+        onDidChange: () => {
+          setDataVersion(new Date().getTime());
+        },
+      });
       setResource(newResource as Resource<T>);
       await newResource.getIfHasID();
       if (mounted) {
