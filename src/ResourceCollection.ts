@@ -11,7 +11,8 @@ import {
 
 import { SortInfo } from "./DataSourceRequest";
 
-export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
+export interface ResourceCollectionOptions<T>
+  extends ResourceBaseOptions<T[], ResourceCollection<T & { id: ResourceID }>> {
   autopersistConfigKey?: string;
 
   aggregations?: DataSourceAggregationField[];

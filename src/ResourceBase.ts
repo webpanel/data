@@ -1,7 +1,7 @@
 import { DataSource } from "./DataSource";
 
-export interface ResourceBaseOptions<T> {
-  dataTransform?: (items: T) => T;
+export interface ResourceBaseOptions<T, R> {
+  dataTransform?: (items: T, resource: R) => T;
   onDidChange?: () => void; // called when resource state changes (attributes, data, ...)
   pollInterval?: number;
 }
@@ -30,7 +30,9 @@ export class ResourceBase<T> {
 
   private pollRefreshInterval?: NodeJS.Timer;
 
-  constructor(private config: ResourceBaseConfig & ResourceBaseOptions<T>) {
+  constructor(
+    private config: ResourceBaseConfig & ResourceBaseOptions<T, ResourceBase<T>>
+  ) {
     this.dataSource = config.dataSource;
     this.name = config.name;
     this.fields = config.fields;
@@ -100,7 +102,7 @@ export class ResourceBase<T> {
 
   setData = (data: T | undefined) => {
     if (this.config.dataTransform && typeof data !== "undefined") {
-      this.data = this.config.dataTransform(data);
+      this.data = this.config.dataTransform(data, this);
     } else {
       this.data = data;
     }

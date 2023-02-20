@@ -2,7 +2,9 @@ import { DataSourceAggregationField, DataSourceArgumentMap } from "./DataSource"
 import { Resource, ResourceID } from "./Resource";
 import { ResourceBase, ResourceBaseConfig, ResourceBaseOptions } from "./ResourceBase";
 import { SortInfo } from "./DataSourceRequest";
-export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[]> {
+export interface ResourceCollectionOptions<T> extends ResourceBaseOptions<T[], ResourceCollection<T & {
+    id: ResourceID;
+}>> {
     autopersistConfigKey?: string;
     aggregations?: DataSourceAggregationField[];
     initialFilters?: DataSourceArgumentMap;

@@ -1,6 +1,6 @@
 import { DataSource } from "./DataSource";
-export interface ResourceBaseOptions<T> {
-    dataTransform?: (items: T) => T;
+export interface ResourceBaseOptions<T, R> {
+    dataTransform?: (items: T, resource: R) => T;
     onDidChange?: () => void;
     pollInterval?: number;
 }
@@ -28,7 +28,7 @@ export declare class ResourceBase<T> {
     data: T | undefined;
     error: Error | undefined;
     private pollRefreshInterval?;
-    constructor(config: ResourceBaseConfig & ResourceBaseOptions<T>);
+    constructor(config: ResourceBaseConfig & ResourceBaseOptions<T, ResourceBase<T>>);
     resetPolling: () => void;
     private runPoll;
     protected tryWithLoading(p: Promise<any>, saveError?: boolean): Promise<any>;
