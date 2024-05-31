@@ -11,7 +11,7 @@ import {
 } from "./ResponseDataTransformer";
 import { ThunkAsync, resolveOptionalThunkAsync } from "ts-thunk";
 
-import fetch from "node-fetch";
+// import fetch from "node-fetch";
 
 export interface HTTPConnectorConfiguration {
   responseDataTransformer?: ResponseDataTransformer;
